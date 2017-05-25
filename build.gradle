@@ -8,7 +8,6 @@ repositories {
 
 dependencies {
     compile 'com.sparkjava:spark-core:2.6.0'
-    compile 'org.projectlombok:lombok:1.16.16'
     testCompile 'junit:junit:4.12'
 }
 
