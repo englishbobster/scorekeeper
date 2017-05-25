@@ -11,14 +11,6 @@ public class FootballMatch {
     private int awayScore;
     private boolean fullTime;
 
-    public int getHomeScore() {
-        return homeScore;
-    }
-
-    public int getAwayScore() {
-        return awayScore;
-    }
-
     private FootballMatch(ZonedDateTime matchTime, String arena, String homeTeam, String awayTeam) {
         this.matchTime = matchTime;
         this.arena = arena;
@@ -27,6 +19,14 @@ public class FootballMatch {
         this.homeScore = 0;
         this.awayScore = 0;
         this.fullTime = false;
+    }
+
+    public int getHomeScore() {
+        return homeScore;
+    }
+
+    public int getAwayScore() {
+        return awayScore;
     }
 
     public static MatcherBuilder builder() {
@@ -45,6 +45,27 @@ public class FootballMatch {
         this.homeScore = homeScore;
         this.awayScore = awayScore;
         this.fullTime = true;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof FootballMatch)) {
+            return false;
+        } else {
+            FootballMatch that = (FootballMatch) obj;
+            if (this.matchTime.equals(that.matchTime)
+                    && this.homeTeam.equals(that.homeTeam)
+                    && this.awayTeam.equals(that.awayTeam)) {
+                return true;
+            }
+            return false;
+        }
     }
 
     public static class MatcherBuilder {
