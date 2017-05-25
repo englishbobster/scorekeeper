@@ -12,16 +12,16 @@ import static org.junit.Assert.assertThat;
 
 public class FootballMatchTest {
 
-    public static final String HOMETEAM = "Brazil";
-    public static final String AWAYTEAM = "France";
-    public static final String SCORE_STRING = HOMETEAM + " 0 - 0 " + AWAYTEAM;
+    private static final String HOME_TEAM = "Brazil";
+    private static final String AWAY_TEAM = "France";
+    private static final String SCORE_STRING = HOME_TEAM + " 0 - 0 " + AWAY_TEAM;
     private FootballMatch match;
 
     @Before
     public void setUp() {
         match = FootballMatch.builder()
                 .time(ZonedDateTime.now())
-                .teams(HOMETEAM, AWAYTEAM)
+                .teams(HOME_TEAM, AWAY_TEAM)
                 .arena("Rio").build();
     }
 
@@ -34,6 +34,19 @@ public class FootballMatchTest {
     public void new_match_has_nil_nil_score() {
         assertThat(match.getHomeScore(), is(0));
         assertThat(match.getAwayScore(), is(0));
+    }
+
+    @Test
+    public void new_match_is_not_played() {
+        assertThat(match.isFullTime(), is(false));
+    }
+
+    @Test
+    public void set_the_final_score() {
+        match.setFinalScore(1, 3);
+        assertThat(match.getHomeScore(), is(1));
+        assertThat(match.getAwayScore(), is(3));
+        assertThat(match.isFullTime(), is(true));
     }
 
     @Test

@@ -9,6 +9,7 @@ public class FootballMatch {
     private String awayTeam;
     private int homeScore;
     private int awayScore;
+    private boolean fullTime;
 
     public int getHomeScore() {
         return homeScore;
@@ -18,13 +19,14 @@ public class FootballMatch {
         return awayScore;
     }
 
-    private FootballMatch(ZonedDateTime matchTime, String arena, String homeTeam, String awayTeam, int homeScore, int awayScore) {
+    private FootballMatch(ZonedDateTime matchTime, String arena, String homeTeam, String awayTeam) {
         this.matchTime = matchTime;
         this.arena = arena;
         this.homeTeam = homeTeam;
         this.awayTeam = awayTeam;
-        this.homeScore = homeScore;
-        this.awayScore = awayScore;
+        this.homeScore = 0;
+        this.awayScore = 0;
+        this.fullTime = false;
     }
 
     public static MatcherBuilder builder() {
@@ -35,6 +37,16 @@ public class FootballMatch {
         return homeTeam + " " + homeScore + " - " + awayScore + " " + awayTeam;
     }
 
+    public boolean isFullTime() {
+        return fullTime;
+    }
+
+    public void setFinalScore(int homeScore, int awayScore) {
+        this.homeScore = homeScore;
+        this.awayScore = awayScore;
+        this.fullTime = true;
+    }
+
     public static class MatcherBuilder {
         private ZonedDateTime matchTime;
         private String arena;
@@ -42,7 +54,7 @@ public class FootballMatch {
         private String awayTeam;
 
         public FootballMatch build() {
-            return new FootballMatch(matchTime, arena, homeTeam, awayTeam, 0, 0);
+            return new FootballMatch(matchTime, arena, homeTeam, awayTeam);
         }
 
         public MatcherBuilder time(ZonedDateTime dateTime) {
