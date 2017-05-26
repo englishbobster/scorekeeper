@@ -1,6 +1,7 @@
 package stos.keeper.model;
 
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class FootballMatch {
     private ZonedDateTime matchTime;
@@ -60,12 +61,37 @@ public class FootballMatch {
         } else {
             FootballMatch that = (FootballMatch) obj;
             if (this.matchTime.equals(that.matchTime)
+                    && this.arena.equals(that.arena)
                     && this.homeTeam.equals(that.homeTeam)
                     && this.awayTeam.equals(that.awayTeam)) {
                 return true;
             }
             return false;
         }
+    }
+
+    @Override
+    public int hashCode() {
+        int result = 17;
+        result = 31 * result + matchTime.hashCode();
+        result = 31 * result + arena.hashCode();
+        result = 31 * result + homeTeam.hashCode();
+        result = 31 * result + awayTeam.hashCode();
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("(");
+        builder.append(matchTime.format(DateTimeFormatter.RFC_1123_DATE_TIME));
+        builder.append(") ");
+        builder.append(arena);
+        builder.append(" [");
+        builder.append(getFinalScoreAsString());
+        builder.append("]");
+        builder.append("\n");
+        return  builder.toString();
     }
 
     public static class MatcherBuilder {
