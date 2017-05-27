@@ -1,0 +1,81 @@
+### Group Matches
+
+1,Thu,"Jun 12, 2014",21:00,Brazil,,,Croatia,Sao Paulo, A
+2,Fri,"Jun 13, 2014",17:00,Mexico,,,Cameroon,Natal, A
+3,Fri,"Jun 13, 2014",20:00,Spain,,,Netherlands,Salvador,B
+4,Fri,"Jun 13, 2014",23:00,Chile,,,Australia,Curitiba,B
+5,Sat,"Jun 14, 2014",17:00,Colombia,,,Greece,Belo Horizonte,C
+6,Sun,"Jun 15, 2014",2:00,Côte d'Ivoire,,,Japan,Recife,C
+7,Sat,"Jun 14, 2014",20:00,Uruguay,,,Costa Rica,Fortaleza,D
+8,Sat,"Jun 14, 2014",23:00,England,,,Italy,Manaus,D
+9,Sun,"Jun 15, 2014",17:00,Switzerland,,,Ecuador,Brasilia,E
+10,Sun,"Jun 15, 2014",20:00,France,,,Honduras,Porto Alegre,E
+11,Sun,"Jun 15, 2014",23:00,Argentina,,,Bosnia-Herzegovina,Rio De Janeiro,F
+12,Mon,"Jun 16, 2014",17:00,Germany,,,Portugal,Salvador,G
+13,Mon,"Jun 16, 2014",20:00,Iran,,,Nigeria,Curitiba,F
+14,Mon,"Jun 16, 2014",23:00,Ghana,,,USA,Natal,G
+15,Tue,"Jun 17, 2014",17:00,Belgium,,,Algeria,Belo Horizonte,H
+16,Tue,"Jun 17, 2014",20:00,Brazil,,,Mexico,Fortaleza,A
+17,Tue,"Jun 17, 2014",23:00,Russia,,,Korea Republic,Cuiaba,H
+18,Wed,"Jun 18, 2014",17:00,Australia,,,Netherlands,Porto Alegre,B
+19,Wed,"Jun 18, 2014",23:00,Cameroon,,,Croatia,Manaus,A
+20,Wed,"Jun 18, 2014",20:00,Spain,,,Chile,Rio De Janeiro,B
+21,Thu,"Jun 19, 2014",17:00,Colombia,,,Côte d'Ivoire,Brasilia,C
+22,Thu,"Jun 19, 2014",20:00,Uruguay,,,England,Sao Paulo,D
+23,Thu,"Jun 19, 2014",23:00,Japan,,,Greece,Natal,C
+24,Fri,"Jun 20, 2014",17:00,Italy,,,Costa Rica,Recife,D
+25,Fri,"Jun 20, 2014",20:00,Switzerland,,,France,Salvador,E
+26,Fri,"Jun 20, 2014",23:00,Honduras,,,Ecuador,Curitiba,E
+27,Sat,"Jun 21, 2014",17:00,Argentina,,,Iran,Belo Horizonte,F
+28,Sat,"Jun 21, 2014",20:00,Germany,,,Ghana,Fortaleza,G
+29,Sat,"Jun 21, 2014",23:00,Nigeria,,,Bosnia-Herzegovina,Cuiaba,F
+30,Sun,"Jun 22, 2014",20:00,Korea Republic,,,Algeria,Porto Alegre,H
+31,Sun,"Jun 22, 2014",23:00,USA,,,Portugal,Manaus,G
+32,Sun,"Jun 22, 2014",17:00,Belgium,,,Russia,Rio De Janeiro,H
+33,Mon,"Jun 23, 2014",17:00,Australia,,,Spain,Curitiba,B
+34,Mon,"Jun 23, 2014",17:00,Netherlands,,,Chile,Sao Paulo,B
+35,Mon,"Jun 23, 2014",21:00,Cameroon,,,Brazil,Brasilia,A
+36,Mon,"Jun 23, 2014",21:00,Croatia,,,Mexico,Recife,A
+37,Tue,"Jun 24, 2014",17:00,Italy,,,Uruguay,Natal,D
+38,Tue,"Jun 24, 2014",17:00,Costa Rica,,,England,Belo Horizonte,D
+39,Tue,"Jun 24, 2014",21:00,Japan,,,Colombia,Cuiaba,C
+40,Tue,"Jun 24, 2014",21:00,Greece,,,Côte d'Ivoire,Fortaleza,C
+41,Wed,"Jun 25, 2014",17:00,Nigeria,,,Argentina,Porto Alegre,F
+42,Wed,"Jun 25, 2014",17:00,Bosnia-Herzegovina,,,Iran,Salvador,F
+43,Wed,"Jun 25, 2014",21:00,Honduras,,,Switzerland,Manaus,E
+44,Wed,"Jun 25, 2014",21:00,Ecuador,,,France,Rio De Janeiro,E
+45,Thu,"Jun 26, 2014",17:00,USA,,,Germany,Recife,G
+46,Thu,"Jun 26, 2014",17:00,Portugal,,,Ghana,BrasiliaG,
+47,Thu,"Jun 26, 2014",21:00,Korea Republic,,,Belgium,Sao Paulo,H
+48,Thu,"Jun 26, 2014",21:00,Algeria,,,Russia,Curitiba,H
+
+###Round of 16
+
+49,Sat,"Jun 28, 2014",17:00,WA,,,RB,Belo Horizonte
+50,Sat,"Jun 28, 2014",21:00,WC,,,RD,Rio De Janeiro
+51,Sun,"Jun 29, 2014",17:00,WB,,,RA,Fortaleza
+52,Sun,"Jun 29, 2014",21:00,WD,,,RC,Recife
+53,Mon,"Jun 30, 2014",17:00,WE,,,RF,Brasilia
+54,Mon,"Jun 30, 2014",21:00,WG,,,RH,Porto Alegre
+55,Tue,"Jul 1, 2014",17:00,WF,,,RE,Sao Paulo
+56,Tue,"Jul 1, 2014",21:00,WH,,,RG,Salvador
+
+###Quarterfinals
+
+57,Fri,"Jul 4, 2014",21:00,W49,,,W50,Fortaleza
+58,Fri,"Jul 4, 2014",17:00,W53,,,W54,Rio De Janeiro
+59,Sat,"Jul 5, 2014",21:00,W51,,,W52,Salvador
+60,Sat,"Jul 5, 2014",17:00,W55,,,W56,Brasilia
+
+###Semi-Finals
+
+61,Tue,"Jul 8, 2014",21:00,W57,,,W58,Belo Horizonte
+62,Wed,"Jul 9, 2014",21:00,W59,,,W60,Sao Paulo
+
+###Third-Place Play-Off
+
+63,Sat,"Jul 12, 2014",21:00,L61,,,L62,Brasilia
+
+###Final
+
+64,Sun,"Jul 13, 2014",20:00,W61,,,W62,Rio De Janeiro
