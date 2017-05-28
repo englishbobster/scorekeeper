@@ -27,7 +27,7 @@ public class MatchLoaderTest {
             writer.newLine();
             writer.write("2,Fri,\"Jun 13, 2014\",17:00,Mexico,,,Cameroon,Natal, A");
             writer.newLine();
-            writer.write("3,Fri,\"Jun 13, 2014\",20:00,Spain,,,Netherlands,Salvador,B");
+            writer.write("3, Fri,\"Jun 13, 2014\",20:00,Spain,0,0,Netherlands,Salvador,B");
             writer.newLine();
             writer.flush();
         }

@@ -38,23 +38,30 @@ public class FootballMatchTest {
         match = FootballMatch.builder()
                 .time(now)
                 .teams(HOME_TEAM, AWAY_TEAM)
+                .matchType(MatchType.GROUPGAME)
+                .group(Group.A)
                 .arena(ARENA_NAME_RIO).build();
 
         match_played = FootballMatch.builder()
                 .time(now)
                 .teams(HOME_TEAM, AWAY_TEAM)
+                .matchType(MatchType.GROUPGAME)
+                .group(Group.A)
                 .arena(ARENA_NAME_RIO).build();
         match_played.setFinalScore(4, 1);
 
         replayed_match = FootballMatch.builder()
                 .time(now)
                 .teams(HOME_TEAM, AWAY_TEAM)
+                .matchType(MatchType.GROUPGAME)
+                .group(Group.A)
                 .arena(ARENA_NAME_RIO).build();
         replayed_match.setFinalScore(2, 2);
 
         another_match = FootballMatch.builder()
                 .time(now)
                 .teams(HOME_TEAM_ENGLAND, HOME_TEAM_CAMEROON)
+                .matchType(MatchType.ROUND16)
                 .arena(ARENA_NAME_WEMBLEY).build();
     }
 
@@ -72,6 +79,11 @@ public class FootballMatchTest {
     @Test
     public void new_match_is_not_played() {
         assertThat(match.isFullTime(), is(false));
+    }
+
+    @Test
+    public void match_is_played() {
+        assertThat(match_played.isFullTime(), is(true));
     }
 
     @Test
@@ -126,4 +138,20 @@ public class FootballMatchTest {
     public void hashcode_different_for_unequal_objects() {
         assertThat(match.hashCode(), is(not(equalTo(another_match.hashCode()))));
     }
+
+    @Test
+    public void match_has_match_type() {
+        assertThat(match.getMatchType(), is(MatchType.GROUPGAME));
+    }
+
+    @Test
+    public void when_group_game_group_has_value() {
+        assertThat(match.getGroup(), is(Group.A));
+    }
+
+    @Test
+    public void when_not_group_game_group_has_value_na() {
+        assertThat(another_match.getGroup(), is(Group.NA));
+    }
+
 }
