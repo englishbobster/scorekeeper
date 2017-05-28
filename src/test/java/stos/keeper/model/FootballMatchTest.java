@@ -18,16 +18,23 @@ public class FootballMatchTest {
 
     private static final String HOME_TEAM = "Brazil";
     private static final String AWAY_TEAM = "France";
-    private static final String SCORE_STRING = HOME_TEAM + " 0 - 0 " + AWAY_TEAM;
+    private static final String HOME_TEAM_ENGLAND = "England";
+    private static final String AWAY_TEAM_CAMEROON = "Cameroon";
+    private static final String SCORE_STRING_GROUP = HOME_TEAM + " 0 - 0 " + AWAY_TEAM;
+    private static final String SCORE_STRING_OTHER = HOME_TEAM_ENGLAND + " 0 - 0 " + AWAY_TEAM_CAMEROON;
     private static final String SCORE_STRING_FINAL = HOME_TEAM + " 1 - 3 " + AWAY_TEAM;
     private static final ZonedDateTime now = ZonedDateTime.now();
     private static final String DATE_STRING = now.format(DateTimeFormatter.RFC_1123_DATE_TIME);
     private static final String ARENA_NAME_RIO = "Rio";
     private static final String ARENA_NAME_WEMBLEY = "Wembley";
-    private static final String HOME_TEAM_ENGLAND = "England";
-    private static final String HOME_TEAM_CAMEROON = "Cameroon";
-    private static final String EXPECTED_TO_STRING =
-            "(" + DATE_STRING + ") " + ARENA_NAME_RIO + " [" + SCORE_STRING + "]\n";
+    private static final String GAME_INFO = "Group A";
+    private static final String GAME_INFO_OTHER = "Round of 16";
+    private static final String EXPECTED_TO_STRING_FOR_GROUP_GAME =
+            "(" + DATE_STRING + ") " + ARENA_NAME_RIO + ", " + GAME_INFO + ", [" + SCORE_STRING_GROUP + "]\n";
+
+    private static final String EXPECTED_TO_STRING_FOR_OTHER_GAME =
+            "(" + DATE_STRING + ") " + ARENA_NAME_WEMBLEY + ", " + GAME_INFO_OTHER + ", [" + SCORE_STRING_OTHER + "]\n";
+
     private FootballMatch match;
     private FootballMatch match_played;
     private FootballMatch another_match;
@@ -60,7 +67,7 @@ public class FootballMatchTest {
 
         another_match = FootballMatch.builder()
                 .time(now)
-                .teams(HOME_TEAM_ENGLAND, HOME_TEAM_CAMEROON)
+                .teams(HOME_TEAM_ENGLAND, AWAY_TEAM_CAMEROON)
                 .matchType(MatchType.ROUND16)
                 .arena(ARENA_NAME_WEMBLEY).build();
     }
@@ -97,12 +104,17 @@ public class FootballMatchTest {
 
     @Test
     public void formatted_string_for_score() {
-        assertThat(match.getFinalScoreAsString(), is(SCORE_STRING));
+        assertThat(match.getFinalScoreAsString(), is(SCORE_STRING_GROUP));
     }
 
     @Test
     public void to_string_expected() {
-        assertThat(match.toString(), is(EXPECTED_TO_STRING));
+        assertThat(match.toString(), is(EXPECTED_TO_STRING_FOR_GROUP_GAME));
+    }
+
+    @Test
+    public void to_string_expected_other() {
+        assertThat(another_match.toString(), is(EXPECTED_TO_STRING_FOR_OTHER_GAME));
     }
 
     @Test

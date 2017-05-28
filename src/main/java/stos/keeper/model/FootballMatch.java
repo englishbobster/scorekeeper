@@ -99,11 +99,21 @@ public class FootballMatch {
         builder.append(matchTime.format(DateTimeFormatter.RFC_1123_DATE_TIME));
         builder.append(") ");
         builder.append(arena);
-        builder.append(" [");
+        builder.append(", ");
+        builder.append(gameInfoAsString());
+        builder.append(", [");
         builder.append(getFinalScoreAsString());
         builder.append("]");
         builder.append("\n");
         return  builder.toString();
+    }
+
+    private String gameInfoAsString() {
+        if (matchType == MatchType.GROUPGAME) {
+            return matchType.toString() + " " + group.toString();
+        } else {
+            return matchType.toString();
+        }
     }
 
     public MatchType getMatchType() {
