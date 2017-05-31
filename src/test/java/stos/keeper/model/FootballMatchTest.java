@@ -165,5 +165,4 @@ public class FootballMatchTest {
     public void when_not_group_game_group_has_value_na() {
         assertThat(another_match.getGroup(), is(Group.NA));
     }
-
 }
