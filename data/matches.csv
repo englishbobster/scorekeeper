@@ -45,37 +45,37 @@
 43,Wed,"Jun 25, 2014",21:00,Honduras,,,Switzerland,Manaus,E
 44,Wed,"Jun 25, 2014",21:00,Ecuador,,,France,Rio De Janeiro,E
 45,Thu,"Jun 26, 2014",17:00,USA,,,Germany,Recife,G
-46,Thu,"Jun 26, 2014",17:00,Portugal,,,Ghana,BrasiliaG,
+46,Thu,"Jun 26, 2014",17:00,Portugal,,,Ghana,Brasilia,G
 47,Thu,"Jun 26, 2014",21:00,Korea Republic,,,Belgium,Sao Paulo,H
 48,Thu,"Jun 26, 2014",21:00,Algeria,,,Russia,Curitiba,H
 
 ###Round of 16
 
-49,Sat,"Jun 28, 2014",17:00,WA,,,RB,Belo Horizonte
-50,Sat,"Jun 28, 2014",21:00,WC,,,RD,Rio De Janeiro
-51,Sun,"Jun 29, 2014",17:00,WB,,,RA,Fortaleza
-52,Sun,"Jun 29, 2014",21:00,WD,,,RC,Recife
-53,Mon,"Jun 30, 2014",17:00,WE,,,RF,Brasilia
-54,Mon,"Jun 30, 2014",21:00,WG,,,RH,Porto Alegre
-55,Tue,"Jul 1, 2014",17:00,WF,,,RE,Sao Paulo
-56,Tue,"Jul 1, 2014",21:00,WH,,,RG,Salvador
+49,Sat,"Jun 28, 2014",17:00,WA,,,RB,Belo Horizonte,ROUND16
+50,Sat,"Jun 28, 2014",21:00,WC,,,RD,Rio De Janeiro,ROUND16
+51,Sun,"Jun 29, 2014",17:00,WB,,,RA,Fortaleza,ROUND16
+52,Sun,"Jun 29, 2014",21:00,WD,,,RC,Recife,ROUND16
+53,Mon,"Jun 30, 2014",17:00,WE,,,RF,Brasilia,ROUND16
+54,Mon,"Jun 30, 2014",21:00,WG,,,RH,Porto Alegre,ROUND16
+55,Tue,"Jul 1, 2014",17:00,WF,,,RE,Sao Paulo,ROUND16
+56,Tue,"Jul 1, 2014",21:00,WH,,,RG,Salvador,ROUND16
 
 ###Quarterfinals
 
-57,Fri,"Jul 4, 2014",21:00,W49,,,W50,Fortaleza
-58,Fri,"Jul 4, 2014",17:00,W53,,,W54,Rio De Janeiro
-59,Sat,"Jul 5, 2014",21:00,W51,,,W52,Salvador
-60,Sat,"Jul 5, 2014",17:00,W55,,,W56,Brasilia
+57,Fri,"Jul 4, 2014",21:00,W49,,,W50,Fortaleza,QUARTERS
+58,Fri,"Jul 4, 2014",17:00,W53,,,W54,Rio De Janeiro,QUARTERS
+59,Sat,"Jul 5, 2014",21:00,W51,,,W52,Salvador,QUARTERS
+60,Sat,"Jul 5, 2014",17:00,W55,,,W56,Brasilia,QUARTERS
 
 ###Semi-Finals
 
-61,Tue,"Jul 8, 2014",21:00,W57,,,W58,Belo Horizonte
-62,Wed,"Jul 9, 2014",21:00,W59,,,W60,Sao Paulo
+61,Tue,"Jul 8, 2014",21:00,W57,,,W58,Belo Horizonte,SEMIS
+62,Wed,"Jul 9, 2014",21:00,W59,,,W60,Sao Paulo,SEMIS
 
 ###Third-Place Play-Off
 
-63,Sat,"Jul 12, 2014",21:00,L61,,,L62,Brasilia
+63,Sat,"Jul 12, 2014",21:00,L61,,,L62,Brasilia,THIRDPLACE
 
 ###Final
 
-64,Sun,"Jul 13, 2014",20:00,W61,,,W62,Rio De Janeiro
+64,Sun,"Jul 13, 2014",20:00,W61,,,W62,Rio De Janeiro,FINAL

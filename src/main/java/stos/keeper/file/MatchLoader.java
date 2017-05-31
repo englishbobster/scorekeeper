@@ -13,6 +13,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,8 +54,20 @@ public class MatchLoader {
         List<String> stringList = splitLine(line.trim());
         ZonedDateTime matchTime = createMatchTime(stringList.get(2), stringList.get(3));
 
+        MatchType matchType;
+        Group group;
+
+        if(isInEnum(stringList.get(9), Group.class)){
+        //if (Group.valueOf(stringList.get(9)) != Group.NA) {
+            matchType = MatchType.GROUPGAME;
+            group = Group.valueOf(stringList.get(9));
+        } else {
+            matchType = MatchType.valueOf(stringList.get(9));
+            group = Group.NA;
+        }
+
         return Optional.of(FootballMatch.builder().time(matchTime)
-                .matchType(MatchType.FINAL).group(Group.NA).arena(stringList.get(8))
+                .matchType(matchType).group(group).arena(stringList.get(8))
                 .teams(stringList.get(4), stringList.get(7)).build());
     }
 
@@ -98,5 +111,9 @@ public class MatchLoader {
         }
         parsedStrings.add(stringValue.toString().trim());
         return parsedStrings;
+    }
+
+    private boolean isInEnum(String value, Class<Group> enumClass) {
+        return Arrays.stream(enumClass.getEnumConstants()).anyMatch(e -> e.name().equals(value));
     }
 }
