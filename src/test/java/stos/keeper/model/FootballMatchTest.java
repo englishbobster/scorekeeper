@@ -16,6 +16,8 @@ import static org.junit.Assert.assertTrue;
 
 public class FootballMatchTest {
 
+    private static final int MATCH_ID_1 = 1;
+    private static final int MATCH_ID_2 = 2;
     private static final String HOME_TEAM = "Brazil";
     private static final String AWAY_TEAM = "France";
     private static final String HOME_TEAM_ENGLAND = "England";
@@ -29,10 +31,10 @@ public class FootballMatchTest {
     private static final String ARENA_NAME_WEMBLEY = "Wembley";
     private static final String GAME_INFO = "Group A";
     private static final String GAME_INFO_OTHER = "Round of 16";
-    private static final String EXPECTED_TO_STRING_FOR_GROUP_GAME =
+    private static final String EXPECTED_TO_STRING_FOR_GROUP_GAME = "MatchId: " + MATCH_ID_1 + " " +
             "(" + DATE_STRING + ") " + ARENA_NAME_RIO + ", " + GAME_INFO + ", [" + SCORE_STRING_GROUP + "]\n";
 
-    private static final String EXPECTED_TO_STRING_FOR_OTHER_GAME =
+    private static final String EXPECTED_TO_STRING_FOR_OTHER_GAME = "MatchId: " + MATCH_ID_2 + " " +
             "(" + DATE_STRING + ") " + ARENA_NAME_WEMBLEY + ", " + GAME_INFO_OTHER + ", [" + SCORE_STRING_OTHER + "]\n";
 
     private FootballMatch match;
@@ -42,14 +44,14 @@ public class FootballMatchTest {
 
     @Before
     public void setUp() {
-        match = FootballMatch.builder()
+        match = FootballMatch.builder().id(1)
                 .time(now)
                 .teams(HOME_TEAM, AWAY_TEAM)
                 .matchType(MatchType.GROUPGAME)
                 .group(Group.A)
                 .arena(ARENA_NAME_RIO).build();
 
-        match_played = FootballMatch.builder()
+        match_played = FootballMatch.builder().id(1)
                 .time(now)
                 .teams(HOME_TEAM, AWAY_TEAM)
                 .matchType(MatchType.GROUPGAME)
@@ -57,7 +59,7 @@ public class FootballMatchTest {
                 .arena(ARENA_NAME_RIO).build();
         match_played.setFinalScore(4, 1);
 
-        replayed_match = FootballMatch.builder()
+        replayed_match = FootballMatch.builder().id(1)
                 .time(now)
                 .teams(HOME_TEAM, AWAY_TEAM)
                 .matchType(MatchType.GROUPGAME)
@@ -65,7 +67,7 @@ public class FootballMatchTest {
                 .arena(ARENA_NAME_RIO).build();
         replayed_match.setFinalScore(2, 2);
 
-        another_match = FootballMatch.builder()
+        another_match = FootballMatch.builder().id(2)
                 .time(now)
                 .teams(HOME_TEAM_ENGLAND, AWAY_TEAM_CAMEROON)
                 .matchType(MatchType.ROUND16)

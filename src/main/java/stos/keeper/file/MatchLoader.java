@@ -66,7 +66,7 @@ public class MatchLoader {
             group = Group.NA;
         }
 
-        return Optional.of(FootballMatch.builder().time(matchTime)
+        return Optional.of(FootballMatch.builder().id(Integer.parseInt(stringList.get(0))).time(matchTime)
                 .matchType(matchType).group(group).arena(stringList.get(8))
                 .teams(stringList.get(4), stringList.get(7)).build());
     }

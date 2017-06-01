@@ -4,6 +4,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class FootballMatch {
+    private int id;
     private ZonedDateTime matchTime;
     private String arena;
     private String homeTeam;
@@ -14,7 +15,8 @@ public class FootballMatch {
     private MatchType matchType;
     private Group group;
 
-    private FootballMatch(ZonedDateTime matchTime, String arena, String homeTeam, String awayTeam, MatchType matchType, Group group) {
+    private FootballMatch(int id, ZonedDateTime matchTime, String arena, String homeTeam, String awayTeam, MatchType matchType, Group group) {
+        this.id = id;
         this.matchTime = matchTime;
         this.arena = arena;
         this.homeTeam = homeTeam;
@@ -68,7 +70,8 @@ public class FootballMatch {
             return false;
         } else {
             FootballMatch that = (FootballMatch) obj;
-            if (this.matchTime.equals(that.matchTime)
+            if (this.id == that.id
+                    && this.matchTime.equals(that.matchTime)
                     && this.arena.equals(that.arena)
                     && this.homeTeam.equals(that.homeTeam)
                     && this.awayTeam.equals(that.awayTeam)
@@ -83,6 +86,7 @@ public class FootballMatch {
     @Override
     public int hashCode() {
         int result = 17;
+        result = 31 * result + id;
         result = 31 * result + matchTime.hashCode();
         result = 31 * result + arena.hashCode();
         result = 31 * result + homeTeam.hashCode();
@@ -95,6 +99,7 @@ public class FootballMatch {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
+        builder.append("MatchId: " + id + " ");
         builder.append("(");
         builder.append(matchTime.format(DateTimeFormatter.RFC_1123_DATE_TIME));
         builder.append(") ");
@@ -125,6 +130,7 @@ public class FootballMatch {
     }
 
     public static class MatcherBuilder {
+        private int id;
         private ZonedDateTime matchTime;
         private String arena;
         private String homeTeam;
@@ -133,7 +139,12 @@ public class FootballMatch {
         private Group group;
 
         public FootballMatch build() {
-            return new FootballMatch(matchTime, arena, homeTeam, awayTeam, matchType, group);
+            return new FootballMatch(id, matchTime, arena, homeTeam, awayTeam, matchType, group);
+        }
+
+        public MatcherBuilder id(int id) {
+            this.id = id;
+            return this;
         }
 
         public MatcherBuilder time(ZonedDateTime dateTime) {

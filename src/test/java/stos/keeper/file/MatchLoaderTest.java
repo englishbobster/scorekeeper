@@ -72,7 +72,7 @@ public class MatchLoaderTest {
         Optional<FootballMatch> matchOptional = matchLoader.parseLine(MATCH_LINE_1);
         FootballMatch footballMatch = matchOptional.orElse(null);
         ZonedDateTime matchTime = ZonedDateTime.of(2014, 6, 12, 21, 0, 0, 0, ZoneId.systemDefault());
-        FootballMatch expectedMatch = FootballMatch.builder().time(matchTime).arena("Sao Paulo")
+        FootballMatch expectedMatch = FootballMatch.builder().id(1).time(matchTime).arena("Sao Paulo")
                 .matchType(MatchType.GROUPGAME).group(Group.A)
                 .teams("Brazil", "Croatia").build();
         assertThat(footballMatch, is(equalTo(expectedMatch)));
