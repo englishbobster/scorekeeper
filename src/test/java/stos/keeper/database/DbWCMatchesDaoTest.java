@@ -1,23 +1,30 @@
 package stos.keeper.database;
 
 import org.junit.Test;
+import stos.keeper.model.FootballMatch;
 
-import java.sql.Connection;
+import java.util.Optional;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
+import static org.hamcrest.MatcherAssert.assertThat;
+
 
 public class DbWCMatchesDaoTest {
 
-    private Connection connection = mock(Connection.class);
-
     @Test
-    public void construct_DAO_with_data_source() {
-        DataSource dataSource = () -> connection;
-        DbWCMatchesDao dbWCMatchesDao = new DbWCMatchesDao(dataSource);
-        assertThat(dbWCMatchesDao, is(notNullValue()));
+    public void delete_a_match_from_planned_matches() {
+        DataSource dataSource = getDataSource();
+        DbWCMatchesDao dao = new DbWCMatchesDao(dataSource);
+
+        dao.deleteMatchById(1);
+        Optional<FootballMatch> match = dao.findMatchById(1);
+
+        assertThat(match, is(equalTo(Optional.empty())));
+    }
+
+    private DataSource getDataSource() {
+        return new PostgresDataSourceImpl();
     }
 
 }

@@ -6,4 +6,5 @@ public interface DataSource {
 
     Connection getConnection();
 
+    boolean closeConnection();
 }
