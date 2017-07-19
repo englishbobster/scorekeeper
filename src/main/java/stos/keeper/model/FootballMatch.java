@@ -129,6 +129,26 @@ public class FootballMatch {
         return group;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public ZonedDateTime getMatchTime() {
+        return matchTime;
+    }
+
+    public String getArena() {
+        return arena;
+    }
+
+    public String getHomeTeam() {
+        return homeTeam;
+    }
+
+    public String getAwayTeam() {
+        return awayTeam;
+    }
+
     public static class MatcherBuilder {
         private int id;
         private ZonedDateTime matchTime;

@@ -6,7 +6,8 @@ public enum MatchType {
     QUARTERS("Quarter-finals"),
     SEMIS("Semi-finals"),
     THIRDPLACE("Third place match"),
-    FINAL("Final");
+    FINAL("Final"),
+    NA("Not applicable");
 
     private final String printableName;
 
