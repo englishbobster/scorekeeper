@@ -9,14 +9,15 @@ import stos.keeper.model.MatchType;
 import java.sql.*;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Optional;
 
 public class DbWCMatchesDao {
 
-    public static final String MATCHES_TABLE_NAME = "planned_matches";
-    public static final String DELETE_BY_ID = "DELETE FROM " + MATCHES_TABLE_NAME + " WHERE id=?";
-    public static final String SELECT_BY_ID = "SELECT * FROM " + MATCHES_TABLE_NAME + " WHERE id=?";
-    public static final String INSERT_MATCH = "INSERT INTO " + MATCHES_TABLE_NAME + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String MATCHES_TABLE_NAME = "planned_matches";
+    private static final String DELETE_BY_ID = "DELETE FROM " + MATCHES_TABLE_NAME + " WHERE id= ?";
+    private static final String SELECT_BY_ID = "SELECT * FROM " + MATCHES_TABLE_NAME + " WHERE id= ?";
+    private static final String INSERT_MATCH = "INSERT INTO " + MATCHES_TABLE_NAME + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     private Logger LOG = LoggerFactory.getLogger(DbWCMatchesDao.class);
     private DataSource dataSource;
@@ -60,6 +61,30 @@ public class DbWCMatchesDao {
         }
     }
 
+    public boolean addMatch(FootballMatch match) {
+        Connection connection = dataSource.getConnection();
+        try {
+            PreparedStatement statement = connection.prepareStatement(INSERT_MATCH);
+            StatementConstructor statementConstructor = new StatementConstructor();
+            List<Object> statementParameters = statementConstructor.getParametersFor("addMatch", match);
+            for (int index = 1; index <= statementParameters.size(); index++) {
+                try {
+                    statement.setObject(index, statementParameters.get(index - 1));
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            return statement.execute();
+
+        } catch (SQLException e) {
+            LOG.info("SQL exception {} with error code {} when inserting match", e.getMessage(), e.getErrorCode());
+            return false;
+        }
+        finally {
+            dataSource.closeConnection();
+        }
+    }
+
     private Optional<FootballMatch> footballMatchFrom(ResultSet match) {
         try {
             return Optional.of(FootballMatch.builder().id(match.getInt("id"))
@@ -73,34 +98,5 @@ public class DbWCMatchesDao {
             LOG.info("SQL exception {} with error code {} when building match from resultset", e.getMessage(), e.getErrorCode());
             return Optional.empty();
         }
-    }
-
-    public boolean addMatch(FootballMatch match) {
-        Connection connection = dataSource.getConnection();
-        try {
-            PreparedStatement statement = connection.prepareStatement(INSERT_MATCH);
-            statement.setInt(1, match.getId());
-            statement.setTimestamp(2,  sqlTimeStampFrom(match.getMatchTime()));
-            statement.setString(3, match.getArena());
-            statement.setString(4, match.getHomeTeam());
-            statement.setString(5, match.getAwayTeam());
-            statement.setInt(6, match.getHomeScore());
-            statement.setInt(7, match.getAwayScore());
-            statement.setBoolean(8, match.isFullTime());
-            statement.setString(9, match.getMatchType().name());
-            statement.setString(10, match.getGroup().name());
-            return statement.execute();
-
-        } catch (SQLException e) {
-            LOG.info("SQL exception {} with error code {} when inserting match", e.getMessage(), e.getErrorCode());
-            return false;
-        }
-        finally {
-            dataSource.closeConnection();
-        }
-    }
-
-    public static Timestamp sqlTimeStampFrom(ZonedDateTime matchTime) {
-        return Timestamp.from(matchTime.toInstant());
     }
 }
