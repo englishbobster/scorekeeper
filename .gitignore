@@ -2,3 +2,8 @@ build/
 out/
 .idea/
 .gradle/
+src/elm/elm-stuff/
+src/elm//elm.js
+src/elm/Main.js
+*.iml
+
