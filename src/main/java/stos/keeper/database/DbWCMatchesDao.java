@@ -68,16 +68,7 @@ public class DbWCMatchesDao {
             StatementConstructor statementConstructor = new StatementConstructor();
             List<Object> statementParameters = statementConstructor.getParametersFor("addMatch", match);
             PreparedStatement statement = connection.prepareStatement(INSERT_MATCH);
-
-            IntStream.range(0, statementParameters.size()).forEach(index -> {
-                try {
-                    statement.setObject((index + 1), statementParameters.get(index));
-                } catch (SQLException e) {
-                    LOG.info("SQL exception {} with error code {} when setting statement parameters.", e.getMessage(), e.getErrorCode());
-                }
-            });
-            return statement.execute();
-
+            return executeAddStatement(statementParameters, statement);
         } catch (SQLException e) {
             LOG.info("SQL exception {} with error code {} when inserting match.", e.getMessage(), e.getErrorCode());
             return false;
@@ -85,6 +76,17 @@ public class DbWCMatchesDao {
         finally {
             dataSource.closeConnection();
         }
+    }
+
+    private boolean executeAddStatement(List<Object> statementParameters, PreparedStatement statement) throws SQLException {
+        IntStream.range(0, statementParameters.size()).forEach(index -> {
+            try {
+                statement.setObject((index + 1), statementParameters.get(index));
+            } catch (SQLException e) {
+                LOG.info("SQL exception {} with error code {} when setting statement parameters.", e.getMessage(), e.getErrorCode());
+            }
+        });
+        return statement.execute();
     }
 
     private Optional<FootballMatch> footballMatchFrom(ResultSet match) {
