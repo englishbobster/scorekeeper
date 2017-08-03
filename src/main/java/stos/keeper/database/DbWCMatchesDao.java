@@ -11,6 +11,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.IntStream;
 
 public class DbWCMatchesDao {
 
@@ -33,7 +34,7 @@ public class DbWCMatchesDao {
             statement.setInt(1, id);
             return statement.execute();
         } catch (SQLException e) {
-            LOG.info("SQL exception {} with error code {} when deleting match by Id", e.getMessage(), e.getErrorCode());
+            LOG.info("SQL exception {} with error code {} when deleting match by Id.", e.getMessage(), e.getErrorCode());
             return false;
         } finally {
             dataSource.closeConnection();
@@ -53,7 +54,7 @@ public class DbWCMatchesDao {
             selectedMatchResultSet.close();
             return match;
         } catch (SQLException e) {
-            LOG.info("SQL exception {} with error code {} when finding match by Id", e.getMessage(), e.getErrorCode());
+            LOG.info("SQL exception {} with error code {} when finding match by Id.", e.getMessage(), e.getErrorCode());
             return Optional.empty();
         }
         finally {
@@ -64,20 +65,21 @@ public class DbWCMatchesDao {
     public boolean addMatch(FootballMatch match) {
         Connection connection = dataSource.getConnection();
         try {
-            PreparedStatement statement = connection.prepareStatement(INSERT_MATCH);
             StatementConstructor statementConstructor = new StatementConstructor();
             List<Object> statementParameters = statementConstructor.getParametersFor("addMatch", match);
-            for (int index = 1; index <= statementParameters.size(); index++) {
+            PreparedStatement statement = connection.prepareStatement(INSERT_MATCH);
+
+            IntStream.range(0, statementParameters.size()).forEach(index -> {
                 try {
-                    statement.setObject(index, statementParameters.get(index - 1));
+                    statement.setObject((index + 1), statementParameters.get(index));
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    LOG.info("SQL exception {} with error code {} when setting statement parameters.", e.getMessage(), e.getErrorCode());
                 }
-            }
+            });
             return statement.execute();
 
         } catch (SQLException e) {
-            LOG.info("SQL exception {} with error code {} when inserting match", e.getMessage(), e.getErrorCode());
+            LOG.info("SQL exception {} with error code {} when inserting match.", e.getMessage(), e.getErrorCode());
             return false;
         }
         finally {
@@ -95,7 +97,7 @@ public class DbWCMatchesDao {
                     .group(Group.valueOf(match.getString("group_id")))
                     .build());
         } catch (SQLException e) {
-            LOG.info("SQL exception {} with error code {} when building match from resultset", e.getMessage(), e.getErrorCode());
+            LOG.info("SQL exception {} with error code {} when building match from resultset.", e.getMessage(), e.getErrorCode());
             return Optional.empty();
         }
     }
