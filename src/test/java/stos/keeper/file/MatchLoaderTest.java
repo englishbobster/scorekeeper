@@ -33,6 +33,7 @@ public class MatchLoaderTest {
     private static final String WONKY_LINE = ",Fri, \"\", 20:00, Spain,,,Spain   , Rubbish";
     private static final String[] PARSED_WONKY_LINE = {"", "Fri", "", "20:00", "Spain", "", "", "Spain", "Rubbish"};
     private static final String TEST_FILE_NAME = "testCsv.csv";
+    public static final String NON_EXISTANT_FILE = "this_file_should_not_exist.txt";
 
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();
@@ -65,6 +66,13 @@ public class MatchLoaderTest {
         assertThat(matchRows.get(1).isFullTime(), is(false));
         assertThat(matchRows.get(2).getGroup(), is(Group.NA));
         assertThat(matchRows.get(2).getMatchType(), is(MatchType.FINAL));
+    }
+
+    @Test
+    (expected = RuntimeException.class)
+    public void fail_to_load_matches_from_file() {
+        matchLoader = new MatchLoader(NON_EXISTANT_FILE);
+        matchLoader.getFootballMatches();
     }
 
     @Test

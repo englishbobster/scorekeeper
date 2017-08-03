@@ -38,7 +38,8 @@ public class MatchLoader {
                 match.ifPresent(matches::add);
             }
         } catch (IOException e) {
-           //TODO: what to do if file not found or something wrong?
+            LOG.info("Failed to read file {} and load matches. Failed with error: {}", file, e.getMessage());
+            throw new RuntimeException("Unable to load base matches from file.");
         }
         return matches;
     }
