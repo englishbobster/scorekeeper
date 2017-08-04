@@ -1,1 +1,4 @@
 rootProject.name = 'scorekeeper'
+
+include ":server"
+include ":frontend"
