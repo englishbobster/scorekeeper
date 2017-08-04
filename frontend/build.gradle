@@ -1,3 +1,8 @@
 plugins {
     id 'org.mohme.gradle.elm-plugin' version '0.2.1'
 }
+
+elmMake {
+    buildDir = "${project(':server').projectDir}/src/main/resources/public"
+    targetModule = 'elm.html'
+}

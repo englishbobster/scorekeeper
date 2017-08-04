@@ -1,17 +1,26 @@
-apply plugin: 'application'
-
 plugins {
     id "org.flywaydb.flyway" version "4.2.0"
 }
+
+apply plugin: 'application'
 
 repositories {
     mavenCentral()
     jcenter()
 }
 
-flyway {
-    url = 'jdbc:postgresql://${psqlDbhost}:${psqlDbPort}/${dbName}'
-    user = psqlDbUser
+dependencies {
+    compile 'org.flywaydb:flyway-core:4.2.0'
+    compile 'org.postgresql:postgresql:42.1.3'
 }
+
+flyway {
+    url = "jdbc:postgresql://${psqlDbHost}:${psqlDbPort}/${dbName}"
+    user = psqlDbUser
+    password = psqlDbPassword
+
+    locations = ['filesystem:src/main/resources/db/migration']
+}
+
 mainClassName = 'App'
 
