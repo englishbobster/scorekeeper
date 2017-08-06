@@ -15,11 +15,6 @@ import java.util.stream.IntStream;
 
 public class DbWCMatchesDao {
 
-    private static final String MATCHES_TABLE_NAME = "planned_matches";
-    private static final String DELETE_BY_ID = "DELETE FROM " + MATCHES_TABLE_NAME + " WHERE id= ?";
-    private static final String SELECT_BY_ID = "SELECT * FROM " + MATCHES_TABLE_NAME + " WHERE id= ?";
-    private static final String INSERT_MATCH = "INSERT INTO " + MATCHES_TABLE_NAME + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
     private Logger LOG = LoggerFactory.getLogger(DbWCMatchesDao.class);
     private DataSource dataSource;
 
@@ -30,7 +25,9 @@ public class DbWCMatchesDao {
     public boolean deleteMatchById(int id) {
         Connection connection = dataSource.getConnection();
         try {
-            PreparedStatement statement = connection.prepareStatement(DELETE_BY_ID);
+            StatementDataObject deleteStatementData = PlannedMatchStatementDataConstructor
+                    .getStatementDataFor("deleteMatchById", Optional.empty());
+            PreparedStatement statement = connection.prepareStatement(deleteStatementData.getSqlStatement());
             statement.setInt(1, id);
             return statement.execute();
         } catch (SQLException e) {
@@ -44,20 +41,21 @@ public class DbWCMatchesDao {
     public Optional<FootballMatch> findMatchById(int id) {
         Connection connection = dataSource.getConnection();
         try {
-            PreparedStatement statement = connection.prepareStatement(SELECT_BY_ID);
+            StatementDataObject findStatementData = PlannedMatchStatementDataConstructor
+                    .getStatementDataFor("findMatchById", Optional.empty());
+            PreparedStatement statement = connection.prepareStatement(findStatementData.getSqlStatement());
             statement.setInt(1, id);
             ResultSet selectedMatchResultSet = statement.executeQuery();
-            Optional<FootballMatch> match = Optional.empty();
-            if(selectedMatchResultSet.next()) {
-                match = footballMatchFrom(selectedMatchResultSet);
+            Optional<FootballMatch> matchOptional = Optional.empty();
+            if (selectedMatchResultSet.next()) {
+                matchOptional = footballMatchFrom(selectedMatchResultSet);
             }
             selectedMatchResultSet.close();
-            return match;
+            return matchOptional;
         } catch (SQLException e) {
             LOG.info("SQL exception {} with error code {} when finding match by Id.", e.getMessage(), e.getErrorCode());
             return Optional.empty();
-        }
-        finally {
+        } finally {
             dataSource.closeConnection();
         }
     }
@@ -65,18 +63,18 @@ public class DbWCMatchesDao {
     public boolean addMatch(FootballMatch match) {
         Connection connection = dataSource.getConnection();
         try {
-            StatementConstructor statementConstructor = new StatementConstructor();
-            List<Object> statementParameters = statementConstructor.getParametersFor("addMatch", match);
-            PreparedStatement statement = connection.prepareStatement(INSERT_MATCH);
-            return executeAddStatement(statementParameters, statement);
+            StatementDataObject statementData = PlannedMatchStatementDataConstructor
+                    .getStatementDataFor("addMatch", Optional.of(match));
+            PreparedStatement statement = connection.prepareStatement(statementData.getSqlStatement());
+            return executeAddStatement(statementData.getParameters(), statement);
         } catch (SQLException e) {
             LOG.info("SQL exception {} with error code {} when inserting match.", e.getMessage(), e.getErrorCode());
             return false;
-        }
-        finally {
+        } finally {
             dataSource.closeConnection();
         }
     }
+
 
     private boolean executeAddStatement(List<Object> statementParameters, PreparedStatement statement) throws SQLException {
         IntStream.range(0, statementParameters.size()).forEach(index -> {
