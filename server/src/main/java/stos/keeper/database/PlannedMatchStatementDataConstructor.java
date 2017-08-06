@@ -14,6 +14,7 @@ class PlannedMatchStatementDataConstructor {
     private static final String DELETE_BY_ID = "DELETE FROM " + MATCHES_TABLE_NAME + " WHERE id= ?";
     private static final String SELECT_BY_ID = "SELECT * FROM " + MATCHES_TABLE_NAME + " WHERE id= ?";
     private static final String INSERT_MATCH = "INSERT INTO " + MATCHES_TABLE_NAME + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String COUNT_MATCHES = "SELECT COUNT(*) FROM " + MATCHES_TABLE_NAME;
 
     private static final List<Object> EMPTY_LIST = new ArrayList<>();
 
@@ -24,6 +25,9 @@ class PlannedMatchStatementDataConstructor {
         }
         if (transactionName.equals("findMatchById")) {
             return new StatementDataObject(SELECT_BY_ID, EMPTY_LIST);
+        }
+        if (transactionName.equals("countPlannedMatches")) {
+            return new StatementDataObject(COUNT_MATCHES, EMPTY_LIST);
         }
         if (matchOptional.isPresent()) {
             FootballMatch match = matchOptional.get();

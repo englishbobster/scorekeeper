@@ -22,6 +22,7 @@ public class PlannedMatchStatementDataConstructorTest {
     private static final String EXPECTED_DELETE = "DELETE FROM planned_matches WHERE id= ?";
     private static final String EXPECTED_SELECT = "SELECT * FROM planned_matches WHERE id= ?";
     private static final String EXPECTED_INSERT = "INSERT INTO planned_matches VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    public static final String EXPECTED_COUNT = "SELECT COUNT(*) FROM planned_matches";
 
     private FootballMatch match;
 
@@ -43,7 +44,8 @@ public class PlannedMatchStatementDataConstructorTest {
 
     @Test
     public void get_statement_data_for_inserting_a_match() {
-        StatementDataObject statementData = PlannedMatchStatementDataConstructor.getStatementDataFor("addMatch", Optional.of(match));
+        StatementDataObject statementData = PlannedMatchStatementDataConstructor
+                .getStatementDataFor("addMatch", Optional.of(match));
 
         List<Object> addMatchParams = statementData.getParameters();
         assertThat(addMatchParams.size(), is(10));
@@ -63,7 +65,8 @@ public class PlannedMatchStatementDataConstructorTest {
 
     @Test
     public void get_statement_data_for_deleting_a_match_by_id() throws Exception {
-        StatementDataObject statementData = PlannedMatchStatementDataConstructor.getStatementDataFor("deleteMatchById", Optional.of(match));
+        StatementDataObject statementData = PlannedMatchStatementDataConstructor
+                .getStatementDataFor("deleteMatchById", Optional.empty());
         List<Object> deleteMatchParams = statementData.getParameters();
 
         assertThat(deleteMatchParams.size(), is(0));
@@ -72,10 +75,21 @@ public class PlannedMatchStatementDataConstructorTest {
 
     @Test
     public void get_statement_data_for_finding_a_match_by_id() throws Exception {
-        StatementDataObject statementData = PlannedMatchStatementDataConstructor.getStatementDataFor("findMatchById", Optional.of(match));
+        StatementDataObject statementData = PlannedMatchStatementDataConstructor
+                .getStatementDataFor("findMatchById", Optional.empty());
         List<Object> findMatchParams = statementData.getParameters();
 
         assertThat(findMatchParams.size(), is(0));
         assertThat(statementData.getSqlStatement(), is(equalTo(EXPECTED_SELECT)));
+    }
+
+    @Test
+    public void get_statement_data_for_getting_planned_match_table_row_count() {
+        StatementDataObject statementData = PlannedMatchStatementDataConstructor
+                .getStatementDataFor("countPlannedMatches", Optional.empty());
+        List<Object> countMatchesParams = statementData.getParameters();
+
+        assertThat(countMatchesParams.size(), is(0));
+        assertThat(statementData.getSqlStatement(), is(equalTo(EXPECTED_COUNT)));
     }
 }

@@ -75,6 +75,27 @@ public class DbWCMatchesDao {
         }
     }
 
+    public int countPlannedMatchEntries() {
+        Connection connection = dataSource.getConnection();
+        int count = 0;
+        try {
+            StatementDataObject statementData = PlannedMatchStatementDataConstructor
+                    .getStatementDataFor("countPlannedMatches", Optional.empty());
+            PreparedStatement statement = connection.prepareStatement(statementData.getSqlStatement());
+            ResultSet countMatchResultSet = statement.executeQuery();
+            if (countMatchResultSet.next()) {
+                count = getPlannedMatchCountFrom(countMatchResultSet);
+            }
+            countMatchResultSet.close();
+            return count;
+
+        } catch (SQLException e) {
+            LOG.info("SQL exception {} with error code {} when counting planned matches.", e.getMessage(), e.getErrorCode());
+            return 0;
+        } finally {
+            dataSource.closeConnection();
+        }
+    }
 
     private boolean executeAddStatement(List<Object> statementParameters, PreparedStatement statement) throws SQLException {
         IntStream.range(0, statementParameters.size()).forEach(index -> {
@@ -100,5 +121,16 @@ public class DbWCMatchesDao {
             LOG.info("SQL exception {} with error code {} when building match from resultset.", e.getMessage(), e.getErrorCode());
             return Optional.empty();
         }
+    }
+
+    private int getPlannedMatchCountFrom(ResultSet countResult) {
+        int count = 0;
+        try {
+            count = countResult.getInt("count");
+        } catch (SQLException e) {
+            LOG.info("SQL exception {} with error code {} when building match from resultset.", e.getMessage(), e.getErrorCode());
+            return count;
+        }
+        return count;
     }
 }

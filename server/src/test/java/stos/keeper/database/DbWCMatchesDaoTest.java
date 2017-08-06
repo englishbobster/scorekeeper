@@ -45,6 +45,27 @@ public class DbWCMatchesDaoTest {
         assertThat(match, is(equalTo(Optional.empty())));
     }
 
+    @Test
+    public void count_matches_in_planned_matches_table() throws Exception {
+        DataSource dataSource = getDataSource();
+        DbWCMatchesDao dao = new DbWCMatchesDao(dataSource);
+
+        FootballMatch expectedMatch = FootballMatch.builder().id(1).time(ZonedDateTime.now())
+                .teams("HOME", "AWAY").group(Group.F).matchType(MatchType.GROUPGAME)
+                .arena("ARENA").build();
+
+        int currentCount = dao.countPlannedMatchEntries();
+
+        dao.addMatch(expectedMatch);
+        Optional<FootballMatch> fetchedMatch = dao.findMatchById(1);
+        assertThat(fetchedMatch.get(), is(equalTo(expectedMatch)));
+
+        assertThat(dao.countPlannedMatchEntries(), is(currentCount + 1));
+
+        dao.deleteMatchById(1);
+        assertThat(dao.countPlannedMatchEntries(), is(currentCount));
+    }
+
     private DataSource getDataSource() {
         return new PostgresDataSourceImpl();
     }
