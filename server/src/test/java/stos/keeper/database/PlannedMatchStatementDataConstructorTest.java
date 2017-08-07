@@ -23,6 +23,7 @@ public class PlannedMatchStatementDataConstructorTest {
     private static final String EXPECTED_SELECT = "SELECT * FROM planned_matches WHERE id= ?";
     private static final String EXPECTED_INSERT = "INSERT INTO planned_matches VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     public static final String EXPECTED_COUNT = "SELECT COUNT(*) FROM planned_matches";
+    public static final String EXPECTED_SELECT_ALL = "SELECT * FROM planned_matches";
 
     private FootballMatch match;
 
@@ -91,5 +92,16 @@ public class PlannedMatchStatementDataConstructorTest {
 
         assertThat(countMatchesParams.size(), is(0));
         assertThat(statementData.getSqlStatement(), is(equalTo(EXPECTED_COUNT)));
+    }
+
+    @Test
+    public void get_statement_data_for_fetching_all_planned_matches() {
+        StatementDataObject statementData = PlannedMatchStatementDataConstructor
+                .getStatementDataFor("fetchAllPlannedMatches", Optional.empty());
+        List<Object> fetchAllMatchParams = statementData.getParameters();
+
+        assertThat(fetchAllMatchParams.size(), is(0));
+        assertThat(statementData.getSqlStatement(), is(equalTo(EXPECTED_SELECT_ALL)));
+
     }
 }

@@ -9,6 +9,8 @@ import stos.keeper.model.MatchType;
 import java.sql.*;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
@@ -96,6 +98,30 @@ public class DbWCMatchesDao {
             dataSource.closeConnection();
         }
     }
+
+    public List<FootballMatch> getAllPlannedMatches() {
+        List<FootballMatch> allMatches = new ArrayList<>();
+        Connection connection = dataSource.getConnection();
+        try {
+            StatementDataObject statementData = PlannedMatchStatementDataConstructor
+                    .getStatementDataFor("fetchAllPlannedMatches", Optional.empty());
+            PreparedStatement statement = connection.prepareStatement(statementData.getSqlStatement());
+            ResultSet plannedMatches = statement.executeQuery();
+            while (plannedMatches.next()) {
+                Optional<FootballMatch> match = footballMatchFrom(plannedMatches);
+                if (match.isPresent()) {
+                    allMatches.add(match.get());
+                }
+            }
+            return allMatches;
+        } catch (SQLException e) {
+            LOG.info("SQL exception {} with error code {} when fetching all planned matches.", e.getMessage(), e.getErrorCode());
+            return Collections.emptyList();
+        } finally {
+            dataSource.closeConnection();
+        }
+    }
+
 
     private boolean executeAddStatement(List<Object> statementParameters, PreparedStatement statement) throws SQLException {
         IntStream.range(0, statementParameters.size()).forEach(index -> {

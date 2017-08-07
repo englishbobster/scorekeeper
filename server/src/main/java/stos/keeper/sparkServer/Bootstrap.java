@@ -7,6 +7,6 @@ public class Bootstrap {
 
     public static void main(String[] args) {
         staticFiles.externalLocation(System.getProperty("user.dir") + "/server/src/main/resources/public");
-        get("/", (req, response) -> "Hello World!");
+        get("/plannedmatches", (req, response) -> "Hello World!");
     }
 }

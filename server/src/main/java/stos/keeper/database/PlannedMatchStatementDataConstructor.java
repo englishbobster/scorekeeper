@@ -5,6 +5,7 @@ import stos.keeper.model.FootballMatch;
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,19 +16,23 @@ class PlannedMatchStatementDataConstructor {
     private static final String SELECT_BY_ID = "SELECT * FROM " + MATCHES_TABLE_NAME + " WHERE id= ?";
     private static final String INSERT_MATCH = "INSERT INTO " + MATCHES_TABLE_NAME + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String COUNT_MATCHES = "SELECT COUNT(*) FROM " + MATCHES_TABLE_NAME;
+    private static final String FETCH_ALL_PLANNED_MATCHES = "SELECT * FROM " + MATCHES_TABLE_NAME;
 
-    private static final List<Object> EMPTY_LIST = new ArrayList<>();
+
 
     static StatementDataObject getStatementDataFor(String transactionName, Optional<FootballMatch> matchOptional) {
 
         if(transactionName.equals("deleteMatchById")){
-            return new StatementDataObject(DELETE_BY_ID, EMPTY_LIST);
+            return new StatementDataObject(DELETE_BY_ID, Collections.emptyList());
         }
         if (transactionName.equals("findMatchById")) {
-            return new StatementDataObject(SELECT_BY_ID, EMPTY_LIST);
+            return new StatementDataObject(SELECT_BY_ID, Collections.emptyList());
         }
         if (transactionName.equals("countPlannedMatches")) {
-            return new StatementDataObject(COUNT_MATCHES, EMPTY_LIST);
+            return new StatementDataObject(COUNT_MATCHES, Collections.emptyList());
+        }
+        if (transactionName.equals("fetchAllPlannedMatches")) {
+            return new StatementDataObject(FETCH_ALL_PLANNED_MATCHES, Collections.emptyList());
         }
         if (matchOptional.isPresent()) {
             FootballMatch match = matchOptional.get();
@@ -46,7 +51,7 @@ class PlannedMatchStatementDataConstructor {
                 return new StatementDataObject(INSERT_MATCH, statementParameters);
             }
         }
-        return new StatementDataObject("", EMPTY_LIST);
+        return new StatementDataObject("", Collections.emptyList());
     }
 
     static Timestamp sqlTimeStampFrom(ZonedDateTime matchTime) {
