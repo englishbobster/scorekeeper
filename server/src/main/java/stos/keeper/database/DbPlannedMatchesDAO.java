@@ -15,12 +15,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
-public class DbWCMatchesDao {
+public class DbPlannedMatchesDAO {
 
-    private Logger LOG = LoggerFactory.getLogger(DbWCMatchesDao.class);
+    private Logger LOG = LoggerFactory.getLogger(DbPlannedMatchesDAO.class);
     private DataSource dataSource;
 
-    public DbWCMatchesDao(DataSource dataSource) {
+    public DbPlannedMatchesDAO(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 

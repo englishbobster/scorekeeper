@@ -15,12 +15,12 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 
 
-public class DbWCMatchesDaoTest {
+public class DbPlannedMatchesDAOTest {
 
     @Test
     public void delete_a_match_from_planned_matches() {
         DataSource dataSource = getDataSource();
-        DbWCMatchesDao dao = new DbWCMatchesDao(dataSource);
+        DbPlannedMatchesDAO dao = new DbPlannedMatchesDAO(dataSource);
 
         dao.deleteMatchById(1);
         Optional<FootballMatch> match = dao.findMatchById(1);
@@ -32,7 +32,7 @@ public class DbWCMatchesDaoTest {
     @Test
     public void insert_a_match_into_planned_matches() {
         DataSource dataSource = getDataSource();
-        DbWCMatchesDao dao = new DbWCMatchesDao(dataSource);
+        DbPlannedMatchesDAO dao = new DbPlannedMatchesDAO(dataSource);
 
         FootballMatch expectedMatch = FootballMatch.builder().id(1).time(ZonedDateTime.now())
                 .teams("HOME", "AWAY").group(Group.F).matchType(MatchType.GROUPGAME)
@@ -50,7 +50,7 @@ public class DbWCMatchesDaoTest {
     @Test
     public void count_matches_in_planned_matches_table() throws Exception {
         DataSource dataSource = getDataSource();
-        DbWCMatchesDao dao = new DbWCMatchesDao(dataSource);
+        DbPlannedMatchesDAO dao = new DbPlannedMatchesDAO(dataSource);
 
         FootballMatch expectedMatch = FootballMatch.builder().id(1).time(ZonedDateTime.now())
                 .teams("HOME", "AWAY").group(Group.F).matchType(MatchType.GROUPGAME)
@@ -72,7 +72,7 @@ public class DbWCMatchesDaoTest {
     @Test
     public void get_all_the_planned_matches() {
         DataSource dataSource = getDataSource();
-        DbWCMatchesDao dao = new DbWCMatchesDao(dataSource);
+        DbPlannedMatchesDAO dao = new DbPlannedMatchesDAO(dataSource);
 
         FootballMatch expectedMatch1 = FootballMatch.builder().id(1000).time(ZonedDateTime.now())
                 .teams("HOME", "AWAY").group(Group.F).matchType(MatchType.GROUPGAME)
