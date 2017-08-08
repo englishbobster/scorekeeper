@@ -27,7 +27,7 @@ public class PlannedMatchesResponseTransformer implements ResponseTransformer {
         @Override
         public JsonElement serialize(ZonedDateTime src, Type typeOfSrc, JsonSerializationContext context) {
             DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("MMM d, yyyy H:mm")
-                    .withZone(ZoneId.systemDefault());;
+                    .withZone(ZoneId.systemDefault());
             return new JsonPrimitive(src.format(dateTimeFormatter));
         }
     }
