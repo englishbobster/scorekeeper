@@ -159,6 +159,9 @@ public class FootballMatch {
         private Group group;
 
         public FootballMatch build() {
+            if(matchType != MatchType.GROUPGAME){
+                this.group = Group.NA;
+            }
             return new FootballMatch(id, matchTime, arena, homeTeam, awayTeam, matchType, group);
         }
 
@@ -189,11 +192,7 @@ public class FootballMatch {
         }
 
         public MatcherBuilder group(Group group) {
-            if(matchType == MatchType.GROUPGAME){
-                this.group = group;
-            } else {
-                this.group = Group.NA;
-            }
+            this.group = group;
             return this;
         }
     }

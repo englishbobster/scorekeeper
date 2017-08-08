@@ -75,11 +75,11 @@ public class DbWCMatchesDaoTest {
         DbWCMatchesDao dao = new DbWCMatchesDao(dataSource);
 
         FootballMatch expectedMatch1 = FootballMatch.builder().id(1000).time(ZonedDateTime.now())
-                .teams("HOME", "AWAY").matchType(MatchType.GROUPGAME).group(Group.F)
+                .teams("HOME", "AWAY").group(Group.F).matchType(MatchType.GROUPGAME)
                 .arena("ARENA").build();
 
         FootballMatch expectedMatch2 = FootballMatch.builder().id(1001).time(ZonedDateTime.now().minusDays(15L))
-                .teams("GOOD", "BAD").matchType(MatchType.FINAL).group(Group.NA)
+                .teams("GOOD", "BAD").group(Group.NA).matchType(MatchType.FINAL)
                 .arena("ARIANNA").build();
 
         dao.addMatch(expectedMatch1);

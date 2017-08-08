@@ -154,7 +154,7 @@ public class FootballMatchTest {
     }
 
     @Test
-    public void match_has_match_type() {
+    public void match_has_MatchType() {
         assertThat(match.getMatchType(), is(MatchType.GROUPGAME));
     }
 
@@ -166,5 +166,29 @@ public class FootballMatchTest {
     @Test
     public void when_not_group_game_group_has_value_na() {
         assertThat(another_match.getGroup(), is(Group.NA));
+    }
+
+    @Test
+    public void group_is_set_correctly_if_set_before_MatchType_for_group_game() {
+        FootballMatch wonkyMatch = FootballMatch.builder().id(1)
+                .time(now)
+                .teams(HOME_TEAM, AWAY_TEAM)
+                .group(Group.A)
+                .matchType(MatchType.GROUPGAME)
+                .arena(ARENA_NAME_RIO).build();
+
+        assertThat(wonkyMatch.getGroup(), is(Group.A));
+    }
+
+    @Test
+    public void group_is_set_correctly_if_set_before_MatchType_for_knockout() {
+        FootballMatch wonkyMatch = FootballMatch.builder().id(1)
+                .time(now)
+                .teams(HOME_TEAM, AWAY_TEAM)
+                .group(Group.A)
+                .matchType(MatchType.FINAL)
+                .arena(ARENA_NAME_RIO).build();
+
+        assertThat(wonkyMatch.getGroup(), is(Group.NA));
     }
 }
