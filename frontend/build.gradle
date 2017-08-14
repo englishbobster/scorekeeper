@@ -4,5 +4,5 @@ plugins {
 
 elmMake {
     buildDir = "${project(':server').projectDir}/src/main/resources/public"
-    targetModule = 'elm.html'
+    targetModule = 'Main.js'
 }
