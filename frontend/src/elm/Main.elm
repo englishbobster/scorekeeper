@@ -1,6 +1,6 @@
 module ScoreKeeper exposing (..)
 
-import Html exposing (Html, text)
+import Html exposing (Html, table, tr, td, text)
 
 
 --Model
@@ -71,10 +71,20 @@ initialModel =
 
 view : Model -> Html msg
 view model =
-    model
-        |> List.map (\match -> match.homeTeam)
-        |> String.join ","
-        |> text
+    table [] (List.map (\match -> makeMatchRow match) model)
+
+
+makeMatchRow : PlannedMatch -> Html msg
+makeMatchRow match =
+    tr []
+        [ td [] [ text match.homeTeam ]
+        , td [] [ text (toString match.homeScore) ]
+        , td [] [ text (toString match.awayScore) ]
+        , td [] [ text match.awayTeam ]
+        , td [] [ text match.matchTime ]
+        , td [] [ text match.arena ]
+        , td [] [ text (toString match.matchType) ]
+        ]
 
 
 
