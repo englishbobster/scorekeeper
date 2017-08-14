@@ -1,6 +1,7 @@
 module ScoreKeeper exposing (..)
 
 import Html exposing (Html, program, table, tr, td, text)
+import Http
 
 
 --Model
@@ -71,7 +72,7 @@ initialModel =
 
 type Msg
     = NoOp
-    | FetchPlannedMatches
+    | FetchPlannedMatches (Result Http.Error String)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -80,7 +81,7 @@ update msg model =
         NoOp ->
             ( model, Cmd.none )
 
-        FetchPlannedMatches ->
+        FetchPlannedMatches result ->
             ( model, Cmd.none )
 
 
