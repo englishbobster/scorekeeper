@@ -1,6 +1,6 @@
 module ScoreKeeper exposing (..)
 
-import Html exposing (Html, table, tr, td, text)
+import Html exposing (Html, program, table, tr, td, text)
 
 
 --Model
@@ -66,6 +66,25 @@ initialModel =
 
 
 
+--Update
+
+
+type Msg
+    = NoOp
+    | FetchPlannedMatches
+
+
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
+    case msg of
+        NoOp ->
+            ( model, Cmd.none )
+
+        FetchPlannedMatches ->
+            ( model, Cmd.none )
+
+
+
 --View
 
 
@@ -91,5 +110,11 @@ makeMatchRow match =
 --Main
 
 
+main : Program Never Model Msg
 main =
-    view initialModel
+    program
+        { init = ( initialModel, Cmd.none )
+        , view = view
+        , update = update
+        , subscriptions = (\model -> Sub.none)
+        }
