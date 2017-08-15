@@ -1,7 +1,8 @@
 module ScoreKeeper exposing (..)
 
 import Html exposing (Html, program, table, tr, td, text)
-import Http
+import Http exposing (Request)
+import Json.Decode exposing (Decoder, list, int, string, map7, field)
 
 
 --Model
@@ -26,6 +27,11 @@ type MatchType
     | Final
 
 
+stringToMatchType : String -> MatchType
+stringToMatchType typeString =
+    Final
+
+
 type alias PlannedMatch =
     { homeTeam : String
     , homeScore : Int
@@ -37,12 +43,8 @@ type alias PlannedMatch =
     }
 
 
-type alias PlannedMatches =
-    List PlannedMatch
-
-
 type alias Model =
-    PlannedMatches
+    List PlannedMatch
 
 
 initialModel : Model
@@ -63,6 +65,7 @@ initialModel =
       , arena = "sao paulo"
       , matchType = Final
       }
+    , PlannedMatch "Italy" 3 "France" 2 "timestamp" "rio" (GroupGame B)
     ]
 
 
@@ -72,7 +75,7 @@ initialModel =
 
 type Msg
     = NoOp
-    | FetchPlannedMatches (Result Http.Error String)
+    | FetchPlannedMatches (Result Http.Error Model)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -82,7 +85,41 @@ update msg model =
             ( model, Cmd.none )
 
         FetchPlannedMatches result ->
-            ( model, Cmd.none )
+            case result of
+                Ok responseStr ->
+                    ( responseStr, Cmd.none )
+
+                Err httpError ->
+                    ( model, Cmd.none )
+
+
+getPlannedMatches : Cmd Msg
+getPlannedMatches =
+    list footballMatchDecoder
+        |> Http.get "http://127.0.0.1:4567/plannedmatches"
+        |> Http.send FetchPlannedMatches
+
+
+footballMatchDecoder : Decoder PlannedMatch
+footballMatchDecoder =
+    map7
+        (\ht hsc at asc mt ar mty ->
+            { homeTeam = ht
+            , homeScore = hsc
+            , awayTeam = at
+            , awayScore = asc
+            , matchTime = mt
+            , arena = ar
+            , matchType = (stringToMatchType mty)
+            }
+        )
+        (field "homeTeam" string)
+        (field "homeScore" int)
+        (field "awayTeam" string)
+        (field "awayScore" int)
+        (field "matchTime" string)
+        (field "arena" string)
+        (field "matchType" string)
 
 
 
@@ -91,11 +128,11 @@ update msg model =
 
 view : Model -> Html msg
 view model =
-    table [] (List.map (\match -> makeMatchRow match) model)
+    table [] (List.map (\match -> makeFootballMatchRow match) model)
 
 
-makeMatchRow : PlannedMatch -> Html msg
-makeMatchRow match =
+makeFootballMatchRow : PlannedMatch -> Html msg
+makeFootballMatchRow match =
     tr []
         [ td [] [ text match.homeTeam ]
         , td [] [ text (toString match.homeScore) ]
@@ -114,7 +151,7 @@ makeMatchRow match =
 main : Program Never Model Msg
 main =
     program
-        { init = ( initialModel, Cmd.none )
+        { init = ( initialModel, getPlannedMatches )
         , view = view
         , update = update
         , subscriptions = (\model -> Sub.none)
