@@ -5,6 +5,25 @@ import Http exposing (Request)
 import Json.Decode exposing (Decoder, list, int, string, map7, field)
 
 
+--Constants
+
+
+type alias Constants =
+    { backendAddress : String
+    , backendPort : Int
+    , plannedMatchesPath : String
+    }
+
+
+constants : Constants
+constants =
+    { backendAddress = "127.0.0.1"
+    , backendPort = 4567
+    , plannedMatchesPath = "/plannedmatches"
+    }
+
+
+
 --Model
 
 
@@ -49,24 +68,7 @@ type alias Model =
 
 initialModel : Model
 initialModel =
-    [ { homeTeam = "Brazil"
-      , homeScore = 1
-      , awayTeam = "Croatia"
-      , awayScore = 0
-      , matchTime = "fix a timestamp"
-      , arena = "amazoa"
-      , matchType = GroupGame A
-      }
-    , { homeTeam = "Sweden"
-      , homeScore = 3
-      , awayTeam = "England"
-      , awayScore = 3
-      , matchTime = "another timestamp"
-      , arena = "sao paulo"
-      , matchType = Final
-      }
-    , PlannedMatch "Italy" 3 "France" 2 "timestamp" "rio" (GroupGame B)
-    ]
+    []
 
 
 
@@ -96,8 +98,17 @@ update msg model =
 getPlannedMatches : Cmd Msg
 getPlannedMatches =
     list footballMatchDecoder
-        |> Http.get "http://127.0.0.1:4567/plannedmatches"
+        |> Http.get plannedMatchesUrl
         |> Http.send FetchPlannedMatches
+
+
+plannedMatchesUrl : String
+plannedMatchesUrl =
+    "http://"
+        ++ constants.backendAddress
+        ++ ":"
+        ++ toString (constants.backendPort)
+        ++ constants.plannedMatchesPath
 
 
 footballMatchDecoder : Decoder PlannedMatch
