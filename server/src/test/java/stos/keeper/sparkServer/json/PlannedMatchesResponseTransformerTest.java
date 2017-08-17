@@ -35,7 +35,7 @@ public class PlannedMatchesResponseTransformerTest {
                     "\"awayScore\":0" +
                     "}," +
                 "\"fullTime\":false," +
-                "\"matchType\":\"QUARTERS\"" +
+                "\"matchType\":\"Quarter-Finals\"" +
                 "}]";
 
         List<FootballMatch> listOfPlannedMatches = new ArrayList<>();

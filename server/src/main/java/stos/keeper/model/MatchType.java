@@ -9,9 +9,9 @@ public enum MatchType {
     F("Group F"),
     G("Group G"),
     ROUND16("Round of 16"),
-    QUARTERS("Quarter-finals"),
-    SEMIS("Semi-finals"),
-    THIRDPLACE("Third place match"),
+    QUARTERS("Quarter-Finals"),
+    SEMIS("Semi-Finals"),
+    THIRDPLACE("Third Place Match"),
     FINAL("Final");
 
     private final String printableName;

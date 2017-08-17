@@ -2,6 +2,7 @@ package stos.keeper.sparkServer.json;
 
 import com.google.gson.*;
 import spark.ResponseTransformer;
+import stos.keeper.model.MatchType;
 
 import java.lang.reflect.Type;
 import java.time.ZoneId;
@@ -15,6 +16,7 @@ public class PlannedMatchesResponseTransformer implements ResponseTransformer {
     public PlannedMatchesResponseTransformer() {
         gson = new GsonBuilder()
                 .registerTypeAdapter(ZonedDateTime.class, new ZoneDateTimeSerializationAdapter())
+                .registerTypeAdapter(MatchType.class, new MatchTypeAdapter())
                 .create();
     }
 
@@ -25,10 +27,18 @@ public class PlannedMatchesResponseTransformer implements ResponseTransformer {
 
     private class ZoneDateTimeSerializationAdapter implements JsonSerializer<ZonedDateTime> {
         @Override
-        public JsonElement serialize(ZonedDateTime src, Type typeOfSrc, JsonSerializationContext context) {
+        public JsonElement serialize(ZonedDateTime time, Type typeOfSrc, JsonSerializationContext context) {
             DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("MMM d, yyyy H:mm")
                     .withZone(ZoneId.systemDefault());
-            return new JsonPrimitive(src.format(dateTimeFormatter));
+            return new JsonPrimitive(time.format(dateTimeFormatter));
         }
     }
+
+    private class MatchTypeAdapter implements JsonSerializer<MatchType> {
+        @Override
+        public JsonElement serialize(MatchType matchType, Type typeOfSrc, JsonSerializationContext context) {
+            return new JsonPrimitive(matchType.toString());
+        }
+    }
+
 }
