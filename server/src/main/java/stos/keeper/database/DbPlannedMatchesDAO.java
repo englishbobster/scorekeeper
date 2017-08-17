@@ -6,7 +6,10 @@ import stos.keeper.model.FootballMatch;
 import stos.keeper.model.Group;
 import stos.keeper.model.MatchType;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -48,7 +51,7 @@ public class DbPlannedMatchesDAO {
             PreparedStatement statement = connection.prepareStatement(findStatementData.getSqlStatement());
             statement.setInt(1, id);
             ResultSet selectedMatchResultSet = statement.executeQuery();
-            Optional<FootballMatch> matchOptional = Optional.empty();
+                        Optional<FootballMatch> matchOptional = Optional.empty();
             if (selectedMatchResultSet.next()) {
                 matchOptional = footballMatchFrom(selectedMatchResultSet);
             }
@@ -123,6 +126,24 @@ public class DbPlannedMatchesDAO {
     }
 
 
+    public int updateMatchScoreById(int id, int homeScore, int awayScore) {
+        Connection connection = dataSource.getConnection();
+        try {
+            StatementDataObject statementData = PlannedMatchStatementDataConstructor
+                    .getStatementDataFor("updatePlannedMatchScoreById", Optional.empty());
+            PreparedStatement statement = connection.prepareStatement(statementData.getSqlStatement());
+            statement.setInt(1, homeScore);
+            statement.setInt(2, awayScore);
+            statement.setInt(3, id);
+            return  statement.executeUpdate();
+      } catch (SQLException e) {
+            LOG.info("SQL exception {} with error code {} when updating match with id: {}", e.getMessage(), e.getErrorCode(), id);
+            return 0;
+        } finally {
+            dataSource.closeConnection();
+        }
+    }
+
     private boolean executeAddStatement(List<Object> statementParameters, PreparedStatement statement) throws SQLException {
         IntStream.range(0, statementParameters.size()).forEach(index -> {
             try {
@@ -134,15 +155,17 @@ public class DbPlannedMatchesDAO {
         return statement.execute();
     }
 
-    private Optional<FootballMatch> footballMatchFrom(ResultSet match) {
+    private Optional<FootballMatch> footballMatchFrom(ResultSet resultSet) {
         try {
-            return Optional.of(FootballMatch.builder().id(match.getInt("id"))
-                    .time(ZonedDateTime.ofInstant(match.getTimestamp("match_time").toInstant(), ZoneId.systemDefault()))
-                    .arena(match.getString("arena"))
-                    .teams(match.getString("home_team"), match.getString("away_team"))
-                    .matchType(MatchType.valueOf(match.getString("matchtype")))
-                    .group(Group.valueOf(match.getString("group_id")))
-                    .build());
+            FootballMatch footballMatch = FootballMatch.builder().id(resultSet.getInt("id"))
+                    .time(ZonedDateTime.ofInstant(resultSet.getTimestamp("match_time").toInstant(), ZoneId.systemDefault()))
+                    .arena(resultSet.getString("arena"))
+                    .teams(resultSet.getString("home_team"), resultSet.getString("away_team"))
+                    .matchType(MatchType.valueOf(resultSet.getString("matchtype")))
+                    .group(Group.valueOf(resultSet.getString("group_id")))
+                    .build();
+            footballMatch.getScore().setScore(resultSet.getInt("home_score"), resultSet.getInt("away_score"));
+            return Optional.of(footballMatch);
         } catch (SQLException e) {
             LOG.info("SQL exception {} with error code {} when building match from resultset.", e.getMessage(), e.getErrorCode());
             return Optional.empty();

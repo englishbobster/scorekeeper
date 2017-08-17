@@ -9,8 +9,7 @@ public class FootballMatch {
     private String arena;
     private String homeTeam;
     private String awayTeam;
-    private int homeScore;
-    private int awayScore;
+    private Score score;
     private boolean fullTime;
     private MatchType matchType;
     private Group group;
@@ -21,8 +20,7 @@ public class FootballMatch {
         this.arena = arena;
         this.homeTeam = homeTeam;
         this.awayTeam = awayTeam;
-        this.homeScore = 0;
-        this.awayScore = 0;
+        this.score = new Score();
         this.fullTime = false;
         this.matchType = matchType;
         if(matchType == MatchType.GROUPGAME){
@@ -32,20 +30,17 @@ public class FootballMatch {
         }
     }
 
-    public int getHomeScore() {
-        return homeScore;
+    public Score getScore() {
+        return score;
     }
 
-    public int getAwayScore() {
-        return awayScore;
-    }
 
     public static MatcherBuilder builder() {
         return new MatcherBuilder();
     }
 
     public String getFinalScoreAsString() {
-        return homeTeam + " " + homeScore + " - " + awayScore + " " + awayTeam;
+        return homeTeam + " " + score.toString() + " " + awayTeam;
     }
 
     public boolean isFullTime() {
@@ -53,8 +48,7 @@ public class FootballMatch {
     }
 
     public void setFinalScore(int homeScore, int awayScore) {
-        this.homeScore = homeScore;
-        this.awayScore = awayScore;
+        score.setScore(homeScore, awayScore);
         this.fullTime = true;
     }
 

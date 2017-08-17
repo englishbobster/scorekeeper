@@ -31,8 +31,10 @@ public class PlannedMatchesResponseTransformerTest {
                 "\"arena\":\"ARENA\"," +
                 "\"homeTeam\":\"HOME\"," +
                 "\"awayTeam\":\"AWAY\"," +
-                "\"homeScore\":0," +
-                "\"awayScore\":0," +
+                "\"score\":{" +
+                    "\"homeScore\":0," +
+                    "\"awayScore\":0" +
+                    "}," +
                 "\"fullTime\":false," +
                 "\"matchType\":\"QUARTERS\"," +
                 "\"group\":\"NA\"}]";

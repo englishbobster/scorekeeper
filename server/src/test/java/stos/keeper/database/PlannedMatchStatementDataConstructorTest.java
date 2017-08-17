@@ -24,6 +24,7 @@ public class PlannedMatchStatementDataConstructorTest {
     private static final String EXPECTED_INSERT = "INSERT INTO planned_matches VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     public static final String EXPECTED_COUNT = "SELECT COUNT(*) FROM planned_matches";
     public static final String EXPECTED_SELECT_ALL = "SELECT * FROM planned_matches";
+    public static final String EXPECTED_UPDATE_SCORE ="UPDATE planned_matches SET (home_score, away_score)=(?, ?) WHERE ID= ? and fulltime = false";
 
     private FootballMatch match;
 
@@ -55,8 +56,8 @@ public class PlannedMatchStatementDataConstructorTest {
                 , match.getArena()
                 , match.getHomeTeam()
                 , match.getAwayTeam()
-                , match.getHomeScore()
-                , match.getAwayScore()
+                , match.getScore().getHomeScore()
+                , match.getScore().getAwayScore()
                 , match.isFullTime()
                 , match.getMatchType().name()
                 , match.getGroup().name()
@@ -102,6 +103,14 @@ public class PlannedMatchStatementDataConstructorTest {
 
         assertThat(fetchAllMatchParams.size(), is(0));
         assertThat(statementData.getSqlStatement(), is(equalTo(EXPECTED_SELECT_ALL)));
+    }
 
+    @Test
+    public void get_statement_data_update_a_planned_match_score() throws Exception {
+        StatementDataObject statementData = PlannedMatchStatementDataConstructor
+                .getStatementDataFor("updatePlannedMatchScoreById", Optional.empty());
+        List<Object> updateMatchParams = statementData.getParameters();
+        assertThat(updateMatchParams.size(), is(0));
+        assertThat(statementData.getSqlStatement(), is(equalTo(EXPECTED_UPDATE_SCORE)));
     }
 }

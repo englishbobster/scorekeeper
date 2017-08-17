@@ -1,5 +1,6 @@
 package stos.keeper.database;
 
+import org.junit.Before;
 import org.junit.Test;
 import stos.keeper.model.FootballMatch;
 import stos.keeper.model.Group;
@@ -13,85 +14,103 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.not;
 
 
 public class DbPlannedMatchesDAOTest {
 
-    @Test
-    public void delete_a_match_from_planned_matches() {
-        DataSource dataSource = getDataSource();
-        DbPlannedMatchesDAO dao = new DbPlannedMatchesDAO(dataSource);
+    public static final int ID_1 = 1;
+    public static final int ID_1000 = 1000;
+    public static final int ID_1001 = 1001;
+    private DataSource dataSource;
+    private DbPlannedMatchesDAO dao;
+    private FootballMatch expectedMatch_id_1;
+    private FootballMatch expectedMatch_id_1000;
+    private FootballMatch expectedMatch_id_1001;
 
-        dao.deleteMatchById(1);
-        Optional<FootballMatch> match = dao.findMatchById(1);
+    @Before
+    public void setUp() {
+        dataSource = getDataSource();
+        dao = new DbPlannedMatchesDAO(dataSource);
 
-        assertThat(match, is(equalTo(Optional.empty())));
-    }
-
-
-    @Test
-    public void insert_a_match_into_planned_matches() {
-        DataSource dataSource = getDataSource();
-        DbPlannedMatchesDAO dao = new DbPlannedMatchesDAO(dataSource);
-
-        FootballMatch expectedMatch = FootballMatch.builder().id(1).time(ZonedDateTime.now())
+        expectedMatch_id_1 = FootballMatch.builder().id(ID_1).time(ZonedDateTime.now())
                 .teams("HOME", "AWAY").group(Group.F).matchType(MatchType.GROUPGAME)
                 .arena("ARENA").build();
 
-        dao.addMatch(expectedMatch);
-        Optional<FootballMatch> fetchedMatch = dao.findMatchById(1);
-        assertThat(fetchedMatch.get(), is(equalTo(expectedMatch)));
+        expectedMatch_id_1000 = FootballMatch.builder().id(ID_1000).time(ZonedDateTime.now())
+                .teams("HOME", "AWAY").group(Group.F).matchType(MatchType.GROUPGAME)
+                .arena("ARENA").build();
 
-        dao.deleteMatchById(1);
+        expectedMatch_id_1001 = FootballMatch.builder().id(ID_1001).time(ZonedDateTime.now().minusDays(15L))
+                .teams("GOOD", "BAD").group(Group.NA).matchType(MatchType.FINAL)
+                .arena("ARIANNA").build();
+    }
+
+    @Test
+    public void insert_a_match_into_planned_matches() {
+        dao.addMatch(expectedMatch_id_1);
+        Optional<FootballMatch> fetchedMatch = dao.findMatchById(1);
+        assertThat(fetchedMatch.get(), is(equalTo(expectedMatch_id_1)));
+
+        dao.deleteMatchById(ID_1);
         Optional<FootballMatch> match = dao.findMatchById(1);
         assertThat(match, is(equalTo(Optional.empty())));
     }
 
     @Test
     public void count_matches_in_planned_matches_table() throws Exception {
-        DataSource dataSource = getDataSource();
-        DbPlannedMatchesDAO dao = new DbPlannedMatchesDAO(dataSource);
-
-        FootballMatch expectedMatch = FootballMatch.builder().id(1).time(ZonedDateTime.now())
-                .teams("HOME", "AWAY").group(Group.F).matchType(MatchType.GROUPGAME)
-                .arena("ARENA").build();
-
         int currentCount = dao.countPlannedMatchEntries();
 
-        dao.addMatch(expectedMatch);
+        dao.addMatch(expectedMatch_id_1);
         Optional<FootballMatch> fetchedMatch = dao.findMatchById(1);
-        assertThat(fetchedMatch.get(), is(equalTo(expectedMatch)));
+        assertThat(fetchedMatch.get(), is(equalTo(expectedMatch_id_1)));
 
         int incremented_count = currentCount + 1;
         assertThat(dao.countPlannedMatchEntries(), is(incremented_count));
 
-        dao.deleteMatchById(1);
+        dao.deleteMatchById(ID_1);
         assertThat(dao.countPlannedMatchEntries(), is(currentCount));
     }
 
     @Test
     public void get_all_the_planned_matches() {
-        DataSource dataSource = getDataSource();
-        DbPlannedMatchesDAO dao = new DbPlannedMatchesDAO(dataSource);
-
-        FootballMatch expectedMatch1 = FootballMatch.builder().id(1000).time(ZonedDateTime.now())
-                .teams("HOME", "AWAY").group(Group.F).matchType(MatchType.GROUPGAME)
-                .arena("ARENA").build();
-
-        FootballMatch expectedMatch2 = FootballMatch.builder().id(1001).time(ZonedDateTime.now().minusDays(15L))
-                .teams("GOOD", "BAD").group(Group.NA).matchType(MatchType.FINAL)
-                .arena("ARIANNA").build();
-
-        dao.addMatch(expectedMatch1);
-        dao.addMatch(expectedMatch2);
+        dao.addMatch(expectedMatch_id_1000);
+        dao.addMatch(expectedMatch_id_1001);
         int count = dao.countPlannedMatchEntries();
         assertThat(count, is(equalTo(2)));
 
         List<FootballMatch> allPlannedMatches = dao.getAllPlannedMatches();
-        assertThat(allPlannedMatches, contains(expectedMatch1, expectedMatch2));
+        assertThat(allPlannedMatches, contains(expectedMatch_id_1000, expectedMatch_id_1001));
 
-        dao.deleteMatchById(1001);
-        dao.deleteMatchById(1000);
+        dao.deleteMatchById(ID_1001);
+        dao.deleteMatchById(ID_1000);
+        int actual = dao.countPlannedMatchEntries();
+        assertThat(actual, is(equalTo(0)));
+    }
+
+    @Test
+    public void update_a_match_by_id() throws Exception {
+        dao.addMatch(expectedMatch_id_1000);
+        int current_home_score = expectedMatch_id_1000.getScore().getHomeScore();
+        int current_away_score = expectedMatch_id_1000.getScore().getAwayScore();
+
+        Optional<FootballMatch> fetchedMatchOptional = dao.findMatchById(ID_1000);
+        assertThat(fetchedMatchOptional, is(not(Optional.empty())));
+
+        FootballMatch fetchedMatch = fetchedMatchOptional.get();
+        assertThat(fetchedMatch.getScore().getHomeScore(), is(current_home_score));
+        assertThat(fetchedMatch.getScore().getAwayScore(), is(current_away_score));
+
+        dao.updateMatchScoreById(ID_1000, 7, 1);
+
+        Optional<FootballMatch> updatedMatchOptional = dao.findMatchById(ID_1000);
+        assertThat(updatedMatchOptional, is(not(Optional.empty())));
+
+        FootballMatch updatedMatch = updatedMatchOptional.get();
+        assertThat(updatedMatch.getScore().getHomeScore(), is(7));
+        assertThat(updatedMatch.getScore().getAwayScore(), is(1));
+
+        dao.deleteMatchById(ID_1000);
         int actual = dao.countPlannedMatchEntries();
         assertThat(actual, is(equalTo(0)));
     }

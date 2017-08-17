@@ -17,7 +17,8 @@ class PlannedMatchStatementDataConstructor {
     private static final String INSERT_MATCH = "INSERT INTO " + MATCHES_TABLE_NAME + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String COUNT_MATCHES = "SELECT COUNT(*) FROM " + MATCHES_TABLE_NAME;
     private static final String FETCH_ALL_PLANNED_MATCHES = "SELECT * FROM " + MATCHES_TABLE_NAME;
-
+    private static final String UPDATE_MATCH_BY_ID = "UPDATE " + MATCHES_TABLE_NAME + " SET (home_score, away_score)=(?, ?)"
+            + " WHERE ID= ? and fulltime = false";
 
 
     static StatementDataObject getStatementDataFor(String transactionName, Optional<FootballMatch> matchOptional) {
@@ -34,6 +35,9 @@ class PlannedMatchStatementDataConstructor {
         if (transactionName.equals("fetchAllPlannedMatches")) {
             return new StatementDataObject(FETCH_ALL_PLANNED_MATCHES, Collections.emptyList());
         }
+        if (transactionName.equals("updatePlannedMatchScoreById")) {
+            return new StatementDataObject(UPDATE_MATCH_BY_ID, Collections.emptyList());
+        }
         if (matchOptional.isPresent()) {
             FootballMatch match = matchOptional.get();
             if (transactionName.equals("addMatch")) {
@@ -43,8 +47,8 @@ class PlannedMatchStatementDataConstructor {
                 statementParameters.add(match.getArena());
                 statementParameters.add(match.getHomeTeam());
                 statementParameters.add(match.getAwayTeam());
-                statementParameters.add(match.getHomeScore());
-                statementParameters.add(match.getAwayScore());
+                statementParameters.add(match.getScore().getHomeScore());
+                statementParameters.add(match.getScore().getAwayScore());
                 statementParameters.add(match.isFullTime());
                 statementParameters.add(match.getMatchType().name());
                 statementParameters.add(match.getGroup().name());

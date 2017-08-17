@@ -22,9 +22,9 @@ public class FootballMatchTest {
     private static final String AWAY_TEAM = "France";
     private static final String HOME_TEAM_ENGLAND = "England";
     private static final String AWAY_TEAM_CAMEROON = "Cameroon";
-    private static final String SCORE_STRING_GROUP = HOME_TEAM + " 0 - 0 " + AWAY_TEAM;
-    private static final String SCORE_STRING_OTHER = HOME_TEAM_ENGLAND + " 0 - 0 " + AWAY_TEAM_CAMEROON;
-    private static final String SCORE_STRING_FINAL = HOME_TEAM + " 1 - 3 " + AWAY_TEAM;
+    private static final String SCORE_STRING_GROUP = HOME_TEAM + " [ 0 - 0 ] " + AWAY_TEAM;
+    private static final String SCORE_STRING_OTHER = HOME_TEAM_ENGLAND + " [ 0 - 0 ] " + AWAY_TEAM_CAMEROON;
+    private static final String SCORE_STRING_FINAL = HOME_TEAM + " [ 1 - 3 ] " + AWAY_TEAM;
     private static final ZonedDateTime now = ZonedDateTime.now();
     private static final String DATE_STRING = now.format(DateTimeFormatter.RFC_1123_DATE_TIME);
     private static final String ARENA_NAME_RIO = "Rio";
@@ -81,8 +81,8 @@ public class FootballMatchTest {
 
     @Test
     public void new_match_has_nil_nil_score() {
-        assertThat(match.getHomeScore(), is(0));
-        assertThat(match.getAwayScore(), is(0));
+        assertThat(match.getScore().getHomeScore(), is(0));
+        assertThat(match.getScore().getAwayScore(), is(0));
     }
 
     @Test
@@ -98,8 +98,8 @@ public class FootballMatchTest {
     @Test
     public void set_the_final_score() {
         match.setFinalScore(1, 3);
-        assertThat(match.getHomeScore(), is(1));
-        assertThat(match.getAwayScore(), is(3));
+        assertThat(match.getScore().getHomeScore(), is(1));
+        assertThat(match.getScore().getAwayScore(), is(3));
         assertThat(match.isFullTime(), is(true));
         assertThat(match.getFinalScoreAsString(), is(SCORE_STRING_FINAL));
     }
