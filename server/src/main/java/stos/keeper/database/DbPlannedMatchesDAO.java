@@ -3,7 +3,6 @@ package stos.keeper.database;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import stos.keeper.model.FootballMatch;
-import stos.keeper.model.Group;
 import stos.keeper.model.MatchType;
 
 import java.sql.Connection;
@@ -162,7 +161,6 @@ public class DbPlannedMatchesDAO {
                     .arena(resultSet.getString("arena"))
                     .teams(resultSet.getString("home_team"), resultSet.getString("away_team"))
                     .matchType(MatchType.valueOf(resultSet.getString("matchtype")))
-                    .group(Group.valueOf(resultSet.getString("group_id")))
                     .build();
             footballMatch.getScore().setScore(resultSet.getInt("home_score"), resultSet.getInt("away_score"));
             return Optional.of(footballMatch);

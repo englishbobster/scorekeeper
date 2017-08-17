@@ -12,9 +12,8 @@ public class FootballMatch {
     private Score score;
     private boolean fullTime;
     private MatchType matchType;
-    private Group group;
 
-    private FootballMatch(int id, ZonedDateTime matchTime, String arena, String homeTeam, String awayTeam, MatchType matchType, Group group) {
+    private FootballMatch(int id, ZonedDateTime matchTime, String arena, String homeTeam, String awayTeam, MatchType matchType) {
         this.id = id;
         this.matchTime = matchTime;
         this.arena = arena;
@@ -23,17 +22,11 @@ public class FootballMatch {
         this.score = new Score();
         this.fullTime = false;
         this.matchType = matchType;
-        if(matchType == MatchType.GROUPGAME){
-            this.group = group;
-        } else {
-            this.group = Group.NA;
-        }
     }
 
     public Score getScore() {
         return score;
     }
-
 
     public static MatcherBuilder builder() {
         return new MatcherBuilder();
@@ -69,13 +62,14 @@ public class FootballMatch {
                     && this.arena.equals(that.arena)
                     && this.homeTeam.equals(that.homeTeam)
                     && this.awayTeam.equals(that.awayTeam)
-                    && this.matchType == that.matchType
-                    && this.group == that.group) {
+                    && this.matchType == that.matchType) {
+
                 return true;
             }
-            return false;
         }
+        return false;
     }
+
 
     @Override
     public int hashCode() {
@@ -86,7 +80,6 @@ public class FootballMatch {
         result = 31 * result + homeTeam.hashCode();
         result = 31 * result + awayTeam.hashCode();
         result = 31 * result + matchType.hashCode();
-        result = 31 * result + group.hashCode();
         return result;
     }
 
@@ -99,7 +92,7 @@ public class FootballMatch {
         builder.append(") ");
         builder.append(arena);
         builder.append(", ");
-        builder.append(gameInfoAsString());
+        builder.append(matchType.toString());
         builder.append(", [");
         builder.append(getFinalScoreAsString());
         builder.append("]");
@@ -107,20 +100,8 @@ public class FootballMatch {
         return  builder.toString();
     }
 
-    private String gameInfoAsString() {
-        if (matchType == MatchType.GROUPGAME) {
-            return matchType.toString() + " " + group.toString();
-        } else {
-            return matchType.toString();
-        }
-    }
-
     public MatchType getMatchType() {
         return matchType;
-    }
-
-    public Group getGroup() {
-        return group;
     }
 
     public int getId() {
@@ -150,13 +131,9 @@ public class FootballMatch {
         private String homeTeam;
         private String awayTeam;
         private MatchType matchType;
-        private Group group;
 
         public FootballMatch build() {
-            if(matchType != MatchType.GROUPGAME){
-                this.group = Group.NA;
-            }
-            return new FootballMatch(id, matchTime, arena, homeTeam, awayTeam, matchType, group);
+            return new FootballMatch(id, matchTime, arena, homeTeam, awayTeam, matchType);
         }
 
         public MatcherBuilder id(int id) {
@@ -182,11 +159,6 @@ public class FootballMatch {
 
         public MatcherBuilder matchType(MatchType matchType) {
             this.matchType = matchType;
-            return this;
-        }
-
-        public MatcherBuilder group(Group group) {
-            this.group = group;
             return this;
         }
     }

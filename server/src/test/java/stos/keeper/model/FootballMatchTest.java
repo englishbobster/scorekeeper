@@ -47,23 +47,20 @@ public class FootballMatchTest {
         match = FootballMatch.builder().id(1)
                 .time(now)
                 .teams(HOME_TEAM, AWAY_TEAM)
-                .matchType(MatchType.GROUPGAME)
-                .group(Group.A)
+                .matchType(MatchType.A)
                 .arena(ARENA_NAME_RIO).build();
 
         match_played = FootballMatch.builder().id(1)
                 .time(now)
                 .teams(HOME_TEAM, AWAY_TEAM)
-                .matchType(MatchType.GROUPGAME)
-                .group(Group.A)
+                .matchType(MatchType.A)
                 .arena(ARENA_NAME_RIO).build();
         match_played.setFinalScore(4, 1);
 
         replayed_match = FootballMatch.builder().id(1)
                 .time(now)
                 .teams(HOME_TEAM, AWAY_TEAM)
-                .matchType(MatchType.GROUPGAME)
-                .group(Group.A)
+                .matchType(MatchType.A)
                 .arena(ARENA_NAME_RIO).build();
         replayed_match.setFinalScore(2, 2);
 
@@ -155,40 +152,6 @@ public class FootballMatchTest {
 
     @Test
     public void match_has_MatchType() {
-        assertThat(match.getMatchType(), is(MatchType.GROUPGAME));
-    }
-
-    @Test
-    public void when_group_game_group_has_value() {
-        assertThat(match.getGroup(), is(Group.A));
-    }
-
-    @Test
-    public void when_not_group_game_group_has_value_na() {
-        assertThat(another_match.getGroup(), is(Group.NA));
-    }
-
-    @Test
-    public void group_is_set_correctly_if_set_before_MatchType_for_group_game() {
-        FootballMatch wonkyMatch = FootballMatch.builder().id(1)
-                .time(now)
-                .teams(HOME_TEAM, AWAY_TEAM)
-                .group(Group.A)
-                .matchType(MatchType.GROUPGAME)
-                .arena(ARENA_NAME_RIO).build();
-
-        assertThat(wonkyMatch.getGroup(), is(Group.A));
-    }
-
-    @Test
-    public void group_is_set_correctly_if_set_before_MatchType_for_knockout() {
-        FootballMatch wonkyMatch = FootballMatch.builder().id(1)
-                .time(now)
-                .teams(HOME_TEAM, AWAY_TEAM)
-                .group(Group.A)
-                .matchType(MatchType.FINAL)
-                .arena(ARENA_NAME_RIO).build();
-
-        assertThat(wonkyMatch.getGroup(), is(Group.NA));
+        assertThat(match.getMatchType(), is(MatchType.A));
     }
 }

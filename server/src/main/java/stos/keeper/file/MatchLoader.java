@@ -3,7 +3,6 @@ package stos.keeper.file;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import stos.keeper.model.FootballMatch;
-import stos.keeper.model.Group;
 import stos.keeper.model.MatchType;
 
 import java.io.BufferedReader;
@@ -55,20 +54,14 @@ public class MatchLoader {
         List<String> stringList = splitLine(line.trim());
         ZonedDateTime matchTime = createMatchTime(stringList.get(2), stringList.get(3));
 
-        MatchType matchType;
-        Group group;
+        MatchType matchType = null;
 
-        if(isInEnum(stringList.get(9), Group.class)){
-        //if (Group.valueOf(stringList.get(9)) != Group.NA) {
-            matchType = MatchType.GROUPGAME;
-            group = Group.valueOf(stringList.get(9));
-        } else {
+        if(isInEnum(stringList.get(9), MatchType.class)){
             matchType = MatchType.valueOf(stringList.get(9));
-            group = Group.NA;
         }
 
         return Optional.of(FootballMatch.builder().id(Integer.parseInt(stringList.get(0))).time(matchTime)
-                .matchType(matchType).group(group).arena(stringList.get(8))
+                .matchType(matchType).arena(stringList.get(8))
                 .teams(stringList.get(4), stringList.get(7)).build());
     }
 
@@ -114,7 +107,7 @@ public class MatchLoader {
         return parsedStrings;
     }
 
-    private boolean isInEnum(String value, Class<Group> enumClass) {
-        return Arrays.stream(enumClass.getEnumConstants()).anyMatch(e -> e.name().equals(value));
+    private boolean isInEnum(String value, Class<MatchType> enumClass) {
+        return Arrays.stream(enumClass.getEnumConstants()).anyMatch(e -> e.name().endsWith(value));
     }
 }

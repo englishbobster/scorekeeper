@@ -3,7 +3,6 @@ package stos.keeper.database;
 import org.junit.Before;
 import org.junit.Test;
 import stos.keeper.model.FootballMatch;
-import stos.keeper.model.Group;
 import stos.keeper.model.MatchType;
 
 import java.sql.Timestamp;
@@ -21,7 +20,7 @@ public class PlannedMatchStatementDataConstructorTest {
 
     private static final String EXPECTED_DELETE = "DELETE FROM planned_matches WHERE id= ?";
     private static final String EXPECTED_SELECT = "SELECT * FROM planned_matches WHERE id= ?";
-    private static final String EXPECTED_INSERT = "INSERT INTO planned_matches VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String EXPECTED_INSERT = "INSERT INTO planned_matches VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
     public static final String EXPECTED_COUNT = "SELECT COUNT(*) FROM planned_matches";
     public static final String EXPECTED_SELECT_ALL = "SELECT * FROM planned_matches";
     public static final String EXPECTED_UPDATE_SCORE ="UPDATE planned_matches SET (home_score, away_score)=(?, ?) WHERE ID= ? and fulltime = false";
@@ -31,7 +30,7 @@ public class PlannedMatchStatementDataConstructorTest {
     @Before
     public void setUp() {
         match = FootballMatch.builder().id(1).arena("ARENA").teams("HOME", "AWAY")
-                .time(ZonedDateTime.now()).matchType(MatchType.FINAL).group(Group.NA).build();
+                .time(ZonedDateTime.now()).matchType(MatchType.FINAL).build();
     }
 
     @Test
@@ -50,7 +49,7 @@ public class PlannedMatchStatementDataConstructorTest {
                 .getStatementDataFor("addMatch", Optional.of(match));
 
         List<Object> addMatchParams = statementData.getParameters();
-        assertThat(addMatchParams.size(), is(10));
+        assertThat(addMatchParams.size(), is(9));
         assertThat(addMatchParams, contains(match.getId()
                 , PlannedMatchStatementDataConstructor.sqlTimeStampFrom(match.getMatchTime())
                 , match.getArena()
@@ -60,7 +59,6 @@ public class PlannedMatchStatementDataConstructorTest {
                 , match.getScore().getAwayScore()
                 , match.isFullTime()
                 , match.getMatchType().name()
-                , match.getGroup().name()
                 ));
         assertThat(statementData.getSqlStatement(), is(equalTo(EXPECTED_INSERT)));
     }

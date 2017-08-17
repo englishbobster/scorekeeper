@@ -3,7 +3,6 @@ package stos.keeper.database;
 import org.junit.Before;
 import org.junit.Test;
 import stos.keeper.model.FootballMatch;
-import stos.keeper.model.Group;
 import stos.keeper.model.MatchType;
 
 import java.time.ZonedDateTime;
@@ -19,10 +18,9 @@ import static org.hamcrest.Matchers.not;
 
 public class DbPlannedMatchesDAOTest {
 
-    public static final int ID_1 = 1;
-    public static final int ID_1000 = 1000;
-    public static final int ID_1001 = 1001;
-    private DataSource dataSource;
+    private static final int ID_1 = 1;
+    private static final int ID_1000 = 1000;
+    private static final int ID_1001 = 1001;
     private DbPlannedMatchesDAO dao;
     private FootballMatch expectedMatch_id_1;
     private FootballMatch expectedMatch_id_1000;
@@ -30,19 +28,19 @@ public class DbPlannedMatchesDAOTest {
 
     @Before
     public void setUp() {
-        dataSource = getDataSource();
+        DataSource dataSource = getDataSource();
         dao = new DbPlannedMatchesDAO(dataSource);
 
         expectedMatch_id_1 = FootballMatch.builder().id(ID_1).time(ZonedDateTime.now())
-                .teams("HOME", "AWAY").group(Group.F).matchType(MatchType.GROUPGAME)
+                .teams("HOME", "AWAY").matchType(MatchType.F)
                 .arena("ARENA").build();
 
         expectedMatch_id_1000 = FootballMatch.builder().id(ID_1000).time(ZonedDateTime.now())
-                .teams("HOME", "AWAY").group(Group.F).matchType(MatchType.GROUPGAME)
+                .teams("HOME", "AWAY").matchType(MatchType.F)
                 .arena("ARENA").build();
 
         expectedMatch_id_1001 = FootballMatch.builder().id(ID_1001).time(ZonedDateTime.now().minusDays(15L))
-                .teams("GOOD", "BAD").group(Group.NA).matchType(MatchType.FINAL)
+                .teams("GOOD", "BAD").matchType(MatchType.FINAL)
                 .arena("ARIANNA").build();
     }
 

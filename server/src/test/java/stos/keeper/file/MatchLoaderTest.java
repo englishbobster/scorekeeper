@@ -5,7 +5,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import stos.keeper.model.FootballMatch;
-import stos.keeper.model.Group;
 import stos.keeper.model.MatchType;
 
 import java.io.BufferedWriter;
@@ -62,9 +61,8 @@ public class MatchLoaderTest {
         List<FootballMatch> matchRows = matchLoader.getFootballMatches();
         assertThat(matchRows.size(), is(3));
         //check some field values.
-        assertThat(matchRows.get(0).getGroup(), is(Group.A));
+        assertThat(matchRows.get(0).getMatchType(), is(MatchType.A));
         assertThat(matchRows.get(1).isFullTime(), is(false));
-        assertThat(matchRows.get(2).getGroup(), is(Group.NA));
         assertThat(matchRows.get(2).getMatchType(), is(MatchType.FINAL));
     }
 
@@ -81,7 +79,7 @@ public class MatchLoaderTest {
         FootballMatch footballMatch = matchOptional.orElse(null);
         ZonedDateTime matchTime = ZonedDateTime.of(2014, 6, 12, 21, 0, 0, 0, ZoneId.systemDefault());
         FootballMatch expectedMatch = FootballMatch.builder().id(1).time(matchTime).arena("Sao Paulo")
-                .matchType(MatchType.GROUPGAME).group(Group.A)
+                .matchType(MatchType.A)
                 .teams("Brazil", "Croatia").build();
         assertThat(footballMatch, is(equalTo(expectedMatch)));
     }

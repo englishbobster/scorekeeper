@@ -1,13 +1,18 @@
 package stos.keeper.model;
 
 public enum MatchType {
-    GROUPGAME("Group"),
+    A("Group A"),
+    B("Group B"),
+    C("Group C"),
+    D("Group D"),
+    E("Group E"),
+    F("Group F"),
+    G("Group G"),
     ROUND16("Round of 16"),
     QUARTERS("Quarter-finals"),
     SEMIS("Semi-finals"),
     THIRDPLACE("Third place match"),
-    FINAL("Final"),
-    NA("Not applicable");
+    FINAL("Final");
 
     private final String printableName;
 

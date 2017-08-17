@@ -2,7 +2,6 @@ package stos.keeper.sparkServer.json;
 
 import org.junit.Test;
 import stos.keeper.model.FootballMatch;
-import stos.keeper.model.Group;
 import stos.keeper.model.MatchType;
 
 import java.time.ZoneId;
@@ -23,7 +22,7 @@ public class PlannedMatchesResponseTransformerTest {
                 .of(1970, 2, 20, 8, 0, 0, 0, ZoneId.systemDefault());
 
         FootballMatch match = FootballMatch.builder().id(1).arena("ARENA").time(time)
-                .teams("HOME", "AWAY").matchType(MatchType.QUARTERS).group(Group.NA)
+                .teams("HOME", "AWAY").matchType(MatchType.QUARTERS)
                 .build();
 
         String expectedSerialization = "[{\"id\":1," +
@@ -36,8 +35,8 @@ public class PlannedMatchesResponseTransformerTest {
                     "\"awayScore\":0" +
                     "}," +
                 "\"fullTime\":false," +
-                "\"matchType\":\"QUARTERS\"," +
-                "\"group\":\"NA\"}]";
+                "\"matchType\":\"QUARTERS\"" +
+                "}]";
 
         List<FootballMatch> listOfPlannedMatches = new ArrayList<>();
         listOfPlannedMatches.add(match);

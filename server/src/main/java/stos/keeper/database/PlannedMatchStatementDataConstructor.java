@@ -14,7 +14,7 @@ class PlannedMatchStatementDataConstructor {
     private static final String MATCHES_TABLE_NAME = "planned_matches";
     private static final String DELETE_BY_ID = "DELETE FROM " + MATCHES_TABLE_NAME + " WHERE id= ?";
     private static final String SELECT_BY_ID = "SELECT * FROM " + MATCHES_TABLE_NAME + " WHERE id= ?";
-    private static final String INSERT_MATCH = "INSERT INTO " + MATCHES_TABLE_NAME + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String INSERT_MATCH = "INSERT INTO " + MATCHES_TABLE_NAME + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String COUNT_MATCHES = "SELECT COUNT(*) FROM " + MATCHES_TABLE_NAME;
     private static final String FETCH_ALL_PLANNED_MATCHES = "SELECT * FROM " + MATCHES_TABLE_NAME;
     private static final String UPDATE_MATCH_BY_ID = "UPDATE " + MATCHES_TABLE_NAME + " SET (home_score, away_score)=(?, ?)"
@@ -51,7 +51,6 @@ class PlannedMatchStatementDataConstructor {
                 statementParameters.add(match.getScore().getAwayScore());
                 statementParameters.add(match.isFullTime());
                 statementParameters.add(match.getMatchType().name());
-                statementParameters.add(match.getGroup().name());
                 return new StatementDataObject(INSERT_MATCH, statementParameters);
             }
         }
