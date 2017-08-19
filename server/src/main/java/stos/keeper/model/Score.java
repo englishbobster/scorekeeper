@@ -13,11 +13,6 @@ public class Score {
         this(0, 0);
     }
 
-    public void setScore(int homeScore, int awayScore) {
-        this.homeScore = homeScore;
-        this.awayScore = awayScore;
-    }
-
     public int getHomeScore() {
         return homeScore;
     }

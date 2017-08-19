@@ -98,12 +98,6 @@ public class FootballMatchTest {
         assertThat(match.getScore().getHomeScore(), is(1));
         assertThat(match.getScore().getAwayScore(), is(3));
         assertThat(match.isFullTime(), is(true));
-        assertThat(match.getFinalScoreAsString(), is(SCORE_STRING_FINAL));
-    }
-
-    @Test
-    public void formatted_string_for_score() {
-        assertThat(match.getFinalScoreAsString(), is(SCORE_STRING_GROUP));
     }
 
     @Test

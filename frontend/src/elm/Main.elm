@@ -1,8 +1,8 @@
 module ScoreKeeper exposing (..)
 
-import Html exposing (Html, program, table, tr, td, text)
+import Html exposing (Html, program, div, table, tr, td, text)
 import Http exposing (Request)
-import Json.Decode exposing (Decoder, list, int, string, map7, field)
+import Json.Decode exposing (Decoder, at, list, int, string, map2, map6, field)
 
 
 --Constants
@@ -27,48 +27,33 @@ constants =
 --Model
 
 
-type Group
-    = A
-    | B
-    | C
-    | D
-    | E
-    | F
-    | G
-
-
-type MatchType
-    = GroupGame Group
-    | R16
-    | QF
-    | SF
-    | ThirdPlace
-    | Final
-
-
-stringToMatchType : String -> MatchType
-stringToMatchType typeString =
-    Final
+type alias Score =
+    { homeScore : Int
+    , awayScore : Int
+    }
 
 
 type alias PlannedMatch =
     { homeTeam : String
-    , homeScore : Int
     , awayTeam : String
-    , awayScore : Int
+    , score : Score
     , matchTime : String
     , arena : String
-    , matchType : MatchType
+    , matchType : String
     }
 
 
 type alias Model =
-    List PlannedMatch
+    { listMatches : List PlannedMatch
+    , loadingError : Maybe String
+    }
 
 
 initialModel : Model
 initialModel =
-    []
+    { listMatches = []
+    , loadingError = Nothing
+    }
 
 
 
@@ -77,7 +62,7 @@ initialModel =
 
 type Msg
     = NoOp
-    | FetchPlannedMatches (Result Http.Error Model)
+    | FetchPlannedMatches (Result Http.Error (List PlannedMatch))
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -89,10 +74,10 @@ update msg model =
         FetchPlannedMatches result ->
             case result of
                 Ok responseStr ->
-                    ( responseStr, Cmd.none )
+                    ( { model | listMatches = responseStr }, Cmd.none )
 
                 Err httpError ->
-                    ( model, Cmd.none )
+                    ( { model | loadingError = Just (toString httpError) }, Cmd.none )
 
 
 getPlannedMatches : Cmd Msg
@@ -111,23 +96,19 @@ plannedMatchesUrl =
         ++ constants.plannedMatchesPath
 
 
+scoreDecoder : Decoder Score
+scoreDecoder =
+    map2 Score
+        (field "homeScore" int)
+        (field "awayScore" int)
+
+
 footballMatchDecoder : Decoder PlannedMatch
 footballMatchDecoder =
-    map7
-        (\ht hsc at asc mt ar mty ->
-            { homeTeam = ht
-            , homeScore = hsc
-            , awayTeam = at
-            , awayScore = asc
-            , matchTime = mt
-            , arena = ar
-            , matchType = (stringToMatchType mty)
-            }
-        )
+    map6 PlannedMatch
         (field "homeTeam" string)
-        (field "homeScore" int)
         (field "awayTeam" string)
-        (field "awayScore" int)
+        (at [ "score" ] scoreDecoder)
         (field "matchTime" string)
         (field "arena" string)
         (field "matchType" string)
@@ -139,19 +120,22 @@ footballMatchDecoder =
 
 view : Model -> Html msg
 view model =
-    table [] (List.map (\match -> makeFootballMatchRow match) model)
+    div []
+        [ text (toString model.loadingError)
+        , table [] (List.map (\match -> makeFootballMatchRow match) model.listMatches)
+        ]
 
 
 makeFootballMatchRow : PlannedMatch -> Html msg
 makeFootballMatchRow match =
     tr []
         [ td [] [ text match.homeTeam ]
-        , td [] [ text (toString match.homeScore) ]
-        , td [] [ text (toString match.awayScore) ]
+        , td [] [ text (toString match.score.homeScore) ]
+        , td [] [ text (toString match.score.awayScore) ]
         , td [] [ text match.awayTeam ]
         , td [] [ text match.matchTime ]
         , td [] [ text match.arena ]
-        , td [] [ text (toString match.matchType) ]
+        , td [] [ text match.matchType ]
         ]
 
 

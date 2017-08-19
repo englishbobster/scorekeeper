@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import stos.keeper.model.FootballMatch;
 import stos.keeper.model.MatchType;
+import stos.keeper.model.Score;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -162,7 +163,7 @@ public class DbPlannedMatchesDAO {
                     .teams(resultSet.getString("home_team"), resultSet.getString("away_team"))
                     .matchType(MatchType.valueOf(resultSet.getString("matchtype")))
                     .build();
-            footballMatch.getScore().setScore(resultSet.getInt("home_score"), resultSet.getInt("away_score"));
+            footballMatch.setScore(new Score(resultSet.getInt("home_score"), resultSet.getInt("away_score")));
             return Optional.of(footballMatch);
         } catch (SQLException e) {
             LOG.info("SQL exception {} with error code {} when building match from resultset.", e.getMessage(), e.getErrorCode());

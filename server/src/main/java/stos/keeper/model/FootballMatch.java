@@ -32,16 +32,12 @@ public class FootballMatch {
         return new MatcherBuilder();
     }
 
-    public String getFinalScoreAsString() {
-        return homeTeam + " " + score.toString() + " " + awayTeam;
-    }
-
     public boolean isFullTime() {
         return fullTime;
     }
 
     public void setFinalScore(int homeScore, int awayScore) {
-        score.setScore(homeScore, awayScore);
+        setScore(new Score(homeScore, awayScore));
         this.fullTime = true;
     }
 
@@ -92,10 +88,10 @@ public class FootballMatch {
         builder.append(") ");
         builder.append(arena);
         builder.append(", ");
-        builder.append(matchType.toString());
-        builder.append(", [");
-        builder.append(getFinalScoreAsString());
-        builder.append("]");
+        builder.append(matchType.toString() + ", ");
+        builder.append("[" + homeTeam + " ");
+        builder.append(score.toString());
+        builder.append(" " + awayTeam + "]");
         builder.append("\n");
         return  builder.toString();
     }
@@ -122,6 +118,10 @@ public class FootballMatch {
 
     public String getAwayTeam() {
         return awayTeam;
+    }
+
+    public void setScore(Score score) {
+        this.score = score;
     }
 
     public static class MatcherBuilder {

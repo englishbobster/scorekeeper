@@ -34,18 +34,6 @@ public class ScoreTest {
     }
 
     @Test
-    public void change_a_score_from_nil_nil_to_some_other_value() {
-        Score score1 = new Score();
-        assertThat(score1.getHomeScore(), is(0));
-        assertThat(score1.getAwayScore(), is(0));
-
-        score1.setScore(5, 5);
-
-        assertThat(score1.getHomeScore(), is(5));
-        assertThat(score1.getAwayScore(), is(5));
-    }
-
-    @Test
     public void hashCode_gives_unique_values() throws Exception {
         int hash_3_2 = new Score(3, 2).hashCode();
         int hash_2_3 = new Score(2, 3).hashCode();
@@ -60,5 +48,4 @@ public class ScoreTest {
 
         assertThat(hash_1_0, is(not(equalTo(hash_0_1))));
     }
-
 }
