@@ -1,8 +1,9 @@
 module ScoreKeeper exposing (..)
 
-import Html exposing (Html, program, div, table, tr, td, text)
+import Html exposing (Html, program, div, table, thead, tbody, th, tr, td, text)
 import Http exposing (Request)
-import Json.Decode exposing (Decoder, at, list, int, string, map2, map6, field)
+import Html.Attributes exposing (class)
+import Json.Decode exposing (Decoder, at, list, int, string, bool, map2, map8, field)
 
 
 --Constants
@@ -34,12 +35,14 @@ type alias Score =
 
 
 type alias PlannedMatch =
-    { homeTeam : String
+    { id : Int
+    , homeTeam : String
     , awayTeam : String
     , score : Score
     , matchTime : String
     , arena : String
     , matchType : String
+    , fullTime : Bool
     }
 
 
@@ -73,8 +76,8 @@ update msg model =
 
         FetchPlannedMatches result ->
             case result of
-                Ok responseStr ->
-                    ( { model | listMatches = responseStr }, Cmd.none )
+                Ok fetchedMatches ->
+                    ( { model | listMatches = fetchedMatches }, Cmd.none )
 
                 Err httpError ->
                     ( { model | loadingError = Just (toString httpError) }, Cmd.none )
@@ -105,13 +108,15 @@ scoreDecoder =
 
 footballMatchDecoder : Decoder PlannedMatch
 footballMatchDecoder =
-    map6 PlannedMatch
+    map8 PlannedMatch
+        (field "id" int)
         (field "homeTeam" string)
         (field "awayTeam" string)
         (at [ "score" ] scoreDecoder)
         (field "matchTime" string)
         (field "arena" string)
         (field "matchType" string)
+        (field "fullTime" bool)
 
 
 
@@ -120,22 +125,57 @@ footballMatchDecoder =
 
 view : Model -> Html msg
 view model =
-    div []
-        [ text (toString model.loadingError)
-        , table [] (List.map (\match -> makeFootballMatchRow match) model.listMatches)
+    div [] [ errorOrView model ]
+
+
+errorOrView : Model -> Html msg
+errorOrView model =
+    case model.loadingError of
+        Just error ->
+            text (toString error)
+
+        Nothing ->
+            makeFootballMatchTable model.listMatches
+
+
+makeFootballMatchTable : List PlannedMatch -> Html msg
+makeFootballMatchTable listOfMatches =
+    div [ class "datagrid" ]
+        [ table
+            [ class "datagrid" ]
+            [ makeFootballMatchHeader
+            , tbody [ class "datagrid" ] (List.map (\match -> makeFootballMatchRow match) listOfMatches)
+            ]
+        ]
+
+
+makeFootballMatchHeader : Html msg
+makeFootballMatchHeader =
+    thead [ class "datagrid" ]
+        [ th [] [ text "Match #" ]
+        , th [] [ text "Home Team" ]
+        , th [] [ text "Home Score" ]
+        , th [] [ text "Away Score" ]
+        , th [] [ text "Away Team" ]
+        , th [] [ text "Date" ]
+        , th [] [ text "Arena" ]
+        , th [] [ text "Group/Round" ]
+        , th [] [ text "Full Time" ]
         ]
 
 
 makeFootballMatchRow : PlannedMatch -> Html msg
 makeFootballMatchRow match =
     tr []
-        [ td [] [ text match.homeTeam ]
+        [ td [] [ text (toString match.id) ]
+        , td [] [ text match.homeTeam ]
         , td [] [ text (toString match.score.homeScore) ]
         , td [] [ text (toString match.score.awayScore) ]
         , td [] [ text match.awayTeam ]
         , td [] [ text match.matchTime ]
         , td [] [ text match.arena ]
         , td [] [ text match.matchType ]
+        , td [] [ text (toString match.fullTime) ]
         ]
 
 
