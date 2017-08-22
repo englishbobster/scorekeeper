@@ -1,9 +1,11 @@
 module ScoreKeeper exposing (..)
 
-import Html exposing (Html, program, div, table, thead, tbody, th, tr, td, text)
+import Html exposing (Html, program, input, div, table, thead, tbody, th, tr, td, text, label)
+import Html.Attributes exposing (class, type_)
+import Html.Events exposing (onClick)
 import Http exposing (Request)
-import Html.Attributes exposing (class)
 import Json.Decode exposing (Decoder, at, list, int, string, bool, map2, map8, field)
+import Array exposing (fromList, toList)
 
 
 --Constants
@@ -34,8 +36,12 @@ type alias Score =
     }
 
 
+type alias MatchId =
+    Int
+
+
 type alias PlannedMatch =
-    { id : Int
+    { id : MatchId
     , homeTeam : String
     , awayTeam : String
     , score : Score
@@ -66,6 +72,7 @@ initialModel =
 type Msg
     = NoOp
     | FetchPlannedMatches (Result Http.Error (List PlannedMatch))
+    | ToggleFullTime MatchId
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -74,6 +81,9 @@ update msg model =
         NoOp ->
             ( model, Cmd.none )
 
+        ToggleFullTime matchId ->
+            ( { model | listMatches = (toggleFullTimeForMatchId matchId model.listMatches) }, Cmd.none )
+
         FetchPlannedMatches result ->
             case result of
                 Ok fetchedMatches ->
@@ -81,6 +91,15 @@ update msg model =
 
                 Err httpError ->
                     ( { model | loadingError = Just (toString httpError) }, Cmd.none )
+
+
+toggleFullTimeForMatchId : MatchId -> List PlannedMatch -> List PlannedMatch
+toggleFullTimeForMatchId id plannedMatches =
+    let
+        matchArray =
+            Array.fromList plannedMatches
+    in
+        Array.toList matchArray
 
 
 getPlannedMatches : Cmd Msg
@@ -123,12 +142,12 @@ footballMatchDecoder =
 --View
 
 
-view : Model -> Html msg
+view : Model -> Html Msg
 view model =
     div [] [ errorOrView model ]
 
 
-errorOrView : Model -> Html msg
+errorOrView : Model -> Html Msg
 errorOrView model =
     case model.loadingError of
         Just error ->
@@ -138,7 +157,7 @@ errorOrView model =
             makeFootballMatchTable model.listMatches
 
 
-makeFootballMatchTable : List PlannedMatch -> Html msg
+makeFootballMatchTable : List PlannedMatch -> Html Msg
 makeFootballMatchTable listOfMatches =
     div [ class "datagrid" ]
         [ table
@@ -164,7 +183,7 @@ makeFootballMatchHeader =
         ]
 
 
-makeFootballMatchRow : PlannedMatch -> Html msg
+makeFootballMatchRow : PlannedMatch -> Html Msg
 makeFootballMatchRow match =
     tr []
         [ td [] [ text (toString match.id) ]
@@ -175,8 +194,13 @@ makeFootballMatchRow match =
         , td [] [ text match.matchTime ]
         , td [] [ text match.arena ]
         , td [] [ text match.matchType ]
-        , td [] [ text (toString match.fullTime) ]
+        , td [] [ checkbox (ToggleFullTime match.id) ]
         ]
+
+
+checkbox : msg -> Html msg
+checkbox msg =
+    input [ type_ "checkbox", onClick msg ] []
 
 
 
