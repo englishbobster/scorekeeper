@@ -181,4 +181,8 @@ public class DbPlannedMatchesDAO {
         }
         return count;
     }
+
+    public boolean setFinalScore(String params, String homeScore, String awayScore) {
+        return false;
+    }
 }

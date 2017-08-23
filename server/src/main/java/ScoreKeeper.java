@@ -4,6 +4,7 @@ import stos.keeper.sparkServer.json.PlannedMatchesResponseTransformer;
 
 import static spark.Spark.after;
 import static spark.Spark.get;
+import static spark.Spark.put;
 import static spark.Spark.staticFiles;
 
 public class ScoreKeeper {
@@ -15,5 +16,11 @@ public class ScoreKeeper {
         PlannedMatchesResponseTransformer transformer = new PlannedMatchesResponseTransformer();
         get("/plannedmatches", (req, response) -> plannedMatchesDAO.getAllPlannedMatches(), transformer);
         after((req, response) -> response.type("application/json"));
+
+        put("/plannedmatches:id", ((request, response) ->
+                plannedMatchesDAO.setFinalScore(request.params(":id"),
+                request.queryParams("homeScore"),
+                request.queryParams("awayScore"))), transformer);
     }
+
 }

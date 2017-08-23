@@ -1,11 +1,11 @@
 module ScoreKeeper exposing (..)
 
-import Html exposing (Html, program, input, div, table, thead, tbody, th, tr, td, text, label)
+import Html exposing (Html, program, input, div, table, thead, tbody, th, tr, td, text, label, h1)
 import Html.Attributes exposing (class, type_)
 import Html.Events exposing (onClick)
 import Http exposing (Request)
 import Json.Decode exposing (Decoder, at, list, int, string, bool, map2, map8, field)
-import Array exposing (fromList, toList)
+import Dict exposing (Dict)
 
 
 --Constants
@@ -52,15 +52,19 @@ type alias PlannedMatch =
     }
 
 
+type alias DictIdToMatches =
+    Dict MatchId PlannedMatch
+
+
 type alias Model =
-    { listMatches : List PlannedMatch
+    { matches : DictIdToMatches
     , loadingError : Maybe String
     }
 
 
 initialModel : Model
 initialModel =
-    { listMatches = []
+    { matches = Dict.empty
     , loadingError = Nothing
     }
 
@@ -82,24 +86,41 @@ update msg model =
             ( model, Cmd.none )
 
         ToggleFullTime matchId ->
-            ( { model | listMatches = (toggleFullTimeForMatchId matchId model.listMatches) }, Cmd.none )
+            ( { model | matches = (toggleFullTimeForMatchId matchId model.matches) }, Cmd.none )
 
         FetchPlannedMatches result ->
             case result of
                 Ok fetchedMatches ->
-                    ( { model | listMatches = fetchedMatches }, Cmd.none )
+                    ( { model | matches = listMatchesToDict fetchedMatches }, Cmd.none )
 
                 Err httpError ->
                     ( { model | loadingError = Just (toString httpError) }, Cmd.none )
 
 
-toggleFullTimeForMatchId : MatchId -> List PlannedMatch -> List PlannedMatch
+toggleFullTimeForMatchId : MatchId -> DictIdToMatches -> DictIdToMatches
 toggleFullTimeForMatchId id plannedMatches =
-    let
-        matchArray =
-            Array.fromList plannedMatches
-    in
-        Array.toList matchArray
+    Dict.update id (toggleFullTime) plannedMatches
+
+
+toggleFullTime : Maybe PlannedMatch -> Maybe PlannedMatch
+toggleFullTime maybeMatch =
+    case maybeMatch of
+        Just match ->
+            Just ({ match | fullTime = not match.fullTime })
+
+        Nothing ->
+            maybeMatch
+
+
+listMatchesToDict : List PlannedMatch -> DictIdToMatches
+listMatchesToDict matchList =
+    List.map (\match -> ( match.id, match )) matchList
+        |> Dict.fromList
+
+
+listMatchesFromDict : DictIdToMatches -> List PlannedMatch
+listMatchesFromDict matchDict =
+    Dict.values matchDict
 
 
 getPlannedMatches : Cmd Msg
@@ -154,7 +175,7 @@ errorOrView model =
             text (toString error)
 
         Nothing ->
-            makeFootballMatchTable model.listMatches
+            makeFootballMatchTable (listMatchesFromDict model.matches)
 
 
 makeFootballMatchTable : List PlannedMatch -> Html Msg
@@ -165,6 +186,8 @@ makeFootballMatchTable listOfMatches =
             [ makeFootballMatchHeader
             , tbody [ class "datagrid" ] (List.map (\match -> makeFootballMatchRow match) listOfMatches)
             ]
+        , h1 [] [ text "debug info" ]
+        , div [] [ text (toString listOfMatches) ]
         ]
 
 
