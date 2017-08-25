@@ -13,14 +13,14 @@ public class FootballMatch {
     private boolean fullTime;
     private MatchType matchType;
 
-    private FootballMatch(int id, ZonedDateTime matchTime, String arena, String homeTeam, String awayTeam, MatchType matchType) {
+    private FootballMatch(int id, ZonedDateTime matchTime, String arena, String homeTeam, String awayTeam, MatchType matchType, Score score, boolean fullTime) {
         this.id = id;
         this.matchTime = matchTime;
         this.arena = arena;
         this.homeTeam = homeTeam;
         this.awayTeam = awayTeam;
-        this.score = new Score();
-        this.fullTime = false;
+        this.score = score;
+        this.fullTime = fullTime;
         this.matchType = matchType;
     }
 
@@ -131,9 +131,11 @@ public class FootballMatch {
         private String homeTeam;
         private String awayTeam;
         private MatchType matchType;
+        private boolean fullTime = false;
+        private Score score = new Score();
 
         public FootballMatch build() {
-            return new FootballMatch(id, matchTime, arena, homeTeam, awayTeam, matchType);
+            return new FootballMatch(id, matchTime, arena, homeTeam, awayTeam, matchType, score, fullTime);
         }
 
         public MatcherBuilder id(int id) {
@@ -159,6 +161,16 @@ public class FootballMatch {
 
         public MatcherBuilder matchType(MatchType matchType) {
             this.matchType = matchType;
+            return this;
+        }
+
+        public MatcherBuilder score(Score score) {
+            this.score = score;
+            return this;
+        }
+
+        public MatcherBuilder fullTime(boolean fullTime) {
+            this.fullTime = fullTime;
             return this;
         }
     }

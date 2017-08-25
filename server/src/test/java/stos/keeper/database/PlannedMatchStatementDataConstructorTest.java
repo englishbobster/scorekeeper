@@ -23,7 +23,7 @@ public class PlannedMatchStatementDataConstructorTest {
     private static final String EXPECTED_INSERT = "INSERT INTO planned_matches VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
     public static final String EXPECTED_COUNT = "SELECT COUNT(*) FROM planned_matches";
     public static final String EXPECTED_SELECT_ALL = "SELECT * FROM planned_matches";
-    public static final String EXPECTED_UPDATE_SCORE ="UPDATE planned_matches SET (home_score, away_score)=(?, ?) WHERE ID= ? and fulltime = false";
+    public static final String EXPECTED_UPDATE_SCORE ="UPDATE planned_matches SET (home_score, away_score, fulltime)=(?, ?, ?) WHERE ID= ? and fulltime = false";
 
     private FootballMatch match;
 

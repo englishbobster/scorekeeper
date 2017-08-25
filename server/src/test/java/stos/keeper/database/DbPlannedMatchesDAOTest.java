@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import stos.keeper.model.FootballMatch;
 import stos.keeper.model.MatchType;
+import stos.keeper.model.Score;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -99,7 +100,7 @@ public class DbPlannedMatchesDAOTest {
         assertThat(fetchedMatch.getScore().getHomeScore(), is(current_home_score));
         assertThat(fetchedMatch.getScore().getAwayScore(), is(current_away_score));
 
-        dao.updateMatchScoreById(ID_1000, 7, 1);
+        dao.setFinalScoreForMatchById(ID_1000, new Score(7, 1));
 
         Optional<FootballMatch> updatedMatchOptional = dao.findMatchById(ID_1000);
         assertThat(updatedMatchOptional, is(not(Optional.empty())));

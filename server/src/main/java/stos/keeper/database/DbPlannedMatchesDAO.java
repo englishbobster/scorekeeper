@@ -125,16 +125,16 @@ public class DbPlannedMatchesDAO {
         }
     }
 
-
-    public int updateMatchScoreById(int id, int homeScore, int awayScore) {
+    public int setFinalScoreForMatchById(int id, Score score) {
         Connection connection = dataSource.getConnection();
         try {
             StatementDataObject statementData = PlannedMatchStatementDataConstructor
                     .getStatementDataFor("updatePlannedMatchScoreById", Optional.empty());
             PreparedStatement statement = connection.prepareStatement(statementData.getSqlStatement());
-            statement.setInt(1, homeScore);
-            statement.setInt(2, awayScore);
-            statement.setInt(3, id);
+            statement.setInt(1, score.getHomeScore());
+            statement.setInt(2, score.getAwayScore());
+            statement.setBoolean(3, true);
+            statement.setInt(4, id);
             return  statement.executeUpdate();
       } catch (SQLException e) {
             LOG.info("SQL exception {} with error code {} when updating match with id: {}", e.getMessage(), e.getErrorCode(), id);
@@ -162,8 +162,8 @@ public class DbPlannedMatchesDAO {
                     .arena(resultSet.getString("arena"))
                     .teams(resultSet.getString("home_team"), resultSet.getString("away_team"))
                     .matchType(MatchType.valueOf(resultSet.getString("matchtype")))
-                    .build();
-            footballMatch.setScore(new Score(resultSet.getInt("home_score"), resultSet.getInt("away_score")));
+                    .score(new Score(resultSet.getInt("home_score"), resultSet.getInt("away_score")))
+                    .fullTime(resultSet.getBoolean("fulltime")).build();
             return Optional.of(footballMatch);
         } catch (SQLException e) {
             LOG.info("SQL exception {} with error code {} when building match from resultset.", e.getMessage(), e.getErrorCode());
@@ -180,9 +180,5 @@ public class DbPlannedMatchesDAO {
             return count;
         }
         return count;
-    }
-
-    public boolean setFinalScore(String params, String homeScore, String awayScore) {
-        return false;
     }
 }

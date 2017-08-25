@@ -1,7 +1,7 @@
 module ScoreKeeper exposing (..)
 
 import Html exposing (Html, program, input, div, table, thead, tbody, th, tr, td, text, label, h1)
-import Html.Attributes exposing (class, type_)
+import Html.Attributes exposing (class, type_, checked)
 import Html.Events exposing (onClick)
 import Http exposing (Request)
 import Json.Decode exposing (Decoder, at, list, int, string, bool, map2, map8, field)
@@ -217,13 +217,13 @@ makeFootballMatchRow match =
         , td [] [ text match.matchTime ]
         , td [] [ text match.arena ]
         , td [] [ text match.matchType ]
-        , td [] [ checkbox (ToggleFullTime match.id) ]
+        , td [] [ checkbox (ToggleFullTime match.id) match.fullTime ]
         ]
 
 
-checkbox : msg -> Html msg
-checkbox msg =
-    input [ type_ "checkbox", onClick msg ] []
+checkbox : msg -> Bool -> Html msg
+checkbox msg check =
+    input [ checked check, type_ "checkbox", onClick msg ] []
 
 
 

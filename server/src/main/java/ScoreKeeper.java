@@ -1,5 +1,7 @@
+import com.google.gson.Gson;
 import stos.keeper.database.DbPlannedMatchesDAO;
 import stos.keeper.database.PostgresDataSourceImpl;
+import stos.keeper.model.Score;
 import stos.keeper.sparkServer.json.PlannedMatchesResponseTransformer;
 
 import static spark.Spark.after;
@@ -17,10 +19,13 @@ public class ScoreKeeper {
         get("/plannedmatches", (req, response) -> plannedMatchesDAO.getAllPlannedMatches(), transformer);
         after((req, response) -> response.type("application/json"));
 
-        put("/plannedmatches:id", ((request, response) ->
-                plannedMatchesDAO.setFinalScore(request.params(":id"),
-                request.queryParams("homeScore"),
-                request.queryParams("awayScore"))), transformer);
+        put("/plannedmatches/:id", (request, response) -> {
+            int id = Integer.parseInt(request.params(":id"));
+            Score score = new Gson().fromJson(request.body(), Score.class);
+            return plannedMatchesDAO.setFinalScoreForMatchById(id, score);
+        });
+
+
     }
 
 }

@@ -17,7 +17,7 @@ class PlannedMatchStatementDataConstructor {
     private static final String INSERT_MATCH = "INSERT INTO " + MATCHES_TABLE_NAME + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String COUNT_MATCHES = "SELECT COUNT(*) FROM " + MATCHES_TABLE_NAME;
     private static final String FETCH_ALL_PLANNED_MATCHES = "SELECT * FROM " + MATCHES_TABLE_NAME;
-    private static final String UPDATE_MATCH_BY_ID = "UPDATE " + MATCHES_TABLE_NAME + " SET (home_score, away_score)=(?, ?)"
+    private static final String SET_FINAL_SCORE_FOR_MATCH_BY_ID = "UPDATE " + MATCHES_TABLE_NAME + " SET (home_score, away_score, fulltime)=(?, ?, ?)"
             + " WHERE ID= ? and fulltime = false";
 
 
@@ -36,7 +36,7 @@ class PlannedMatchStatementDataConstructor {
             return new StatementDataObject(FETCH_ALL_PLANNED_MATCHES, Collections.emptyList());
         }
         if (transactionName.equals("updatePlannedMatchScoreById")) {
-            return new StatementDataObject(UPDATE_MATCH_BY_ID, Collections.emptyList());
+            return new StatementDataObject(SET_FINAL_SCORE_FOR_MATCH_BY_ID, Collections.emptyList());
         }
         if (matchOptional.isPresent()) {
             FootballMatch match = matchOptional.get();
