@@ -224,8 +224,8 @@ makeFootballMatchRow match =
     tr []
         [ td [] [ text (toString match.id) ]
         , td [] [ text match.homeTeam ]
-        , td [] [ scoreInputField (SetHomeScore match.id) match.score.homeScore ]
-        , td [] [ scoreInputField (SetAwayScore match.id) match.score.awayScore ]
+        , td [] [ scoreInputField (SetHomeScore match.id) match.score.homeScore match.fullTime ]
+        , td [] [ scoreInputField (SetAwayScore match.id) match.score.awayScore match.fullTime ]
         , td [] [ text match.awayTeam ]
         , td [] [ text match.matchTime ]
         , td [] [ text match.arena ]
@@ -239,10 +239,11 @@ checkbox msg ifChecked =
     input [ checked ifChecked, disabled ifChecked, type_ "checkbox", onClick msg ] []
 
 
-scoreInputField : (String -> Msg) -> Int -> Html Msg
-scoreInputField msg nrGoals =
+scoreInputField : (String -> Msg) -> Int -> Bool -> Html Msg
+scoreInputField msg nrGoals ifFullTime =
     input
         [ type_ "number"
+        , disabled ifFullTime
         , Html.Attributes.min "0"
         , Html.Attributes.max "999"
         , size 3
