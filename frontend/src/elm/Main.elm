@@ -1,8 +1,8 @@
 module ScoreKeeper exposing (..)
 
 import Html exposing (Html, program, input, div, table, thead, tbody, th, tr, td, text, label, h1)
-import Html.Attributes exposing (class, type_, checked)
-import Html.Events exposing (onClick)
+import Html.Attributes exposing (class, type_, checked, disabled, size, value)
+import Html.Events exposing (onClick, onInput)
 import Http exposing (Request)
 import Json.Decode exposing (Decoder, at, list, int, string, bool, map2, map8, field)
 import Dict exposing (Dict)
@@ -77,6 +77,7 @@ type Msg
     = NoOp
     | FetchPlannedMatches (Result Http.Error (List PlannedMatch))
     | ToggleFullTime MatchId
+    | SetTeamScore Int String
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -87,6 +88,9 @@ update msg model =
 
         ToggleFullTime matchId ->
             ( { model | matches = (toggleFullTimeForMatchId matchId model.matches) }, Cmd.none )
+
+        SetTeamScore id score ->
+            ( model, Cmd.none )
 
         FetchPlannedMatches result ->
             case result of
@@ -211,8 +215,8 @@ makeFootballMatchRow match =
     tr []
         [ td [] [ text (toString match.id) ]
         , td [] [ text match.homeTeam ]
-        , td [] [ text (toString match.score.homeScore) ]
-        , td [] [ text (toString match.score.awayScore) ]
+        , td [] [ scoreInputField match.id match.score.homeScore ]
+        , td [] [ scoreInputField match.id match.score.awayScore ]
         , td [] [ text match.awayTeam ]
         , td [] [ text match.matchTime ]
         , td [] [ text match.arena ]
@@ -222,8 +226,21 @@ makeFootballMatchRow match =
 
 
 checkbox : msg -> Bool -> Html msg
-checkbox msg check =
-    input [ checked check, type_ "checkbox", onClick msg ] []
+checkbox msg ifChecked =
+    input [ checked ifChecked, disabled ifChecked, type_ "checkbox", onClick msg ] []
+
+
+scoreInputField : Int -> Int -> Html Msg
+scoreInputField id teamScore =
+    input
+        [ type_ "number"
+        , Html.Attributes.min "0"
+        , Html.Attributes.max "999"
+        , size 3
+        , value (toString teamScore)
+        , onInput (SetTeamScore id)
+        ]
+        []
 
 
 
