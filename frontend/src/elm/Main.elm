@@ -77,7 +77,8 @@ type Msg
     = NoOp
     | FetchPlannedMatches (Result Http.Error (List PlannedMatch))
     | ToggleFullTime MatchId
-    | SetTeamScore Int String
+    | SetHomeScore Int String
+    | SetAwayScore Int String
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -89,8 +90,11 @@ update msg model =
         ToggleFullTime matchId ->
             ( { model | matches = (toggleFullTimeForMatchId matchId model.matches) }, Cmd.none )
 
-        SetTeamScore id score ->
-            ( model, Cmd.none )
+        SetHomeScore matchId score ->
+            ( { model | matches = updateScore matchId score model.matches }, Cmd.none )
+
+        SetAwayScore matchId score ->
+            ( { model | matches = updateScore matchId score model.matches }, Cmd.none )
 
         FetchPlannedMatches result ->
             case result of
@@ -99,6 +103,11 @@ update msg model =
 
                 Err httpError ->
                     ( { model | loadingError = Just (toString httpError) }, Cmd.none )
+
+
+updateScore : MatchId -> String -> DictIdToMatches -> DictIdToMatches
+updateScore id score plannedMatches =
+    plannedMatches
 
 
 toggleFullTimeForMatchId : MatchId -> DictIdToMatches -> DictIdToMatches
@@ -215,8 +224,8 @@ makeFootballMatchRow match =
     tr []
         [ td [] [ text (toString match.id) ]
         , td [] [ text match.homeTeam ]
-        , td [] [ scoreInputField match.id match.score.homeScore ]
-        , td [] [ scoreInputField match.id match.score.awayScore ]
+        , td [] [ scoreInputField (SetHomeScore match.id) match.score.homeScore ]
+        , td [] [ scoreInputField (SetAwayScore match.id) match.score.awayScore ]
         , td [] [ text match.awayTeam ]
         , td [] [ text match.matchTime ]
         , td [] [ text match.arena ]
@@ -230,15 +239,15 @@ checkbox msg ifChecked =
     input [ checked ifChecked, disabled ifChecked, type_ "checkbox", onClick msg ] []
 
 
-scoreInputField : Int -> Int -> Html Msg
-scoreInputField id teamScore =
+scoreInputField : (String -> Msg) -> Int -> Html Msg
+scoreInputField msg nrGoals =
     input
         [ type_ "number"
         , Html.Attributes.min "0"
         , Html.Attributes.max "999"
         , size 3
-        , value (toString teamScore)
-        , onInput (SetTeamScore id)
+        , value (toString nrGoals)
+        , onInput msg
         ]
         []
 
