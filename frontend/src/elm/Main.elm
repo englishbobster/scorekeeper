@@ -3,8 +3,9 @@ module ScoreKeeper exposing (..)
 import Html exposing (Html, program, input, div, table, thead, tbody, th, tr, td, text, label, h1)
 import Html.Attributes exposing (class, type_, checked, disabled, size, value)
 import Html.Events exposing (onClick, onInput)
-import Http exposing (Request)
+import Http exposing (Request, Body, jsonBody, request, header, expectString)
 import Json.Decode exposing (Decoder, at, list, int, string, bool, map2, map8, field)
+import Json.Encode exposing (object)
 import Dict exposing (Dict)
 
 
@@ -62,6 +63,11 @@ type alias Model =
     }
 
 
+type Venue
+    = Home
+    | Away
+
+
 initialModel : Model
 initialModel =
     { matches = Dict.empty
@@ -76,7 +82,8 @@ initialModel =
 type Msg
     = NoOp
     | FetchPlannedMatches (Result Http.Error (List PlannedMatch))
-    | ToggleFullTime MatchId
+    | UpdateMatch (Result Http.Error String)
+    | ToggleFullTime MatchId Score
     | SetHomeScore Int String
     | SetAwayScore Int String
 
@@ -87,14 +94,22 @@ update msg model =
         NoOp ->
             ( model, Cmd.none )
 
-        ToggleFullTime matchId ->
-            ( { model | matches = (toggleFullTimeForMatchId matchId model.matches) }, Cmd.none )
+        ToggleFullTime matchId finalScore ->
+            ( { model | matches = (toggleFullTimeForMatchId matchId model.matches) }, putFullTimeScore matchId finalScore )
 
         SetHomeScore matchId score ->
-            ( { model | matches = updateScore matchId score model.matches }, Cmd.none )
+            ( { model | matches = updateScoreById matchId Home score model.matches }, Cmd.none )
 
         SetAwayScore matchId score ->
-            ( { model | matches = updateScore matchId score model.matches }, Cmd.none )
+            ( { model | matches = updateScoreById matchId Away score model.matches }, Cmd.none )
+
+        UpdateMatch result ->
+            case result of
+                Ok _ ->
+                    ( model, Cmd.none )
+
+                Err httpError ->
+                    ( { model | loadingError = Just (toString httpError) }, Cmd.none )
 
         FetchPlannedMatches result ->
             case result of
@@ -105,9 +120,41 @@ update msg model =
                     ( { model | loadingError = Just (toString httpError) }, Cmd.none )
 
 
-updateScore : MatchId -> String -> DictIdToMatches -> DictIdToMatches
-updateScore id score plannedMatches =
-    plannedMatches
+updateScoreById : MatchId -> Venue -> String -> DictIdToMatches -> DictIdToMatches
+updateScoreById id venue score plannedMatches =
+    let
+        result =
+            String.toInt score
+
+        scoreValue =
+            case result of
+                Ok val ->
+                    val
+
+                Err error ->
+                    0
+    in
+        Dict.update id (updateScoreForMatch venue scoreValue) plannedMatches
+
+
+updateScoreForMatch : Venue -> Int -> Maybe PlannedMatch -> Maybe PlannedMatch
+updateScoreForMatch venue goalsFor maybeMatch =
+    case maybeMatch of
+        Just match ->
+            Just ({ match | score = updateScore venue goalsFor match.score })
+
+        Nothing ->
+            maybeMatch
+
+
+updateScore : Venue -> Int -> Score -> Score
+updateScore venue goalsFor score =
+    case venue of
+        Home ->
+            { score | homeScore = goalsFor }
+
+        Away ->
+            { score | awayScore = goalsFor }
 
 
 toggleFullTimeForMatchId : MatchId -> DictIdToMatches -> DictIdToMatches
@@ -152,6 +199,17 @@ plannedMatchesUrl =
         ++ constants.plannedMatchesPath
 
 
+fullTimeUrl : String -> String
+fullTimeUrl id =
+    "http://"
+        ++ constants.backendAddress
+        ++ ":"
+        ++ toString (constants.backendPort)
+        ++ constants.plannedMatchesPath
+        ++ "/"
+        ++ id
+
+
 scoreDecoder : Decoder Score
 scoreDecoder =
     map2 Score
@@ -170,6 +228,36 @@ footballMatchDecoder =
         (field "arena" string)
         (field "matchType" string)
         (field "fullTime" bool)
+
+
+putFullTimeScore : MatchId -> Score -> Cmd Msg
+putFullTimeScore id score =
+    Http.send UpdateMatch (putRequestForFullTime (fullTimeUrl (toString id)) (fullTimeRequestBody score))
+
+
+putRequestForFullTime : String -> Body -> Request String
+putRequestForFullTime url body =
+    request
+        { method = "PUT"
+        , headers = []
+        , url = url
+        , body = body
+        , expect = expectString
+        , timeout = Nothing
+        , withCredentials = False
+        }
+
+
+fullTimeRequestBody : Score -> Body
+fullTimeRequestBody score =
+    let
+        home =
+            toString score.homeScore
+
+        away =
+            toString score.awayScore
+    in
+        jsonBody <| object [ ( "homeScore", Json.Encode.string home ), ( "awayScore", Json.Encode.string away ) ]
 
 
 
@@ -230,7 +318,7 @@ makeFootballMatchRow match =
         , td [] [ text match.matchTime ]
         , td [] [ text match.arena ]
         , td [] [ text match.matchType ]
-        , td [] [ checkbox (ToggleFullTime match.id) match.fullTime ]
+        , td [] [ checkbox (ToggleFullTime match.id match.score) match.fullTime ]
         ]
 
 
