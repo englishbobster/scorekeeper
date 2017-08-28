@@ -22,7 +22,7 @@ type alias Constants =
 constants : Constants
 constants =
     { backendAddress = "127.0.0.1"
-    , backendPort = 4567
+    , backendPort = 5000
     , plannedMatchesPath = "/plannedmatches"
     }
 
@@ -199,15 +199,9 @@ plannedMatchesUrl =
         ++ constants.plannedMatchesPath
 
 
-fullTimeUrl : String -> String
+fullTimeUrl : Int -> String
 fullTimeUrl id =
-    "http://"
-        ++ constants.backendAddress
-        ++ ":"
-        ++ toString (constants.backendPort)
-        ++ constants.plannedMatchesPath
-        ++ "/"
-        ++ id
+    plannedMatchesUrl ++ "/" ++ (toString id)
 
 
 scoreDecoder : Decoder Score
@@ -232,11 +226,13 @@ footballMatchDecoder =
 
 putFullTimeScore : MatchId -> Score -> Cmd Msg
 putFullTimeScore id score =
-    Http.send UpdateMatch (putRequestForFullTime (fullTimeUrl (toString id)) (fullTimeRequestBody score))
+    putScoreReqBody score
+        |> putScoreReqOnFullTime (fullTimeUrl id)
+        |> Http.send UpdateMatch
 
 
-putRequestForFullTime : String -> Body -> Request String
-putRequestForFullTime url body =
+putScoreReqOnFullTime : String -> Body -> Request String
+putScoreReqOnFullTime url body =
     request
         { method = "PUT"
         , headers = []
@@ -248,16 +244,13 @@ putRequestForFullTime url body =
         }
 
 
-fullTimeRequestBody : Score -> Body
-fullTimeRequestBody score =
-    let
-        home =
-            toString score.homeScore
-
-        away =
-            toString score.awayScore
-    in
-        jsonBody <| object [ ( "homeScore", Json.Encode.string home ), ( "awayScore", Json.Encode.string away ) ]
+putScoreReqBody : Score -> Body
+putScoreReqBody score =
+    jsonBody <|
+        object
+            [ ( "homeScore", Json.Encode.int score.homeScore )
+            , ( "awayScore", Json.Encode.int score.awayScore )
+            ]
 
 
 

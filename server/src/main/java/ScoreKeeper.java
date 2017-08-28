@@ -6,6 +6,7 @@ import stos.keeper.sparkServer.json.PlannedMatchesResponseTransformer;
 
 import static spark.Spark.after;
 import static spark.Spark.get;
+import static spark.Spark.port;
 import static spark.Spark.put;
 import static spark.Spark.staticFiles;
 
@@ -13,6 +14,7 @@ public class ScoreKeeper {
 
     public static void main(String[] args) {
         DbPlannedMatchesDAO plannedMatchesDAO = new DbPlannedMatchesDAO(new PostgresDataSourceImpl());
+        port(5000);
         staticFiles.externalLocation(System.getProperty("user.dir") + "/server/src/main/resources/public");
 
         PlannedMatchesResponseTransformer transformer = new PlannedMatchesResponseTransformer();
