@@ -22,5 +22,5 @@ flyway {
     locations = ['filesystem:src/main/resources/db/migration']
 }
 
-mainClassName = 'App'
+mainClassName = 'stos.keeper.ScoreKeeper'
 

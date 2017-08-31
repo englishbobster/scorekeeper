@@ -1,8 +1,14 @@
 package stos.keeper.sparkServer.json;
 
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 import spark.ResponseTransformer;
 import stos.keeper.model.MatchType;
+import stos.keeper.model.Score;
 
 import java.lang.reflect.Type;
 import java.time.ZoneId;
@@ -23,6 +29,10 @@ public class PlannedMatchesResponseTransformer implements ResponseTransformer {
     @Override
     public String render(Object model) throws Exception {
         return gson.toJson(model);
+    }
+
+    public Score scoreFromJson(String response) {
+        return gson.fromJson(response, Score.class);
     }
 
     private class ZoneDateTimeSerializationAdapter implements JsonSerializer<ZonedDateTime> {
