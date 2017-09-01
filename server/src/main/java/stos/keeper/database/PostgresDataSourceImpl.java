@@ -7,13 +7,13 @@ import java.util.Properties;
 
 public class PostgresDataSourceImpl implements DataSource {
 
-    public static final String DB_URL = "jdbc:postgresql://localhost/scorekeeper";
-    public static final String USER_PROP = "user";
-    public static final String USER = "postgres";
-    public static final String PWD_PROP = "password";
-    public static final String PWD = "postgres";
-    public static final String SSL_PROP = "ssl";
-    public static final String SSL_ENABLED = "false";
+    private static final String DB_URL = "jdbc:postgresql://localhost/scorekeeper";
+    private static final String USER_PROP = "user";
+    private static final String USER = "postgres";
+    private static final String PWD_PROP = "password";
+    private static final String PWD = "postgres";
+    private static final String SSL_PROP = "ssl";
+    private static final String SSL_ENABLED = "false";
     private Connection conn = null;
 
     @Override
@@ -32,15 +32,13 @@ public class PostgresDataSourceImpl implements DataSource {
     }
 
     @Override
-    public boolean closeConnection() {
+    public void closeConnection() {
         if (conn != null) {
             try {
                 conn.close();
-                return true;
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
-        return false;
     }
 }

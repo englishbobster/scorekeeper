@@ -110,9 +110,7 @@ public class PlannedMatchesDAO extends AbstactDAO {
             ResultSet plannedMatches = statement.executeQuery();
             while (plannedMatches.next()) {
                 Optional<FootballMatch> match = footballMatchFrom(plannedMatches);
-                if (match.isPresent()) {
-                    allMatches.add(match.get());
-                }
+                match.ifPresent(allMatches::add);
             }
             return allMatches;
         } catch (SQLException e) {

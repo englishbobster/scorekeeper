@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-public class UserStatementDataConstructor {
+class UserStatementDataConstructor {
     private static final String USERS_TABLE_NAME = "players";
     private static final String INSERT_USER = "INSERT INTO " + USERS_TABLE_NAME
             + " (username, password, email, paid, created) VALUES (?, ?, ?, ?, ?)";
@@ -17,7 +17,7 @@ public class UserStatementDataConstructor {
             + " WHERE username= ?";
 
 
-    public static StatementDataObject getStatementDataFor(String transactionName, Optional<Player> playerOptional) {
+    static StatementDataObject getStatementDataFor(String transactionName, Optional<Player> playerOptional) {
         if(transactionName.equals("getPlayer")){
             return new StatementDataObject(GET_USER, Collections.emptyList());
         }
