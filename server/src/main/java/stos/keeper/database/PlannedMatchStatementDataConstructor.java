@@ -1,9 +1,7 @@
 package stos.keeper.database;
 
-import stos.keeper.model.FootballMatch;
+import stos.keeper.model.planned_matches.FootballMatch;
 
-import java.sql.Timestamp;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -43,7 +41,7 @@ class PlannedMatchStatementDataConstructor {
             if (transactionName.equals("addMatch")) {
                 List<Object> statementParameters = new ArrayList<>();
                 statementParameters.add(match.getId());
-                statementParameters.add(sqlTimeStampFrom(match.getMatchTime()));
+                statementParameters.add(ConversionUtils.sqlTimeStampFrom(match.getMatchTime()));
                 statementParameters.add(match.getArena());
                 statementParameters.add(match.getHomeTeam());
                 statementParameters.add(match.getAwayTeam());
@@ -55,10 +53,6 @@ class PlannedMatchStatementDataConstructor {
             }
         }
         return new StatementDataObject("", Collections.emptyList());
-    }
-
-    static Timestamp sqlTimeStampFrom(ZonedDateTime matchTime) {
-        return Timestamp.from(matchTime.toInstant());
     }
 
 }

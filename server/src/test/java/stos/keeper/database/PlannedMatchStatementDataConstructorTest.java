@@ -2,11 +2,9 @@ package stos.keeper.database;
 
 import org.junit.Before;
 import org.junit.Test;
-import stos.keeper.model.FootballMatch;
-import stos.keeper.model.MatchType;
+import stos.keeper.model.planned_matches.FootballMatch;
+import stos.keeper.model.planned_matches.MatchType;
 
-import java.sql.Timestamp;
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -34,16 +32,6 @@ public class PlannedMatchStatementDataConstructorTest {
     }
 
     @Test
-    public void convert_a_zoned_datetime_to_sql_time_stamp_and_back() throws Exception {
-        ZonedDateTime givenTime = ZonedDateTime.of(2004, 10, 19, 10, 23, 54, 0, ZoneId.systemDefault());
-        Timestamp expected = Timestamp.from(givenTime.toInstant());
-        assertThat(PlannedMatchStatementDataConstructor.sqlTimeStampFrom(givenTime), is(equalTo(expected)));
-
-        ZonedDateTime convertedBack = ZonedDateTime.ofInstant(expected.toInstant(), ZoneId.systemDefault());
-        assertThat(convertedBack, is(equalTo(givenTime)));
-    }
-
-    @Test
     public void get_statement_data_for_inserting_a_match() {
         StatementDataObject statementData = PlannedMatchStatementDataConstructor
                 .getStatementDataFor("addMatch", Optional.of(match));
@@ -51,7 +39,7 @@ public class PlannedMatchStatementDataConstructorTest {
         List<Object> addMatchParams = statementData.getParameters();
         assertThat(addMatchParams.size(), is(9));
         assertThat(addMatchParams, contains(match.getId()
-                , PlannedMatchStatementDataConstructor.sqlTimeStampFrom(match.getMatchTime())
+                , ConversionUtils.sqlTimeStampFrom(match.getMatchTime())
                 , match.getArena()
                 , match.getHomeTeam()
                 , match.getAwayTeam()

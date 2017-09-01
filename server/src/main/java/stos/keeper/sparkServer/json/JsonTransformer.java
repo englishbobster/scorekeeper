@@ -7,19 +7,19 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import spark.ResponseTransformer;
-import stos.keeper.model.MatchType;
-import stos.keeper.model.Score;
+import stos.keeper.model.planned_matches.MatchType;
+import stos.keeper.model.planned_matches.Score;
 
 import java.lang.reflect.Type;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class PlannedMatchesResponseTransformer implements ResponseTransformer {
+public class JsonTransformer implements ResponseTransformer {
 
     private Gson gson;
 
-    public PlannedMatchesResponseTransformer() {
+    public JsonTransformer() {
         gson = new GsonBuilder()
                 .registerTypeAdapter(ZonedDateTime.class, new ZoneDateTimeSerializationAdapter())
                 .registerTypeAdapter(MatchType.class, new MatchTypeAdapter())

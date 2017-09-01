@@ -1,8 +1,8 @@
 package stos.keeper.sparkServer.json;
 
 import org.junit.Test;
-import stos.keeper.model.FootballMatch;
-import stos.keeper.model.MatchType;
+import stos.keeper.model.planned_matches.FootballMatch;
+import stos.keeper.model.planned_matches.MatchType;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -13,11 +13,11 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 
-public class PlannedMatchesResponseTransformerTest {
+public class JsonTransformerTest {
 
     @Test
     public void should_render_correct_json_serialization_of_planned_matches() throws Exception {
-        PlannedMatchesResponseTransformer transformer = new PlannedMatchesResponseTransformer();
+        JsonTransformer transformer = new JsonTransformer();
         ZonedDateTime time = ZonedDateTime
                 .of(1970, 2, 20, 8, 0, 0, 0, ZoneId.systemDefault());
 

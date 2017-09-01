@@ -2,8 +2,8 @@ package stos.keeper.file;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import stos.keeper.model.FootballMatch;
-import stos.keeper.model.MatchType;
+import stos.keeper.model.planned_matches.FootballMatch;
+import stos.keeper.model.planned_matches.MatchType;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

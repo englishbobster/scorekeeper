@@ -4,8 +4,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import stos.keeper.model.FootballMatch;
-import stos.keeper.model.MatchType;
+import stos.keeper.model.planned_matches.FootballMatch;
+import stos.keeper.model.planned_matches.MatchType;
 
 import java.io.BufferedWriter;
 import java.io.File;

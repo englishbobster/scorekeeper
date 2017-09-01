@@ -2,9 +2,9 @@ package stos.keeper.database;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import stos.keeper.model.FootballMatch;
-import stos.keeper.model.MatchType;
-import stos.keeper.model.Score;
+import stos.keeper.model.planned_matches.FootballMatch;
+import stos.keeper.model.planned_matches.MatchType;
+import stos.keeper.model.planned_matches.Score;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,28 +16,26 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.IntStream;
 
-public class DbPlannedMatchesDAO {
+public class PlannedMatchesDAO extends AbstactDAO {
 
-    private Logger LOG = LoggerFactory.getLogger(DbPlannedMatchesDAO.class);
-    private DataSource dataSource;
+    private Logger LOG = LoggerFactory.getLogger(PlannedMatchesDAO.class);
 
-    public DbPlannedMatchesDAO(DataSource dataSource) {
-        this.dataSource = dataSource;
+    public PlannedMatchesDAO(DataSource dataSource) {
+        super(dataSource);
     }
 
-    public boolean deleteMatchById(int id) {
+    public int deleteMatchById(int id) {
         Connection connection = dataSource.getConnection();
         try {
             StatementDataObject deleteStatementData = PlannedMatchStatementDataConstructor
                     .getStatementDataFor("deleteMatchById", Optional.empty());
             PreparedStatement statement = connection.prepareStatement(deleteStatementData.getSqlStatement());
             statement.setInt(1, id);
-            return statement.execute();
+            return statement.executeUpdate();
         } catch (SQLException e) {
             LOG.info("SQL exception {} with error code {} when deleting match by Id.", e.getMessage(), e.getErrorCode());
-            return false;
+            return 0;
         } finally {
             dataSource.closeConnection();
         }
@@ -51,7 +49,7 @@ public class DbPlannedMatchesDAO {
             PreparedStatement statement = connection.prepareStatement(findStatementData.getSqlStatement());
             statement.setInt(1, id);
             ResultSet selectedMatchResultSet = statement.executeQuery();
-                        Optional<FootballMatch> matchOptional = Optional.empty();
+            Optional<FootballMatch> matchOptional = Optional.empty();
             if (selectedMatchResultSet.next()) {
                 matchOptional = footballMatchFrom(selectedMatchResultSet);
             }
@@ -65,7 +63,7 @@ public class DbPlannedMatchesDAO {
         }
     }
 
-    public boolean addMatch(FootballMatch match) {
+    public int addMatch(FootballMatch match) {
         Connection connection = dataSource.getConnection();
         try {
             StatementDataObject statementData = PlannedMatchStatementDataConstructor
@@ -74,7 +72,7 @@ public class DbPlannedMatchesDAO {
             return executeAddStatement(statementData.getParameters(), statement);
         } catch (SQLException e) {
             LOG.info("SQL exception {} with error code {} when inserting match.", e.getMessage(), e.getErrorCode());
-            return false;
+            return 0;
         } finally {
             dataSource.closeConnection();
         }
@@ -135,24 +133,13 @@ public class DbPlannedMatchesDAO {
             statement.setInt(2, score.getAwayScore());
             statement.setBoolean(3, true);
             statement.setInt(4, id);
-            return  statement.executeUpdate();
-      } catch (SQLException e) {
+            return statement.executeUpdate();
+        } catch (SQLException e) {
             LOG.info("SQL exception {} with error code {} when updating match with id: {}", e.getMessage(), e.getErrorCode(), id);
             return 0;
         } finally {
             dataSource.closeConnection();
         }
-    }
-
-    private boolean executeAddStatement(List<Object> statementParameters, PreparedStatement statement) throws SQLException {
-        IntStream.range(0, statementParameters.size()).forEach(index -> {
-            try {
-                statement.setObject((index + 1), statementParameters.get(index));
-            } catch (SQLException e) {
-                LOG.info("SQL exception {} with error code {} when setting statement parameters.", e.getMessage(), e.getErrorCode());
-            }
-        });
-        return statement.execute();
     }
 
     private Optional<FootballMatch> footballMatchFrom(ResultSet resultSet) {

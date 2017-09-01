@@ -1,4 +1,4 @@
-package stos.keeper.model;
+package stos.keeper.model.planned_matches;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;

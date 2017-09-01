@@ -1,4 +1,4 @@
-package stos.keeper.model;
+package stos.keeper.model.planned_matches;
 
 import org.hamcrest.CoreMatchers;
 import org.junit.Before;
