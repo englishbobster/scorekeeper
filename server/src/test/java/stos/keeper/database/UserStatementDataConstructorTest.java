@@ -13,7 +13,7 @@ import static org.junit.Assert.assertThat;
 
 public class UserStatementDataConstructorTest {
 
-    private static final String EXPECTED_ADD_USER = "INSERT INTO players (username, password, email, paid, created) VALUES (?, ?, ?, ?, ?)";
+    private static final String EXPECTED_ADD_USER = "INSERT INTO players VALUES (?, ?, ?, ?, ?)";
     private static final String EXPECTED_GET_USER = "SELECT * FROM players WHERE username= ?";
     private static final String EXPECTED_DELETE_USER = "DELETE FROM players WHERE username= ?";
 
