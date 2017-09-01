@@ -38,6 +38,7 @@ public class ScoreKeeper {
         get("/player/:name", (request, response) -> {
             Optional<Player> playerByName = playerDAO.getPlayerByName(request.params(":name"));
             if (playerByName.isPresent()) {
+                response.status(Response.SC_OK);
                 return playerByName.get();
             } else {
                 response.status(Response.SC_NOT_FOUND);
@@ -47,8 +48,16 @@ public class ScoreKeeper {
 
         post("/player", (request, response) -> {
             Player player = transformer.playerFromJson(request.body());
-            return playerDAO.addPlayer(player);
+            int result = playerDAO.addPlayer(player);
+            if (result == 0) {
+                response.status(Response.SC_CONFLICT);
+                return "Player already exists.";
+            }else {
+                response.status(Response.SC_CREATED);
+                return request.body();
+            }
         }, transformer);
+
     }
 }
 
