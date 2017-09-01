@@ -81,19 +81,17 @@ public class FootballMatch {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("MatchId: " + id + " ");
-        builder.append("(");
-        builder.append(matchTime.format(DateTimeFormatter.RFC_1123_DATE_TIME));
-        builder.append(") ");
-        builder.append(arena);
-        builder.append(", ");
-        builder.append(matchType.toString() + ", ");
-        builder.append("[" + homeTeam + " ");
-        builder.append(score.toString());
-        builder.append(" " + awayTeam + "]");
-        builder.append("\n");
-        return  builder.toString();
+        return ("MatchId: " + id + " ") +
+                "(" +
+                matchTime.format(DateTimeFormatter.RFC_1123_DATE_TIME) +
+                ") " +
+                arena +
+                ", " +
+                matchType.toString() + ", " +
+                "[" + homeTeam + " " +
+                score.toString() +
+                " " + awayTeam + "]" +
+                "\n";
     }
 
     public MatchType getMatchType() {

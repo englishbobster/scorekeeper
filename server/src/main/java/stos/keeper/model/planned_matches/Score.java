@@ -33,10 +33,7 @@ public class Score {
             return false;
         } else {
             Score that = (Score) object;
-            if (this.homeScore == that.homeScore && this.awayScore == that.awayScore) {
-                return true;
-            }
-            return false;
+            return this.homeScore == that.homeScore && this.awayScore == that.awayScore;
         }
     }
 

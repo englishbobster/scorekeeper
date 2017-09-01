@@ -76,17 +76,15 @@ public class Player {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append(this.userName);
-        builder.append(":");
-        builder.append(this.password);
-        builder.append(":");
-        builder.append(this.email);
-        builder.append(":");
-        builder.append(hasPaid ? "PAID" : "NOTPAID");
-        builder.append(":");
-        builder.append(created.toString());
-        return builder.toString();
+        return this.userName +
+                ":" +
+                this.password +
+                ":" +
+                this.email +
+                ":" +
+                (hasPaid ? "PAID" : "NOTPAID") +
+                ":" +
+                created.toString();
     }
 
     public static class PlayerBuilder {
