@@ -19,7 +19,7 @@ public class PlayerDAO extends AbstactDAO {
         super(dataSource);
     }
 
-    public int addUser(Player player) {
+    public int addPlayer(Player player) {
         Connection connection = dataSource.getConnection();
         String transactionName = "addPlayer";
         try {
@@ -35,7 +35,7 @@ public class PlayerDAO extends AbstactDAO {
         }
     }
 
-    public Optional<Player> getUserByName(String userName) {
+    public Optional<Player> getPlayerByName(String userName) {
         Connection connection = dataSource.getConnection();
         String transactionName = "getPlayer";
         try {
@@ -58,7 +58,7 @@ public class PlayerDAO extends AbstactDAO {
         }
     }
 
-    public int deleteUserByName(String userName) {
+    public int deletePlayerByName(String userName) {
         Connection connection = dataSource.getConnection();
         try {
             StatementDataObject deleteStatementData = UserStatementDataConstructor

@@ -26,16 +26,16 @@ public class PlayerDAOTest {
         Player player = Player.builder().username("bob").password("*****")
                 .email("maily.mc@mailface.com").hasPaid(false).created(ZonedDateTime.now()).build();
 
-        assertThat(dao.addUser(player), is(1));
-        Optional<Player> fetchedPlayerOptionl = dao.getUserByName(player.getUserName());
+        assertThat(dao.addPlayer(player), is(1));
+        Optional<Player> fetchedPlayerOptionl = dao.getPlayerByName(player.getUserName());
         assertThat(fetchedPlayerOptionl.get(), is(equalTo(player)));
 
-        assertThat(dao.deleteUserByName(player.getUserName()), is(1));
+        assertThat(dao.deletePlayerByName(player.getUserName()), is(1));
     }
 
     @Test
     public void delete_non_existant_player_returns_0() throws Exception {
-        assertThat(dao.deleteUserByName("IDONTEXISTS"), is(0));
+        assertThat(dao.deletePlayerByName("IDONTEXISTS"), is(0));
     }
 
     private DataSource getDataSource() {

@@ -3,6 +3,7 @@ package stos.keeper.sparkServer.json;
 import org.junit.Test;
 import stos.keeper.model.planned_matches.FootballMatch;
 import stos.keeper.model.planned_matches.MatchType;
+import stos.keeper.model.player.Player;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -14,6 +15,24 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 
 public class JsonTransformerTest {
+
+    @Test
+    public void should_deserialize_time_correctly() throws Exception {
+        JsonTransformer transformer = new JsonTransformer();
+
+        String addPlayerRequest = "{\"userName\": \"minger\",\n" +
+                " \"password\" : \"twinger\",\n" +
+                " \"email\" : \"abcde@ghijklmn.opq\",\n" +
+                " \"created\" : \"2007-12-03T10:15:30.00Z\"\n" +
+                "}";
+
+        Player expectedPlayer = Player.builder().username("minger")
+                .password("twinger").email("abcde@ghijklmn.opq")
+                .created(ZonedDateTime.parse("2007-12-03T10:15:30.00Z")).build();
+
+        Player player = transformer.playerFromJson(addPlayerRequest);
+        assertThat(player, is(equalTo(expectedPlayer)));
+    }
 
     @Test
     public void should_render_correct_json_serialization_of_planned_matches() throws Exception {

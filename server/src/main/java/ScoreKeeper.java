@@ -11,6 +11,7 @@ import java.util.Optional;
 import static spark.Spark.after;
 import static spark.Spark.get;
 import static spark.Spark.port;
+import static spark.Spark.post;
 import static spark.Spark.put;
 import static spark.Spark.staticFiles;
 
@@ -35,13 +36,18 @@ public class ScoreKeeper {
         });
 
         get("/player/:name", (request, response) -> {
-            Optional<Player> playerByName = playerDAO.getUserByName(request.params(":name"));
+            Optional<Player> playerByName = playerDAO.getPlayerByName(request.params(":name"));
             if (playerByName.isPresent()) {
                 return playerByName.get();
             } else {
                 response.status(Response.SC_NOT_FOUND);
                 return "Player not found.";
             }
+        }, transformer);
+
+        post("/player", (request, response) -> {
+            Player player = transformer.playerFromJson(request.body());
+            return playerDAO.addPlayer(player);
         }, transformer);
     }
 }
