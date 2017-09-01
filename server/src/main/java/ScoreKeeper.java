@@ -1,8 +1,12 @@
+import org.eclipse.jetty.server.Response;
 import stos.keeper.database.PlannedMatchesDAO;
 import stos.keeper.database.PlayerDAO;
 import stos.keeper.database.PostgresDataSourceImpl;
 import stos.keeper.model.planned_matches.Score;
+import stos.keeper.model.player.Player;
 import stos.keeper.sparkServer.json.JsonTransformer;
+
+import java.util.Optional;
 
 import static spark.Spark.after;
 import static spark.Spark.get;
@@ -30,6 +34,15 @@ public class ScoreKeeper {
             return plannedMatchesDAO.setFinalScoreForMatchById(id, score);
         });
 
-        get("/user/:name", (request, response) -> playerDAO.getUserByName(request.params(":name")),transformer);
+        get("/player/:name", (request, response) -> {
+            Optional<Player> playerByName = playerDAO.getUserByName(request.params(":name"));
+            if (playerByName.isPresent()) {
+                return playerByName.get();
+            } else {
+                response.status(Response.SC_NOT_FOUND);
+                return "Player not found.";
+            }
+        }, transformer);
     }
 }
+
