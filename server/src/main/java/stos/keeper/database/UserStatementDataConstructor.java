@@ -8,12 +8,12 @@ import java.util.List;
 import java.util.Optional;
 
 class UserStatementDataConstructor {
-    private static final String USERS_TABLE_NAME = "players";
-    private static final String INSERT_USER = "INSERT INTO " + USERS_TABLE_NAME
-            + " (username, password, email, paid, created) VALUES (?, ?, ?, ?, ?)";
-    private static final String GET_USER = "SELECT * FROM " + USERS_TABLE_NAME
+    private static final String PLAYERS_TABLE_NAME = "players";
+    private static final String INSERT_USER = "INSERT INTO " + PLAYERS_TABLE_NAME
+            + " VALUES (?, ?, ?, ?, ?)";
+    private static final String GET_USER = "SELECT * FROM " + PLAYERS_TABLE_NAME
             + " WHERE username= ?";
-    private static final String DELETE_USER = "DELETE FROM " + USERS_TABLE_NAME
+    private static final String DELETE_USER = "DELETE FROM " + PLAYERS_TABLE_NAME
             + " WHERE username= ?";
 
 
