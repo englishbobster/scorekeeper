@@ -92,6 +92,10 @@ public class Player {
                 created.toString();
     }
 
+    public Player withId(int id) {
+        return this.id == id ? this : new Player(id, userName, password, email, hasPaid, created);
+    }
+
     public static class PlayerBuilder {
         private int id = 0;
         private String userName;

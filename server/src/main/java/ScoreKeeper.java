@@ -67,7 +67,7 @@ public class ScoreKeeper {
                 return "Player already exists.";
             }else {
                 response.status(Response.SC_CREATED);
-                return request.body();
+                return player.withId(result);
             }
         }, transformer);
     }

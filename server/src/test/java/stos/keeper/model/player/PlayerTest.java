@@ -84,4 +84,12 @@ public class PlayerTest {
         String result = player_1.toString();
         assertThat(result, is(equalTo(EXPECTED_STRING)));
     }
+
+    @Test
+    public void withid_adds_id_to_player() throws Exception {
+        assertThat(player_2.getId(), is(0));
+        Player a_new_player = player_2.withId(30);
+        assertThat(a_new_player, is(equalTo(player_2)));
+        assertThat(a_new_player.getId(), is(30));
+    }
 }
