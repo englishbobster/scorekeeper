@@ -14,17 +14,25 @@ import static org.junit.Assert.assertThat;
 public class PlayerDAOTest {
 
     private PlayerDAO dao ;
+    private Player player;
+    private Player player_2;
+    private Player player_3;
 
     @Before
     public void setUp() {
+        player = Player.builder().username("bob").password("*****")
+                .email("maily.mc@mailface.com").hasPaid(false).created(ZonedDateTime.now()).build();
+        player_2 = Player.builder().username("robert").password("hanzo")
+                .email("robert@mailface.com").hasPaid(false).created(ZonedDateTime.now()).build();
+        player_3 = Player.builder().username("gringots").password("bank")
+                .email("gringots@diagonally.com").hasPaid(false).created(ZonedDateTime.now()).build();
+
         DataSource dataSource = getDataSource();
         dao = new PlayerDAO(dataSource);
     }
 
     @Test
     public void add_get_delete_a_user_in_the_database() {
-        Player player = Player.builder().username("bob").password("*****")
-                .email("maily.mc@mailface.com").hasPaid(false).created(ZonedDateTime.now()).build();
 
         assertThat(dao.addPlayer(player), is(1));
         Optional<Player> fetchedPlayerOptionl = dao.getPlayerByName(player.getUserName());
@@ -36,6 +44,15 @@ public class PlayerDAOTest {
     @Test
     public void delete_non_existant_player_returns_0() throws Exception {
         assertThat(dao.deletePlayerByName("IDONTEXISTS"), is(0));
+    }
+
+
+    @Test
+    public void generated_keys_are_returned() throws Exception {
+        assertThat(dao.addPlayer(player), is(1));
+        assertThat(dao.addPlayer(player_2), is(2));
+        assertThat(dao.deletePlayerByName("robert"), is(1));
+        assertThat(dao.addPlayer(player_3), is(3));
     }
 
     private DataSource getDataSource() {

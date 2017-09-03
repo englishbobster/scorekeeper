@@ -13,6 +13,7 @@ import static org.junit.Assert.assertTrue;
 
 public class PlayerTest {
 
+    public static final int UNSET_ID = 0;
     public static final String NAME = "bob";
     public static final String PASSWORD = "passme";
     public static final ZonedDateTime TIME_CREATED = ZonedDateTime.now();
@@ -45,6 +46,11 @@ public class PlayerTest {
         assertThat(player_1.getPassword(), is(PASSWORD));
         assertThat(player_1.getEmail(), is(ADDRESS));
         assertThat(player_1.getCreated(), is(TIME_CREATED));
+    }
+
+    @Test
+    public void id_is_0_if_not_set() throws Exception {
+        assertThat(player_1.getId(), is(UNSET_ID));
     }
 
     @Test

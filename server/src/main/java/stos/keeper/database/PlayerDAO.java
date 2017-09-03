@@ -23,9 +23,9 @@ public class PlayerDAO extends AbstactDAO {
         Connection connection = dataSource.getConnection();
         String transactionName = "addPlayer";
         try {
-            StatementDataObject statementData = UserStatementDataConstructor
+            StatementDataObject statementData = PlayerStatementDataConstructor
                     .getStatementDataFor(transactionName, Optional.of(player));
-            PreparedStatement statement = connection.prepareStatement(statementData.getSqlStatement());
+            PreparedStatement statement = connection.prepareStatement(statementData.getSqlStatement(), PreparedStatement.RETURN_GENERATED_KEYS);
             return executeAddStatement(statementData.getParameters(), statement);
         } catch (SQLException e) {
             LOG.info("SQL exception {} with error code {} when performing {}", e.getMessage(), e.getErrorCode(), transactionName);
@@ -39,7 +39,7 @@ public class PlayerDAO extends AbstactDAO {
         Connection connection = dataSource.getConnection();
         String transactionName = "getPlayer";
         try {
-            StatementDataObject statementData = UserStatementDataConstructor
+            StatementDataObject statementData = PlayerStatementDataConstructor
                     .getStatementDataFor(transactionName, Optional.empty());
             PreparedStatement statement = connection.prepareStatement(statementData.getSqlStatement());
             statement.setString(1, userName);
@@ -61,7 +61,7 @@ public class PlayerDAO extends AbstactDAO {
     public int deletePlayerByName(String userName) {
         Connection connection = dataSource.getConnection();
         try {
-            StatementDataObject deleteStatementData = UserStatementDataConstructor
+            StatementDataObject deleteStatementData = PlayerStatementDataConstructor
                     .getStatementDataFor("deletePlayer", Optional.empty());
             PreparedStatement statement = connection.prepareStatement(deleteStatementData.getSqlStatement());
             statement.setString(1, userName);
@@ -77,11 +77,13 @@ public class PlayerDAO extends AbstactDAO {
     private Optional<Player> playerFrom(ResultSet playerResultSet) {
         try {
             Player player = Player.builder()
+                    .id(playerResultSet.getInt("id"))
                     .username(playerResultSet.getString("username"))
                     .password(playerResultSet.getString("password"))
                     .email(playerResultSet.getString("email"))
                     .hasPaid(playerResultSet.getBoolean("paid"))
                     .created(ZonedDateTime.ofInstant(playerResultSet.getTimestamp("created").toInstant(), ZoneId.systemDefault())).build();
+
             return Optional.of(player);
         } catch (SQLException e) {
             LOG.info("SQL exception {} with error code {} when building player from resultset.", e.getMessage(), e.getErrorCode());

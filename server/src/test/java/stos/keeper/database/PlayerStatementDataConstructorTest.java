@@ -11,9 +11,9 @@ import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
-public class UserStatementDataConstructorTest {
+public class PlayerStatementDataConstructorTest {
 
-    private static final String EXPECTED_ADD_USER = "INSERT INTO players VALUES (?, ?, ?, ?, ?)";
+    private static final String EXPECTED_ADD_USER = "INSERT INTO players (username, password, email, paid, created) VALUES (?, ?, ?, ?, ?)";
     private static final String EXPECTED_GET_USER = "SELECT * FROM players WHERE username= ?";
     private static final String EXPECTED_DELETE_USER = "DELETE FROM players WHERE username= ?";
 
@@ -22,7 +22,7 @@ public class UserStatementDataConstructorTest {
         ZonedDateTime now = ZonedDateTime.now();
         Player player = Player.builder().username("user").password("mntgomery").email("a@b.c").hasPaid(true)
                 .created(now).build();
-        StatementDataObject addUserStatementData = UserStatementDataConstructor
+        StatementDataObject addUserStatementData = PlayerStatementDataConstructor
                 .getStatementDataFor("addPlayer", Optional.of(player));
 
         assertThat(addUserStatementData.getSqlStatement(), is(EXPECTED_ADD_USER));
@@ -37,7 +37,7 @@ public class UserStatementDataConstructorTest {
 
     @Test
     public void construct_correct_parameters_for_getting_user() throws Exception {
-        StatementDataObject getUserStatement = UserStatementDataConstructor
+        StatementDataObject getUserStatement = PlayerStatementDataConstructor
                 .getStatementDataFor("getPlayer", Optional.empty());
         assertThat(getUserStatement.getSqlStatement(), is(EXPECTED_GET_USER));
         assertThat(getUserStatement.getParameters(), is(Collections.emptyList()));
@@ -45,7 +45,7 @@ public class UserStatementDataConstructorTest {
 
     @Test
     public void construct_correct_parameters_for_deleting_user() throws Exception {
-        StatementDataObject getUserStatement = UserStatementDataConstructor
+        StatementDataObject getUserStatement = PlayerStatementDataConstructor
                 .getStatementDataFor("deletePlayer", Optional.empty());
         assertThat(getUserStatement.getSqlStatement(), is(EXPECTED_DELETE_USER));
         assertThat(getUserStatement.getParameters(), is(Collections.emptyList()));

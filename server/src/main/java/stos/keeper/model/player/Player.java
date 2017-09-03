@@ -3,6 +3,7 @@ package stos.keeper.model.player;
 import java.time.ZonedDateTime;
 
 public class Player {
+    private int id;
     private String userName;
     private String password;
     private String email;
@@ -10,7 +11,8 @@ public class Player {
     private ZonedDateTime created;
 
 
-    private Player(String userName, String password, String email, boolean hasPaid, ZonedDateTime created) {
+    private Player(int id, String userName, String password, String email, boolean hasPaid, ZonedDateTime created) {
+        this.id = id;
         this.userName = userName;
         this.password = password;
         this.email = email;
@@ -22,6 +24,9 @@ public class Player {
         return new PlayerBuilder();
     }
 
+    public int getId() {
+        return id;
+    }
     public boolean hasPaid() {
         return hasPaid;
     }
@@ -88,11 +93,17 @@ public class Player {
     }
 
     public static class PlayerBuilder {
+        private int id = 0;
         private String userName;
         private String password;
         private String email;
         private boolean hasPaid;
         private ZonedDateTime created;
+
+        public PlayerBuilder id(int id) {
+            this.id = id;
+            return this;
+        }
 
         public PlayerBuilder username(String userName) {
             this.userName = userName;
@@ -120,7 +131,7 @@ public class Player {
         }
 
         public Player build() {
-            return new Player(userName, password, email, hasPaid, created);
+            return new Player(id, userName, password, email, hasPaid, created);
         }
     }
 }
