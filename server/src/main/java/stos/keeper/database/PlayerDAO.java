@@ -26,7 +26,14 @@ public class PlayerDAO extends AbstactDAO {
             StatementDataObject statementData = PlayerStatementDataConstructor
                     .getStatementDataFor(transactionName, Optional.of(player));
             PreparedStatement statement = connection.prepareStatement(statementData.getSqlStatement(), PreparedStatement.RETURN_GENERATED_KEYS);
-            return executeAddStatement(statementData.getParameters(), statement);
+            int result = executeAddStatement(statementData.getParameters(), statement);
+            if (result > 0) {
+                ResultSet resultSet = statement.getGeneratedKeys();
+                if (resultSet.next()) {
+                    return resultSet.getInt("id");
+                }
+            }
+            throw new SQLException("No generated key returned.");
         } catch (SQLException e) {
             LOG.info("SQL exception {} with error code {} when performing {}", e.getMessage(), e.getErrorCode(), transactionName);
             return 0;

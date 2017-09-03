@@ -8,6 +8,7 @@ import java.time.ZonedDateTime;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -49,10 +50,16 @@ public class PlayerDAOTest {
 
     @Test
     public void generated_keys_are_returned() throws Exception {
-        assertThat(dao.addPlayer(player), is(1));
-        assertThat(dao.addPlayer(player_2), is(2));
+        int playerId = dao.addPlayer(player);
+        assertThat(playerId, is(greaterThan(0)));
+        int player2Id = dao.addPlayer(player_2);
+        assertThat(player2Id, is(greaterThan(playerId)));
         assertThat(dao.deletePlayerByName("robert"), is(1));
-        assertThat(dao.addPlayer(player_3), is(3));
+        int player3Id = dao.addPlayer(player_3);
+        assertThat(player3Id, is(greaterThan(player2Id)));
+        assertThat(player3Id, is(greaterThan(2)));
+        assertThat(dao.deletePlayerByName("bob"), is(1));
+        assertThat(dao.deletePlayerByName("gringots"), is(1));
     }
 
     private DataSource getDataSource() {
