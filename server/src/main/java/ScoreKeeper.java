@@ -6,6 +6,7 @@ import stos.keeper.model.planned_matches.FootballMatch;
 import stos.keeper.model.planned_matches.Score;
 import stos.keeper.model.player.Player;
 import stos.keeper.sparkServer.json.JsonTransformer;
+import stos.keeper.sparkServer.Routes.RegisterPlayerRoute;
 
 import java.util.List;
 import java.util.Optional;
@@ -48,6 +49,8 @@ public class ScoreKeeper {
             }
         });
 
+        post(RegisterPlayerRoute.PATH, new RegisterPlayerRoute(transformer, playerDAO), transformer);
+
         get("/player/:name", (request, response) -> {
             Optional<Player> playerByName = playerDAO.getPlayerByName(request.params(":name"));
             if (playerByName.isPresent()) {
@@ -59,17 +62,6 @@ public class ScoreKeeper {
             }
         }, transformer);
 
-        post("/player", (request, response) -> {
-            Player player = transformer.playerFromJson(request.body());
-            int result = playerDAO.addPlayer(player);
-            if (result == 0) {
-                response.status(Response.SC_CONFLICT);
-                return "Player already exists.";
-            }else {
-                response.status(Response.SC_CREATED);
-                return player.withId(result);
-            }
-        }, transformer);
     }
 }
 
