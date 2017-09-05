@@ -41,6 +41,22 @@ type alias MatchId =
     Int
 
 
+type alias PlayerId =
+    Int
+
+
+type alias PlayerInfo =
+    { id : PlayerId
+    , userName : String
+    , passWord : String
+    , email : String
+    , hasPaid : Bool
+    , created : String
+    , guesses : DictIdToMatches
+    , committed : Bool
+    }
+
+
 type alias PlannedMatch =
     { id : MatchId
     , homeTeam : String
