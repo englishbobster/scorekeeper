@@ -1,9 +1,11 @@
-package stos.keeper.sparkServer.Routes;
+package stos.keeper.sparkServer.routes;
 
 import org.eclipse.jetty.server.Response;
 import org.junit.Test;
 import stos.keeper.database.PlayerDAO;
 import stos.keeper.sparkServer.json.JsonTransformer;
+
+import java.util.Collections;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -31,9 +33,17 @@ public class RegisterPlayerRouteTest {
         when(dao.addPlayer(anyObject())).thenReturn(1);
 
         RegisterPlayerRoute route = new RegisterPlayerRoute(new JsonTransformer(), dao);
-        ResponseData data = route.process(requestBody);
+        ResponseData data = route.process(requestBody, Collections.EMPTY_MAP);
         assertThat(data.getResponseStatus(), is(Response.SC_CREATED));
         assertThat(data.getResponseMessage(), is(expectedResponseMessage));
 
+    }
+
+    @Test
+    public void returns_failed_response() throws Exception {
+        RegisterPlayerRoute route = new RegisterPlayerRoute(new JsonTransformer(), dao);
+        ResponseData data = route.process("", Collections.EMPTY_MAP);
+        assertThat(data.getResponseStatus(), is(Response.SC_CONFLICT));
+        assertThat(data.getResponseMessage(), is(""));
     }
 }

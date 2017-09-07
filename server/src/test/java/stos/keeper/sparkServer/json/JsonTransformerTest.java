@@ -1,5 +1,6 @@
 package stos.keeper.sparkServer.json;
 
+import org.junit.Before;
 import org.junit.Test;
 import stos.keeper.model.planned_matches.FootballMatch;
 import stos.keeper.model.planned_matches.MatchType;
@@ -16,21 +17,33 @@ import static org.hamcrest.Matchers.is;
 
 public class JsonTransformerTest {
 
-    @Test
-    public void should_deserialize_time_correctly() throws Exception {
-        JsonTransformer transformer = new JsonTransformer();
+    private String addPlayerRequestJson;
+    private String scoreJson;
 
-        String addPlayerRequest = "{\"userName\": \"minger\",\n" +
+    @Before
+    public void setUp() throws Exception {
+        addPlayerRequestJson = "{\"userName\": \"minger\",\n" +
                 " \"password\" : \"twinger\",\n" +
                 " \"email\" : \"abcde@ghijklmn.opq\",\n" +
                 " \"created\" : \"2007-12-03T10:15:30.00Z\"\n" +
                 "}";
+        scoreJson = "{\"score\":{" +
+                "\"homeScore\":5," +
+                "\"awayScore\":4" +
+                "}" +
+                "}";
+    }
+
+    @Test
+    public void should_deserialize_time_correctly() throws Exception {
+        JsonTransformer transformer = new JsonTransformer();
+
 
         Player expectedPlayer = Player.builder().username("minger")
                 .password("twinger").email("abcde@ghijklmn.opq")
                 .created(ZonedDateTime.parse("2007-12-03T10:15:30.00Z")).build();
 
-        Player player = transformer.playerFromJson(addPlayerRequest);
+        Player player = transformer.playerFromJson(addPlayerRequestJson);
         assertThat(player, is(equalTo(expectedPlayer)));
     }
 
@@ -59,7 +72,6 @@ public class JsonTransformerTest {
 
         List<FootballMatch> listOfPlannedMatches = new ArrayList<>();
         listOfPlannedMatches.add(match);
-
         String formattedJson = transformer.render(listOfPlannedMatches);
 
         assertThat(formattedJson, is(equalTo(expectedSerialization)));

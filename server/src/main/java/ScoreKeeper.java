@@ -4,12 +4,11 @@ import stos.keeper.database.PlayerDAO;
 import stos.keeper.database.PostgresDataSourceImpl;
 import stos.keeper.model.planned_matches.FootballMatch;
 import stos.keeper.model.planned_matches.Score;
-import stos.keeper.model.player.Player;
 import stos.keeper.sparkServer.json.JsonTransformer;
-import stos.keeper.sparkServer.Routes.RegisterPlayerRoute;
+import stos.keeper.sparkServer.routes.LoginPlayerRoute;
+import stos.keeper.sparkServer.routes.RegisterPlayerRoute;
 
 import java.util.List;
-import java.util.Optional;
 
 import static spark.Spark.after;
 import static spark.Spark.get;
@@ -51,17 +50,8 @@ public class ScoreKeeper {
 
         post(RegisterPlayerRoute.PATH, new RegisterPlayerRoute(transformer, playerDAO));
 
-        get("/player/:name", (request, response) -> {
-            Optional<Player> playerByName = playerDAO.getPlayerByName(request.params(":name"));
-            if (playerByName.isPresent()) {
-                response.status(Response.SC_OK);
-                return playerByName.get();
-            } else {
-                response.status(Response.SC_NOT_FOUND);
-                return "Player not found.";
-            }
-        }, transformer);
-
+        get(LoginPlayerRoute.PATH, new LoginPlayerRoute(transformer, playerDAO));
     }
+
 }
 

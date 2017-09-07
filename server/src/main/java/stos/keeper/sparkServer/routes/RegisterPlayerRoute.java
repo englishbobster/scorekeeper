@@ -1,4 +1,4 @@
-package stos.keeper.sparkServer.Routes;
+package stos.keeper.sparkServer.routes;
 
 import spark.Request;
 import spark.Response;
@@ -6,6 +6,9 @@ import spark.Route;
 import stos.keeper.database.PlayerDAO;
 import stos.keeper.model.player.Player;
 import stos.keeper.sparkServer.json.JsonTransformer;
+
+import java.util.Collections;
+import java.util.Map;
 
 public class RegisterPlayerRoute implements Route {
     public static final String PATH = "/register";
@@ -20,14 +23,14 @@ public class RegisterPlayerRoute implements Route {
 
     @Override
     public Object handle(Request request, Response response) throws Exception {
-        ResponseData responseData = process(request.body());
+        ResponseData responseData = process(request.body(), Collections.EMPTY_MAP);
         response.status(responseData.getResponseStatus());
         return responseData.getResponseMessage();
     }
 
-    public ResponseData process(String requestBody) throws Exception {
+    public ResponseData process(String requestBody, Map<String, String> requestParams) throws Exception {
         int status = org.eclipse.jetty.server.Response.SC_CREATED;
-        String message = "";
+        String message;
         Player player = transformer.playerFromJson(requestBody);
         int result = playerDAO.addPlayer(player);
         if (result == 0) {
@@ -39,6 +42,5 @@ public class RegisterPlayerRoute implements Route {
         }
         return new ResponseData(status, message);
     }
-
 
 }
