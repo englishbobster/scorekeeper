@@ -58,7 +58,7 @@ public class JsonTransformerTest {
                 .build();
 
         String expectedSerialization = "[{\"id\":1," +
-                "\"matchTime\":\"Feb 20, 1970 8:00\"," +
+                "\"matchTime\":\"1970-02-20T08:00+01:00[Europe/Stockholm]\"," +
                 "\"arena\":\"ARENA\"," +
                 "\"homeTeam\":\"HOME\"," +
                 "\"awayTeam\":\"AWAY\"," +

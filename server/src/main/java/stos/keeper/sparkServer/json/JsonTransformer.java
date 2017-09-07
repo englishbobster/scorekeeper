@@ -15,9 +15,7 @@ import stos.keeper.model.planned_matches.Score;
 import stos.keeper.model.player.Player;
 
 import java.lang.reflect.Type;
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 
 public class JsonTransformer implements ResponseTransformer {
 
@@ -47,9 +45,7 @@ public class JsonTransformer implements ResponseTransformer {
     private class ZoneDateTimeSerializationAdapter implements JsonSerializer<ZonedDateTime> {
         @Override
         public JsonElement serialize(ZonedDateTime time, Type typeOfSrc, JsonSerializationContext context) {
-            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("MMM d, yyyy H:mm")
-                    .withZone(ZoneId.systemDefault());
-            return new JsonPrimitive(time.format(dateTimeFormatter));
+            return new JsonPrimitive(time.toString());
         }
     }
 

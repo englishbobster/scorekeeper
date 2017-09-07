@@ -22,13 +22,13 @@ public class RegisterPlayerRouteTest {
         String requestBody = "{\"userName\": \"minger\"," +
                 "\"password\" : \"twinger\"," +
                 "\"email\" : \"abcde@ghijklmn.opq\", " +
-                "\"created\" :\"2007-12-03T10:15:30.00Z\"}";
+                "\"created\" :\"2007-12-03T10:15:30Z\"}";
         String expectedResponseMessage = "{\"id\":1," +
                 "\"userName\":\"minger\"," +
                 "\"password\":\"twinger\"," +
                 "\"email\":\"abcde@ghijklmn.opq\"," +
                 "\"hasPaid\":false," +
-                "\"created\":\"Dec 3, 2007 11:15\"}";
+                "\"created\":\"2007-12-03T10:15:30Z\"}";
 
         when(dao.addPlayer(anyObject())).thenReturn(1);
 
@@ -44,6 +44,6 @@ public class RegisterPlayerRouteTest {
         RegisterPlayerRoute route = new RegisterPlayerRoute(new JsonTransformer(), dao);
         ResponseData data = route.process("", Collections.EMPTY_MAP);
         assertThat(data.getResponseStatus(), is(Response.SC_CONFLICT));
-        assertThat(data.getResponseMessage(), is(""));
+        assertThat(data.getResponseMessage(), is("Player with that name already exists."));
     }
 }
