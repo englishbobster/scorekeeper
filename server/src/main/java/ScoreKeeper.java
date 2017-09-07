@@ -49,7 +49,7 @@ public class ScoreKeeper {
             }
         });
 
-        post(RegisterPlayerRoute.PATH, new RegisterPlayerRoute(transformer, playerDAO), transformer);
+        post(RegisterPlayerRoute.PATH, new RegisterPlayerRoute(transformer, playerDAO));
 
         get("/player/:name", (request, response) -> {
             Optional<Player> playerByName = playerDAO.getPlayerByName(request.params(":name"));

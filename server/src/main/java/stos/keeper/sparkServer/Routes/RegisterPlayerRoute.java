@@ -20,15 +20,25 @@ public class RegisterPlayerRoute implements Route {
 
     @Override
     public Object handle(Request request, Response response) throws Exception {
-        Player player = transformer.playerFromJson(request.body());
+        ResponseData responseData = process(request.body());
+        response.status(responseData.getResponseStatus());
+        return responseData.getResponseMessage();
+    }
+
+    public ResponseData process(String requestBody) throws Exception {
+        int status = org.eclipse.jetty.server.Response.SC_CREATED;
+        String message = "";
+        Player player = transformer.playerFromJson(requestBody);
         int result = playerDAO.addPlayer(player);
         if (result == 0) {
-            response.status(org.eclipse.jetty.server.Response.SC_CONFLICT);
-            return "Player already exists.";
+            status = org.eclipse.jetty.server.Response.SC_CONFLICT;
+            message = "Player with that name already exists.";
         } else {
-            response.status(org.eclipse.jetty.server.Response.SC_CREATED);
-
-            return player.withId(result);
+            player = player.withId(result);
+            message = transformer.render(player);
         }
+        return new ResponseData(status, message);
     }
+
+
 }
