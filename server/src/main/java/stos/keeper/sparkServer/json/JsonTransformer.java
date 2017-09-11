@@ -49,17 +49,17 @@ public class JsonTransformer implements ResponseTransformer {
         }
     }
 
-    private class ZoneDateTimeDeserializerAdapter implements JsonDeserializer<ZonedDateTime> {
-        @Override
-        public ZonedDateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-            return ZonedDateTime.parse(json.getAsString());
-        }
-    }
-
     private class MatchTypeAdapter implements JsonSerializer<MatchType> {
         @Override
         public JsonElement serialize(MatchType matchType, Type typeOfSrc, JsonSerializationContext context) {
             return new JsonPrimitive(matchType.toString());
+        }
+    }
+
+    private class ZoneDateTimeDeserializerAdapter implements JsonDeserializer<ZonedDateTime> {
+        @Override
+        public ZonedDateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            return ZonedDateTime.parse(json.getAsString());
         }
     }
 }

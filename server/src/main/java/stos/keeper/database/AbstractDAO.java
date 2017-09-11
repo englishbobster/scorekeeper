@@ -8,12 +8,12 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.IntStream;
 
-class AbstactDAO {
+class AbstractDAO {
 
     private Logger LOG = LoggerFactory.getLogger(PlayerDAO.class);
     DataSource dataSource;
 
-    AbstactDAO(DataSource dataSource) {
+    AbstractDAO(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 

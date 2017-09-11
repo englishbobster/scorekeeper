@@ -17,7 +17,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-public class PlannedMatchesDAO extends AbstactDAO {
+public class PlannedMatchesDAO extends AbstractDAO {
 
     private Logger LOG = LoggerFactory.getLogger(PlannedMatchesDAO.class);
 

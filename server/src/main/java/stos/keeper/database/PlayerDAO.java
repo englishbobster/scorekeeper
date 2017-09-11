@@ -12,7 +12,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Optional;
 
-public class PlayerDAO extends AbstactDAO {
+public class PlayerDAO extends AbstractDAO {
     private Logger LOG = LoggerFactory.getLogger(PlayerDAO.class);
 
     public PlayerDAO(DataSource dataSource) {
