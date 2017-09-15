@@ -87,6 +87,7 @@ public class PlayerDAO extends AbstractDAO {
                     .id(playerResultSet.getInt("id"))
                     .username(playerResultSet.getString("username"))
                     .password(playerResultSet.getString("password"))
+                    .passwordSalt(playerResultSet.getBytes("salt"))
                     .email(playerResultSet.getString("email"))
                     .hasPaid(playerResultSet.getBoolean("paid"))
                     .created(ZonedDateTime.ofInstant(playerResultSet.getTimestamp("created").toInstant(), ZoneId.systemDefault())).build();

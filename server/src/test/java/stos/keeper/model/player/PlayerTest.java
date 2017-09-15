@@ -2,6 +2,7 @@ package stos.keeper.model.player;
 
 import org.junit.Before;
 import org.junit.Test;
+import stos.keeper.sparkServer.security.PasswordService;
 
 import java.time.ZonedDateTime;
 
@@ -23,6 +24,7 @@ public class PlayerTest {
     public static final String EMAIL_OTHER = "candypants@pandycants.com";
     public static final String EXPECTED_STRING = NAME + ":" + PASSWORD + ":" + ADDRESS + ":" + "PAID" + ":"
             + TIME_CREATED.toString();
+    public static final String HASHED_PWD = "jkasdfhkahe3k294fakljf";
     private Player player_1;
     private Player another_player_1;
     private Player player_2;
@@ -91,5 +93,19 @@ public class PlayerTest {
         Player a_new_player = player_2.withId(30);
         assertThat(a_new_player, is(equalTo(player_2)));
         assertThat(a_new_player.getId(), is(30));
+    }
+
+    @Test
+    public void withHashedPasswordAndSalt_changes_password_and_adds_salt() throws Exception {
+        assertThat(player_2.getPassword(), is(PASSWORD_OTHER));
+        byte[] salt = PasswordService.generateSalt();
+        Player a_new_player = player_2.withHashedPasswordAndSalt(HASHED_PWD, salt);
+        assertThat(a_new_player.getPassword(), is(HASHED_PWD));
+        assertThat(a_new_player.getSalt(), is(salt));
+    }
+
+    @Test
+    public void salt_defaults_to_zeros() throws Exception {
+        assertThat(player_1.getSalt(), is(equalTo(new byte[]{0, 0, 0, 0})));
     }
 }

@@ -9,8 +9,8 @@ import java.util.Optional;
 
 class PlayerStatementDataConstructor {
     private static final String PLAYERS_TABLE_NAME = "players";
-    private static final String INSERT_USER = "INSERT INTO " + PLAYERS_TABLE_NAME + " (username, password, email, paid, created)"
-            + " VALUES (?, ?, ?, ?, ?)";
+    private static final String INSERT_USER = "INSERT INTO " + PLAYERS_TABLE_NAME + " (username, password, salt, email, paid, created)"
+            + " VALUES (?, ?, ?, ?, ?, ?)";
     private static final String GET_USER = "SELECT * FROM " + PLAYERS_TABLE_NAME
             + " WHERE username= ?";
     private static final String DELETE_USER = "DELETE FROM " + PLAYERS_TABLE_NAME
@@ -30,6 +30,7 @@ class PlayerStatementDataConstructor {
                 List<Object> statementParameters = new ArrayList<>();
                 statementParameters.add(player.getUserName());
                 statementParameters.add(player.getPassword());
+                statementParameters.add(player.getSalt());
                 statementParameters.add(player.getEmail());
                 statementParameters.add(player.hasPaid());
                 statementParameters.add(ConversionUtils.sqlTimeStampFrom(player.getCreated()));

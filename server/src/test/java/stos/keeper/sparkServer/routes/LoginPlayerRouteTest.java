@@ -35,6 +35,7 @@ public class LoginPlayerRouteTest {
 
         String expectedResponse = "{\"id\":7,\"userName\":\"bobby\"," +
                 "\"password\":\"dallas\"," +
+                "\"passwordSalt\":[0,0,0,0]," +
                 "\"email\":\"another@email.address\"," +
                 "\"hasPaid\":true," +
                 "\"created\":\"" +
