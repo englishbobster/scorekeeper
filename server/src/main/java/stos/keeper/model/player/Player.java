@@ -6,13 +6,13 @@ public class Player {
     private int id;
     private String userName;
     private String password;
-    private byte[] passwordSalt;
+    private String passwordSalt;
     private String email;
     private boolean hasPaid;
     private ZonedDateTime created;
 
 
-    private Player(int id, String userName, String password, byte [] passwordSalt, String email, boolean hasPaid, ZonedDateTime created) {
+    private Player(int id, String userName, String password, String passwordSalt, String email, boolean hasPaid, ZonedDateTime created) {
         this.id = id;
         this.userName = userName;
         this.password = password;
@@ -41,7 +41,7 @@ public class Player {
         return password;
     }
 
-    public byte[] getSalt() {
+    public String getSalt() {
         return passwordSalt;
     }
 
@@ -102,15 +102,12 @@ public class Player {
         return this.id == id ? this : new Player(id, userName, password, passwordSalt, email, hasPaid, created);
     }
 
-    public Player withHashedPasswordAndSalt(String hashedPassword, byte[] passwordSalt) {
-        return this.password.equals(hashedPassword) ? this : new Player(id, userName, hashedPassword, passwordSalt, email, hasPaid, created);
-    }
 
     public static class PlayerBuilder {
         private int id = 0;
         private String userName;
         private String password;
-        private byte[] passwordSalt = {0,0,0,0};
+        private String passwordSalt;
         private String email;
         private boolean hasPaid;
         private ZonedDateTime created;
@@ -130,7 +127,7 @@ public class Player {
             return this;
         }
 
-        public PlayerBuilder passwordSalt(byte[] passwordSalt) {
+        public PlayerBuilder passwordSalt(String passwordSalt) {
             this.passwordSalt = passwordSalt;
             return this;
         }

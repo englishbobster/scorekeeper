@@ -1,7 +1,7 @@
-package stos.keeper.sparkServer.routes;
+package stos.keeper.sparkServer.api.routes;
 
 import org.eclipse.jetty.server.Response;
-import stos.keeper.database.PlayerDAO;
+import stos.keeper.database.dao.PlayerDAO;
 import stos.keeper.model.player.Player;
 import stos.keeper.sparkServer.json.JsonTransformer;
 
@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Optional;
 
 public class LoginPlayerRoute extends AbstractScoreKeeperRoute {
-    public static final String PATH = "/login/:name";
+    public static final String PATH = "/login";
 
     public LoginPlayerRoute(JsonTransformer transformer, PlayerDAO playerDAO) {
         super(playerDAO, transformer);

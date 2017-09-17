@@ -1,4 +1,4 @@
-package stos.keeper.database;
+package stos.keeper.database.helpers;
 
 import stos.keeper.model.player.Player;
 
@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-class PlayerStatementDataConstructor {
+public class PlayerStatementDataConstructor {
     private static final String PLAYERS_TABLE_NAME = "players";
     private static final String INSERT_USER = "INSERT INTO " + PLAYERS_TABLE_NAME + " (username, password, salt, email, paid, created)"
             + " VALUES (?, ?, ?, ?, ?, ?)";
@@ -17,7 +17,7 @@ class PlayerStatementDataConstructor {
             + " WHERE username= ?";
 
 
-    static StatementDataObject getStatementDataFor(String transactionName, Optional<Player> playerOptional) {
+    public static StatementDataObject getStatementDataFor(String transactionName, Optional<Player> playerOptional) {
         if(transactionName.equals("getPlayer")){
             return new StatementDataObject(GET_USER, Collections.emptyList());
         }

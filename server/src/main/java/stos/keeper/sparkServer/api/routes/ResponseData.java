@@ -1,4 +1,4 @@
-package stos.keeper.sparkServer.routes;
+package stos.keeper.sparkServer.api.routes;
 
 class ResponseData {
     private int responseStatus;

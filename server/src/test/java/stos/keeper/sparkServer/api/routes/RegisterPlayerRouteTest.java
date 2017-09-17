@@ -1,8 +1,8 @@
-package stos.keeper.sparkServer.routes;
+package stos.keeper.sparkServer.api.routes;
 
 import org.eclipse.jetty.server.Response;
 import org.junit.Test;
-import stos.keeper.database.PlayerDAO;
+import stos.keeper.database.dao.PlayerDAO;
 import stos.keeper.sparkServer.json.JsonTransformer;
 
 import java.util.Collections;
@@ -34,6 +34,17 @@ public class RegisterPlayerRouteTest {
         ResponseData data = route.process(REQUEST_BODY, Collections.EMPTY_MAP);
         assertThat(data.getResponseStatus(), is(Response.SC_CREATED));
         assertThat(data.getResponseMessage(), startsWith(expectedResponseMessage));
+    }
+
+    @Test
+    public void exception_when_rubbish_is_sent_in() throws Exception {
+        RegisterPlayerRoute route = new RegisterPlayerRoute(new JsonTransformer(), dao);
+
+        ResponseData data = route.process("", Collections.EMPTY_MAP);
+        when(dao.addPlayer(anyObject())).thenReturn(0);
+        assertThat(data.getResponseStatus(), is(Response.SC_BAD_REQUEST));
+        assertThat(data.getResponseMessage(), is("Invalid Request."));
+
     }
 
     @Test

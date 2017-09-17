@@ -1,7 +1,10 @@
-package stos.keeper.database;
+package stos.keeper.database.dao;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import stos.keeper.database.DataSource;
+import stos.keeper.database.helpers.PlannedMatchStatementDataConstructor;
+import stos.keeper.database.helpers.StatementDataObject;
 import stos.keeper.model.planned_matches.FootballMatch;
 import stos.keeper.model.planned_matches.MatchType;
 import stos.keeper.model.planned_matches.Score;

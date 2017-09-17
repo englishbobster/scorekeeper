@@ -2,6 +2,7 @@ package stos.keeper.database;
 
 import org.junit.Before;
 import org.junit.Test;
+import stos.keeper.database.dao.PlannedMatchesDAO;
 import stos.keeper.model.planned_matches.FootballMatch;
 import stos.keeper.model.planned_matches.MatchType;
 import stos.keeper.model.planned_matches.Score;

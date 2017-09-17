@@ -1,7 +1,10 @@
-package stos.keeper.database;
+package stos.keeper.database.dao;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import stos.keeper.database.DataSource;
+import stos.keeper.database.helpers.PlayerStatementDataConstructor;
+import stos.keeper.database.helpers.StatementDataObject;
 import stos.keeper.model.player.Player;
 
 import java.sql.Connection;
@@ -87,14 +90,14 @@ public class PlayerDAO extends AbstractDAO {
                     .id(playerResultSet.getInt("id"))
                     .username(playerResultSet.getString("username"))
                     .password(playerResultSet.getString("password"))
-                    .passwordSalt(playerResultSet.getBytes("salt"))
+                    .passwordSalt(playerResultSet.getString("salt"))
                     .email(playerResultSet.getString("email"))
                     .hasPaid(playerResultSet.getBoolean("paid"))
                     .created(ZonedDateTime.ofInstant(playerResultSet.getTimestamp("created").toInstant(), ZoneId.systemDefault())).build();
 
             return Optional.of(player);
         } catch (SQLException e) {
-            LOG.info("SQL exception {} with error code {} when building player from resultset.", e.getMessage(), e.getErrorCode());
+            LOG.info("SQL exception {} with error code {} when building player from result set.", e.getMessage(), e.getErrorCode());
             return Optional.empty();
         }
     }

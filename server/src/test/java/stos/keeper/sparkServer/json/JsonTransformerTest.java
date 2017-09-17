@@ -4,7 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import stos.keeper.model.planned_matches.FootballMatch;
 import stos.keeper.model.planned_matches.MatchType;
-import stos.keeper.model.player.Player;
+import stos.keeper.sparkServer.api.messages.RegisterPlayerRequest;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -17,12 +17,12 @@ import static org.hamcrest.Matchers.is;
 
 public class JsonTransformerTest {
 
-    private String addPlayerRequestJson;
+    private String registerPlayerRequestJson;
     private String scoreJson;
 
     @Before
     public void setUp() throws Exception {
-        addPlayerRequestJson = "{\"userName\": \"minger\",\n" +
+        registerPlayerRequestJson = "{\"userName\": \"minger\",\n" +
                 " \"password\" : \"twinger\",\n" +
                 " \"email\" : \"abcde@ghijklmn.opq\",\n" +
                 " \"created\" : \"2007-12-03T10:15:30.00Z\"\n" +
@@ -38,12 +38,10 @@ public class JsonTransformerTest {
     public void should_deserialize_time_correctly() throws Exception {
         JsonTransformer transformer = new JsonTransformer();
 
+        RegisterPlayerRequest expectedPlayer = new RegisterPlayerRequest("minger","twinger","abcde@ghijklmn.opq",
+                ZonedDateTime.parse("2007-12-03T10:15:30.00Z"));
 
-        Player expectedPlayer = Player.builder().username("minger")
-                .password("twinger").email("abcde@ghijklmn.opq")
-                .created(ZonedDateTime.parse("2007-12-03T10:15:30.00Z")).build();
-
-        Player player = transformer.playerFromJson(addPlayerRequestJson);
+        RegisterPlayerRequest player = transformer.registerPlayerFromJson(registerPlayerRequestJson);
         assertThat(player, is(equalTo(expectedPlayer)));
     }
 

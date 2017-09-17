@@ -2,6 +2,9 @@ package stos.keeper.database;
 
 import org.junit.Before;
 import org.junit.Test;
+import stos.keeper.database.helpers.ConversionUtils;
+import stos.keeper.database.helpers.PlannedMatchStatementDataConstructor;
+import stos.keeper.database.helpers.StatementDataObject;
 import stos.keeper.model.planned_matches.FootballMatch;
 import stos.keeper.model.planned_matches.MatchType;
 

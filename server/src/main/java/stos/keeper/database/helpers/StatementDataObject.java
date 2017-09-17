@@ -1,21 +1,21 @@
-package stos.keeper.database;
+package stos.keeper.database.helpers;
 
 import java.util.List;
 
-class StatementDataObject {
+public class StatementDataObject {
     private String sqlStatement;
     private List<Object> parameters;
 
-    StatementDataObject(String sqlStatement, List<Object> parameters) {
+    public StatementDataObject(String sqlStatement, List<Object> parameters) {
         this.sqlStatement = sqlStatement;
         this.parameters = parameters;
     }
 
-    String getSqlStatement() {
+    public String getSqlStatement() {
         return sqlStatement;
     }
 
-    List<Object> getParameters() {
+    public List<Object> getParameters() {
         return parameters;
     }
 }

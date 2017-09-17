@@ -12,7 +12,7 @@ import com.google.gson.JsonSerializer;
 import spark.ResponseTransformer;
 import stos.keeper.model.planned_matches.MatchType;
 import stos.keeper.model.planned_matches.Score;
-import stos.keeper.model.player.Player;
+import stos.keeper.sparkServer.api.messages.RegisterPlayerRequest;
 
 import java.lang.reflect.Type;
 import java.time.ZonedDateTime;
@@ -38,8 +38,8 @@ public class JsonTransformer implements ResponseTransformer {
         return gson.fromJson(response, Score.class);
     }
 
-    public Player playerFromJson(String response) {
-        return gson.fromJson(response, Player.class);
+    public RegisterPlayerRequest registerPlayerFromJson(String response) {
+        return gson.fromJson(response, RegisterPlayerRequest.class);
     }
 
     private class ZoneDateTimeSerializationAdapter implements JsonSerializer<ZonedDateTime> {

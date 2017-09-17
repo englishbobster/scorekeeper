@@ -1,4 +1,4 @@
-package stos.keeper.database;
+package stos.keeper.database.helpers;
 
 import stos.keeper.model.planned_matches.FootballMatch;
 
@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-class PlannedMatchStatementDataConstructor {
+public class PlannedMatchStatementDataConstructor {
 
     private static final String MATCHES_TABLE_NAME = "planned_matches";
     private static final String DELETE_BY_ID = "DELETE FROM " + MATCHES_TABLE_NAME + " WHERE id= ?";
@@ -19,7 +19,7 @@ class PlannedMatchStatementDataConstructor {
             + " WHERE ID= ? and fulltime = false";
 
 
-    static StatementDataObject getStatementDataFor(String transactionName, Optional<FootballMatch> matchOptional) {
+    public static StatementDataObject getStatementDataFor(String transactionName, Optional<FootballMatch> matchOptional) {
 
         if(transactionName.equals("deleteMatchById")){
             return new StatementDataObject(DELETE_BY_ID, Collections.emptyList());

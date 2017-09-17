@@ -1,12 +1,12 @@
-package stos.keeper.model.player;
+package stos.keeper.sparkServer.api.messages;
 
-public class PlayerIdAndToken {
+public class PlayerIdAndTokenReply {
     private final int id;
     private final String userName;
     private final String token;
 
 
-    public PlayerIdAndToken(int id, String userName, String token) {
+    public PlayerIdAndTokenReply(int id, String userName, String token) {
         this.id = id;
         this.userName = userName;
         this.token = token;

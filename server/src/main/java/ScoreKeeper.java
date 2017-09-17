@@ -1,12 +1,12 @@
 import org.eclipse.jetty.server.Response;
-import stos.keeper.database.PlannedMatchesDAO;
-import stos.keeper.database.PlayerDAO;
+import stos.keeper.database.dao.PlannedMatchesDAO;
+import stos.keeper.database.dao.PlayerDAO;
 import stos.keeper.database.PostgresDataSourceImpl;
 import stos.keeper.model.planned_matches.FootballMatch;
 import stos.keeper.model.planned_matches.Score;
 import stos.keeper.sparkServer.json.JsonTransformer;
-import stos.keeper.sparkServer.routes.LoginPlayerRoute;
-import stos.keeper.sparkServer.routes.RegisterPlayerRoute;
+import stos.keeper.sparkServer.api.routes.LoginPlayerRoute;
+import stos.keeper.sparkServer.api.routes.RegisterPlayerRoute;
 
 import java.util.List;
 

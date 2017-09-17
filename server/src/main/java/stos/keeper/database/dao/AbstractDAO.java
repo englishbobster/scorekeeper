@@ -1,7 +1,8 @@
-package stos.keeper.database;
+package stos.keeper.database.dao;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import stos.keeper.database.DataSource;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;

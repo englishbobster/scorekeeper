@@ -2,6 +2,7 @@ package stos.keeper.database;
 
 import org.junit.Before;
 import org.junit.Test;
+import stos.keeper.database.dao.PlayerDAO;
 import stos.keeper.model.player.Player;
 
 import java.time.ZonedDateTime;
@@ -21,11 +22,11 @@ public class PlayerDAOTest {
 
     @Before
     public void setUp() {
-        player = Player.builder().username("bob").password("*****")
+        player = Player.builder().username("bob").password("*****").passwordSalt("sfsdffsf")
                 .email("maily.mc@mailface.com").hasPaid(false).created(ZonedDateTime.now()).build();
-        player_2 = Player.builder().username("robert").password("hanzo")
+        player_2 = Player.builder().username("robert").password("hanzo").passwordSalt("aslaflajf")
                 .email("robert@mailface.com").hasPaid(false).created(ZonedDateTime.now()).build();
-        player_3 = Player.builder().username("gringots").password("bank")
+        player_3 = Player.builder().username("gringots").password("bank").passwordSalt("eioufgk")
                 .email("gringots@diagonally.com").hasPaid(false).created(ZonedDateTime.now()).build();
 
         DataSource dataSource = getDataSource();
@@ -34,7 +35,6 @@ public class PlayerDAOTest {
 
     @Test
     public void add_get_delete_a_user_in_the_database() {
-
         assertThat(dao.addPlayer(player), is(1));
         Optional<Player> fetchedPlayerOptionl = dao.getPlayerByName(player.getUserName());
         assertThat(fetchedPlayerOptionl.get(), is(equalTo(player)));

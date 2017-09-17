@@ -1,9 +1,9 @@
-package stos.keeper.sparkServer.routes;
+package stos.keeper.sparkServer.api.routes;
 
 import org.eclipse.jetty.server.Response;
 import org.junit.Before;
 import org.junit.Test;
-import stos.keeper.database.PlayerDAO;
+import stos.keeper.database.dao.PlayerDAO;
 import stos.keeper.model.player.Player;
 import stos.keeper.sparkServer.json.JsonTransformer;
 
