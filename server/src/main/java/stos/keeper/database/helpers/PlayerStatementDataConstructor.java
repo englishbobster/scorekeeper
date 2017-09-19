@@ -28,7 +28,7 @@ public class PlayerStatementDataConstructor {
             Player player = playerOptional.get();
             if (transactionName.equals("addPlayer")) {
                 List<Object> statementParameters = new ArrayList<>();
-                statementParameters.add(player.getUserName());
+                statementParameters.add(player.getUsername());
                 statementParameters.add(player.getPassword());
                 statementParameters.add(player.getSalt());
                 statementParameters.add(player.getEmail());

@@ -43,7 +43,7 @@ public class PlayerTest {
     @Test
     public void create_a_player_using_builder() throws Exception {
         assertThat(player_1.hasPaid(), is(true));
-        assertThat(player_1.getUserName(), is(NAME));
+        assertThat(player_1.getUsername(), is(NAME));
         assertThat(player_1.getPassword(), is(PASSWORD));
         assertThat(player_1.getEmail(), is(ADDRESS));
         assertThat(player_1.getCreated(), is(TIME_CREATED));

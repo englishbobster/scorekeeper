@@ -36,4 +36,22 @@ public class PasswordServiceTest {
         assertThat(encryptedPassword, is(not(equalTo(anotherEncryptedPassword))));
     }
 
+    @Test
+    public void authenticate_a_password() throws Exception {
+        String password = "mypassword";
+        String generatedSalt = PasswordService.generateSalt();
+        String encryptedPassword = PasswordService.encryptPassword(password, generatedSalt);
+        boolean authentic = PasswordService.authenticate(password, encryptedPassword, generatedSalt);
+        assertThat(authentic, is(true));
+    }
+
+    @Test
+    public void fail_authentication_for_non_matching_passwords() throws Exception {
+        String correctPwd = "mycorrectpassword";
+        String incorrectPwd = "myincorrectpassword";
+        String generatedSalt = PasswordService.generateSalt();
+        String encryptedCorrectPassword = PasswordService.encryptPassword(correctPwd, generatedSalt);
+        boolean authenticate =  PasswordService.authenticate(incorrectPwd, encryptedCorrectPassword, generatedSalt);
+        assertThat(authenticate, is(false));
+    }
 }

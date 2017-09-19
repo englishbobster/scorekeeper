@@ -6,13 +6,16 @@ import org.junit.Test;
 import stos.keeper.database.dao.PlayerDAO;
 import stos.keeper.model.player.Player;
 import stos.keeper.sparkServer.json.JsonTransformer;
+import stos.keeper.sparkServer.security.DigestKeyChest;
+import stos.keeper.sparkServer.security.PasswordService;
+import stos.keeper.sparkServer.security.TokenGenerator;
 
 import java.time.ZonedDateTime;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Collections;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.startsWith;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -20,48 +23,35 @@ import static org.mockito.Mockito.when;
 public class LoginPlayerRouteTest {
 
     private PlayerDAO dao;
+    private TokenGenerator tokenGenerator;
 
     @Before
     public void setUp() throws Exception {
         dao = mock(PlayerDAO.class);
+        tokenGenerator = new TokenGenerator(DigestKeyChest.getInstance());
     }
 
     @Test
     public void player_json_message_is_returned_on_a_successful_request() throws Exception {
         ZonedDateTime time = ZonedDateTime.now();
-        String timeString = time.toString();
-        Player player = Player.builder().id(7).username("bobby").password("dallas").email("another@email.address")
-                .hasPaid(true).created(time).build();
+        String salt = PasswordService.generateSalt();
+        String encryptedPassword = PasswordService.encryptPassword("dallas", salt);
+        Player player = Player.builder().id(7).username("bobby")
+                .password(encryptedPassword).passwordSalt(salt)
+                .email("another@email.address").hasPaid(true)
+                .created(time).build();
 
-        String expectedResponse = "{\"id\":7,\"userName\":\"bobby\"," +
-                "\"password\":\"dallas\"," +
-                "\"passwordSalt\":[0,0,0,0]," +
-                "\"email\":\"another@email.address\"," +
-                "\"hasPaid\":true," +
-                "\"created\":\"" +
-                timeString +
-                "\"}";
+        String requestBody = "{\"username\":\"bobby\"," + "\"password\":\"dallas\"" + "}";
 
-        Map<String, String> requestParams = new HashMap<>();
-        requestParams.put(":name", "bobby");
-        when(dao.getPlayerByName(requestParams.get(":name"))).thenReturn(Optional.of(player));
-        LoginPlayerRoute route = new LoginPlayerRoute(new JsonTransformer(), dao);
-        ResponseData responseData = route.process("", requestParams);
+        String expectedResponse = "{\"id\":7,\"username\":\"bobby\"," +
+                "\"token\":";
+
+        when(dao.getPlayerByName("bobby")).thenReturn(Optional.of(player));
+        LoginPlayerRoute route = new LoginPlayerRoute(new JsonTransformer(), dao, tokenGenerator);
+        ResponseData responseData = route.process(requestBody, Collections.emptyMap());
 
         assertThat(responseData.getResponseStatus(), is(Response.SC_OK));
-        assertThat(responseData.getResponseMessage(), is(expectedResponse));
+        assertThat(responseData.getResponseMessage(), startsWith(expectedResponse));
     }
 
-    @Test
-    public void error_is_returned_when_login_fails() throws Exception {
-        Map<String, String> requestParams = new HashMap<>();
-        requestParams.put(":name", "torkel");
-        when(dao.getPlayerByName(requestParams.get(":name"))).thenReturn(Optional.empty());
-        LoginPlayerRoute route = new LoginPlayerRoute(new JsonTransformer(), dao);
-        ResponseData responseData = route.process("", requestParams);
-
-        assertThat(responseData.getResponseStatus(), is(Response.SC_NOT_FOUND));
-        assertThat(responseData.getResponseMessage(), is("Player not found."));
-
-    }
 }

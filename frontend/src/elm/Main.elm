@@ -47,7 +47,7 @@ type alias PlayerId =
 
 type alias PlayerInfo =
     { id : PlayerId
-    , userName : String
+    , username : String
     , passWord : String
     , email : String
     , hasPaid : Bool

@@ -30,7 +30,7 @@ public class PlayerStatementDataConstructorTest {
 
         assertThat(addUserStatementData.getSqlStatement(), is(EXPECTED_ADD_USER));
         assertThat(addUserStatementData.getParameters(), contains(
-                player.getUserName(),
+                player.getUsername(),
                 player.getPassword(),
                 player.getSalt(),
                 player.getEmail(),

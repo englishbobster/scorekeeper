@@ -36,10 +36,10 @@ public class PlayerDAOTest {
     @Test
     public void add_get_delete_a_user_in_the_database() {
         assertThat(dao.addPlayer(player), is(1));
-        Optional<Player> fetchedPlayerOptionl = dao.getPlayerByName(player.getUserName());
+        Optional<Player> fetchedPlayerOptionl = dao.getPlayerByName(player.getUsername());
         assertThat(fetchedPlayerOptionl.get(), is(equalTo(player)));
 
-        assertThat(dao.deletePlayerByName(player.getUserName()), is(1));
+        assertThat(dao.deletePlayerByName(player.getUsername()), is(1));
     }
 
     @Test

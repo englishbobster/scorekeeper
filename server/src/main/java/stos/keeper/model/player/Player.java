@@ -4,7 +4,7 @@ import java.time.ZonedDateTime;
 
 public class Player {
     private int id;
-    private String userName;
+    private String username;
     private String password;
     private String passwordSalt;
     private String email;
@@ -12,9 +12,9 @@ public class Player {
     private ZonedDateTime created;
 
 
-    private Player(int id, String userName, String password, String passwordSalt, String email, boolean hasPaid, ZonedDateTime created) {
+    private Player(int id, String username, String password, String passwordSalt, String email, boolean hasPaid, ZonedDateTime created) {
         this.id = id;
-        this.userName = userName;
+        this.username = username;
         this.password = password;
         this.passwordSalt = passwordSalt;
         this.email = email;
@@ -33,8 +33,8 @@ public class Player {
         return hasPaid;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
     public String getPassword() {
@@ -65,7 +65,7 @@ public class Player {
             return false;
         } else {
             Player that = (Player) obj;
-            if (this.userName.equals(that.userName)
+            if (this.username.equals(that.username)
                     && this.password.equals(that.password)
                     && this.email.equals(that.email)
                     && this.created.equals(that.created)) {
@@ -78,7 +78,7 @@ public class Player {
     @Override
     public int hashCode() {
         int result = 17;
-        result = 31 * result + userName.hashCode();
+        result = 31 * result + username.hashCode();
         result = 31 * result + password.hashCode();
         result = 31 * result + email.hashCode();
         result = 31 * result + created.hashCode();
@@ -87,7 +87,7 @@ public class Player {
 
     @Override
     public String toString() {
-        return this.userName +
+        return this.username +
                 ":" +
                 this.password +
                 ":" +
@@ -99,13 +99,13 @@ public class Player {
     }
 
     public Player withId(int id) {
-        return this.id == id ? this : new Player(id, userName, password, passwordSalt, email, hasPaid, created);
+        return this.id == id ? this : new Player(id, username, password, passwordSalt, email, hasPaid, created);
     }
 
 
     public static class PlayerBuilder {
         private int id = 0;
-        private String userName;
+        private String username;
         private String password;
         private String passwordSalt;
         private String email;
@@ -118,7 +118,7 @@ public class Player {
         }
 
         public PlayerBuilder username(String userName) {
-            this.userName = userName;
+            this.username = userName;
             return this;
         }
 
@@ -148,7 +148,7 @@ public class Player {
         }
 
         public Player build() {
-            return new Player(id, userName, password, passwordSalt, email, hasPaid, created);
+            return new Player(id, username, password, passwordSalt, email, hasPaid, created);
         }
     }
 }

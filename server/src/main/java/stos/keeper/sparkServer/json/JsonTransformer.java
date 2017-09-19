@@ -12,6 +12,7 @@ import com.google.gson.JsonSerializer;
 import spark.ResponseTransformer;
 import stos.keeper.model.planned_matches.MatchType;
 import stos.keeper.model.planned_matches.Score;
+import stos.keeper.sparkServer.api.messages.LoginPlayerRequest;
 import stos.keeper.sparkServer.api.messages.RegisterPlayerRequest;
 
 import java.lang.reflect.Type;
@@ -40,6 +41,10 @@ public class JsonTransformer implements ResponseTransformer {
 
     public RegisterPlayerRequest registerPlayerFromJson(String response) {
         return gson.fromJson(response, RegisterPlayerRequest.class);
+    }
+
+    public LoginPlayerRequest loginPlayerFromJson(String response) {
+        return gson.fromJson(response, LoginPlayerRequest.class);
     }
 
     private class ZoneDateTimeSerializationAdapter implements JsonSerializer<ZonedDateTime> {

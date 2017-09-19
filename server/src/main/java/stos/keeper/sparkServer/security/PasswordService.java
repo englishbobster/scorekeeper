@@ -29,4 +29,9 @@ public class PasswordService {
         byte[] encoded = keyFactory.generateSecret(spec).getEncoded();
         return Base64.getEncoder().encodeToString(encoded);
     }
+
+    public static boolean authenticate(String attemptedPassword, String encryptedPassword, String generatedSalt) throws InvalidKeySpecException, NoSuchAlgorithmException {
+        String encryptedAttemptedPassword = encryptPassword(attemptedPassword, generatedSalt);
+        return encryptedAttemptedPassword.equals(encryptedPassword);
+    }
 }

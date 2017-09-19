@@ -13,25 +13,19 @@ import java.util.Date;
 public class TokenGenerator {
     public static final int TOKEN_VALIDITY_TIME_HRS = 2;
     private DigestKeyChest keyChest;
-    private String username;
-    private String password;
-    private String email;
     private int hrsValid;
 
 
-    TokenGenerator(String username, String password, String email, DigestKeyChest keyChest, int hrsValid) {
-        this.username = username;
-        this.password = password;
-        this.email = email;
+    TokenGenerator(DigestKeyChest keyChest, int hrsValid) {
         this.keyChest = keyChest;
         this.hrsValid = hrsValid;
     }
 
-    public TokenGenerator(String username, String password, String email, DigestKeyChest keyChest) {
-        this(username, password, email, keyChest, TOKEN_VALIDITY_TIME_HRS);
+    public TokenGenerator(DigestKeyChest keyChest) {
+        this(keyChest, TOKEN_VALIDITY_TIME_HRS);
     }
 
-    public String generateToken() {
+    public String generateToken(String username, String password, String email) {
         SecretKey jwtKey = keyChest.getJwtKey();
         return Jwts.builder().setExpiration(Date.from(Instant.now().plus(hrsValid, ChronoUnit.HOURS)))
                 .setSubject(username)
@@ -42,7 +36,7 @@ public class TokenGenerator {
     public boolean verifyTokenAgainstPlayer(Player player, String token) throws Exception {
         SecretKey jwtKey = keyChest.getJwtKey();
         Claims claims = Jwts.parser().setSigningKey(jwtKey).parseClaimsJws(token).getBody();
-        boolean verified = claims.getSubject().equals(player.getUserName());
+        boolean verified = claims.getSubject().equals(player.getUsername());
         verified &= claims.getExpiration().toInstant().isAfter(Instant.now());
         verified &= claims.get("password").equals(player.getPassword());
         verified &= claims.get("email").equals(player.getEmail());

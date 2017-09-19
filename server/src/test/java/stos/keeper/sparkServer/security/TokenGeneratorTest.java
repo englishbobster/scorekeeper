@@ -25,27 +25,27 @@ public class TokenGeneratorTest {
 
     @Before
     public void setUp() throws Exception {
-        generator = new TokenGenerator(USERNAME, PASSWORD, EMAIL, keyChest, HRS_VALID);
+        generator = new TokenGenerator(keyChest, HRS_VALID);
         player = Player.builder().id(2).username(USERNAME).password(PASSWORD).email(EMAIL).hasPaid(true)
                 .created(ZonedDateTime.now()).build();
     }
 
     @Test
     public void generates_a_jwt_token() throws Exception {
-        String jwt = generator.generateToken();
+        String jwt = generator.generateToken(USERNAME, PASSWORD, EMAIL);
         assertThat(jwt.split("\\.").length, is(equalTo(3)));
     }
 
     @Test
     public void verify_the_token_claims() throws Exception {
-        String token = generator.generateToken();
+        String token = generator.generateToken(USERNAME, PASSWORD, EMAIL);
         assertThat(generator.verifyTokenAgainstPlayer(player, token), is(true));
     }
 
     @Test(expected = ExpiredJwtException.class)
     public void expiry_date_reached_gives_error() throws Exception {
-        TokenGenerator generator = new TokenGenerator(USERNAME, PASSWORD, EMAIL_NEW, keyChest, EXPIRES_NOW);
-        String token = generator.generateToken();
+        TokenGenerator generator = new TokenGenerator(keyChest, EXPIRES_NOW);
+        String token = generator.generateToken(USERNAME, PASSWORD, EMAIL_NEW);
         boolean verified = generator.verifyTokenAgainstPlayer(player, token);
         assertThat(verified, is(true));
 

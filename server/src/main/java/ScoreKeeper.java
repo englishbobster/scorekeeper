@@ -7,6 +7,8 @@ import stos.keeper.model.planned_matches.Score;
 import stos.keeper.sparkServer.json.JsonTransformer;
 import stos.keeper.sparkServer.api.routes.LoginPlayerRoute;
 import stos.keeper.sparkServer.api.routes.RegisterPlayerRoute;
+import stos.keeper.sparkServer.security.DigestKeyChest;
+import stos.keeper.sparkServer.security.TokenGenerator;
 
 import java.util.List;
 
@@ -24,6 +26,7 @@ public class ScoreKeeper {
         PlannedMatchesDAO plannedMatchesDAO = new PlannedMatchesDAO(dataSource);
         PlayerDAO playerDAO = new PlayerDAO(dataSource);
         JsonTransformer transformer = new JsonTransformer();
+        TokenGenerator tokenGenerator = new TokenGenerator(DigestKeyChest.getInstance());
         port(5000);
         staticFiles.externalLocation(System.getProperty("user.dir") + "/server/src/main/resources/public");
 
@@ -48,9 +51,9 @@ public class ScoreKeeper {
             }
         });
 
-        post(RegisterPlayerRoute.PATH, new RegisterPlayerRoute(transformer, playerDAO));
+        post(RegisterPlayerRoute.PATH, new RegisterPlayerRoute(transformer, playerDAO, tokenGenerator));
 
-        get(LoginPlayerRoute.PATH, new LoginPlayerRoute(transformer, playerDAO));
+        get(LoginPlayerRoute.PATH, new LoginPlayerRoute(transformer, playerDAO, tokenGenerator));
     }
 
 }

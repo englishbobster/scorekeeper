@@ -4,6 +4,8 @@ import org.junit.Before;
 import org.junit.Test;
 import stos.keeper.model.planned_matches.FootballMatch;
 import stos.keeper.model.planned_matches.MatchType;
+import stos.keeper.sparkServer.api.messages.LoginPlayerRequest;
+import stos.keeper.sparkServer.api.messages.PlayerIdAndTokenReply;
 import stos.keeper.sparkServer.api.messages.RegisterPlayerRequest;
 
 import java.time.ZoneId;
@@ -19,10 +21,12 @@ public class JsonTransformerTest {
 
     private String registerPlayerRequestJson;
     private String scoreJson;
+    private String loginRequest;
+    private String renderedPlayerIdAndToken;
 
     @Before
     public void setUp() throws Exception {
-        registerPlayerRequestJson = "{\"userName\": \"minger\",\n" +
+        registerPlayerRequestJson = "{\"username\": \"minger\",\n" +
                 " \"password\" : \"twinger\",\n" +
                 " \"email\" : \"abcde@ghijklmn.opq\",\n" +
                 " \"created\" : \"2007-12-03T10:15:30.00Z\"\n" +
@@ -31,6 +35,12 @@ public class JsonTransformerTest {
                 "\"homeScore\":5," +
                 "\"awayScore\":4" +
                 "}" +
+                "}";
+        loginRequest = "{\"username\": \"minger\",\n" +
+                " \"password\" : \"twinger\"" + "}";
+        renderedPlayerIdAndToken = "{\"id\":7," +
+                "\"username\":\"billybob\"," +
+                "\"token\":\"a_long_long_long.tokenkindofthing.asdfnnsf\"" +
                 "}";
     }
 
@@ -43,6 +53,21 @@ public class JsonTransformerTest {
 
         RegisterPlayerRequest player = transformer.registerPlayerFromJson(registerPlayerRequestJson);
         assertThat(player, is(equalTo(expectedPlayer)));
+    }
+
+    @Test
+    public void should_deserialize_LoginPlayerRequest() throws Exception {
+        JsonTransformer transformer = new JsonTransformer();
+        LoginPlayerRequest playerRequest = transformer.loginPlayerFromJson(loginRequest);
+        assertThat(playerRequest.getUsername(), is("minger"));
+        assertThat(playerRequest.getPassword(), is("twinger"));
+    }
+
+    @Test
+    public void should_render_PlayerIdAndToken_correctly() throws Exception {
+        JsonTransformer transformer = new JsonTransformer();
+        PlayerIdAndTokenReply reply = new PlayerIdAndTokenReply(7, "billybob", "a_long_long_long.tokenkindofthing.asdfnnsf");
+        assertThat(transformer.render(reply), is(renderedPlayerIdAndToken));
     }
 
     @Test
