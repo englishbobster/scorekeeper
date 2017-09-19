@@ -22,8 +22,16 @@ import static org.mockito.Mockito.when;
 
 public class LoginPlayerRouteTest {
 
+    private static final String USER_NAME = "bobby";
+    private static final String PASSWORD = "dallas";
+    private static final String WRONG_PASSWORD = "wrong_password";
+    private static final String EMAIL = "another@email.address";
     private PlayerDAO dao;
     private TokenGenerator tokenGenerator;
+    private static final String REQUEST_BODY = "{\"username\":\"" + USER_NAME + "\"," + "\"password\":\"" + PASSWORD + "\"" + "}";
+    private static final String REQUEST_BODY_WRONG_PWD = "{\"username\":\"" + USER_NAME + "\"," + "\"password\":\"" + WRONG_PASSWORD + "\"" + "}";
+    private static final String EXPECTED_RESPONSE = "{\"id\":7,\"username\":\"" + USER_NAME + "\"," +
+            "\"token\":";
 
     @Before
     public void setUp() throws Exception {
@@ -35,40 +43,33 @@ public class LoginPlayerRouteTest {
     public void player_json_message_is_returned_on_a_successful_request() throws Exception {
         ZonedDateTime time = ZonedDateTime.now();
         String salt = PasswordService.generateSalt();
-        String encryptedPassword = PasswordService.encryptPassword("dallas", salt);
-        Player player = Player.builder().id(7).username("bobby")
+        String encryptedPassword = PasswordService.encryptPassword(PASSWORD, salt);
+        Player player = Player.builder().id(7).username(USER_NAME)
                 .password(encryptedPassword).passwordSalt(salt)
-                .email("another@email.address").hasPaid(true)
+                .email(EMAIL).hasPaid(true)
                 .created(time).build();
 
-        String requestBody = "{\"username\":\"bobby\"," + "\"password\":\"dallas\"" + "}";
-
-        String expectedResponse = "{\"id\":7,\"username\":\"bobby\"," +
-                "\"token\":";
-
-        when(dao.getPlayerByName("bobby")).thenReturn(Optional.of(player));
+        when(dao.getPlayerByName(USER_NAME)).thenReturn(Optional.of(player));
         LoginPlayerRoute route = new LoginPlayerRoute(new JsonTransformer(), dao, tokenGenerator);
-        ResponseData responseData = route.process(requestBody, Collections.emptyMap());
+        ResponseData responseData = route.process(REQUEST_BODY, Collections.emptyMap());
 
         assertThat(responseData.getResponseStatus(), is(Response.SC_OK));
-        assertThat(responseData.getResponseMessage(), startsWith(expectedResponse));
+        assertThat(responseData.getResponseMessage(), startsWith(EXPECTED_RESPONSE));
     }
 
     @Test
     public void unauthorized_is_returned_with_wrong_password() throws Exception {
         ZonedDateTime time = ZonedDateTime.now();
         String salt = PasswordService.generateSalt();
-        String encryptedPassword = PasswordService.encryptPassword("dallas", salt);
-        Player player = Player.builder().id(7).username("bobby")
+        String encryptedPassword = PasswordService.encryptPassword(PASSWORD, salt);
+        Player player = Player.builder().id(7).username(USER_NAME)
                 .password(encryptedPassword).passwordSalt(salt)
-                .email("another@email.address").hasPaid(true)
+                .email(EMAIL).hasPaid(true)
                 .created(time).build();
 
-        String requestBody = "{\"username\":\"bobby\"," + "\"password\":\"wrongpassword\"" + "}";
-
-        when(dao.getPlayerByName("bobby")).thenReturn(Optional.of(player));
+        when(dao.getPlayerByName(USER_NAME)).thenReturn(Optional.of(player));
         LoginPlayerRoute route = new LoginPlayerRoute(new JsonTransformer(), dao, tokenGenerator);
-        ResponseData responseData = route.process(requestBody, Collections.emptyMap());
+        ResponseData responseData = route.process(REQUEST_BODY_WRONG_PWD, Collections.emptyMap());
 
         assertThat(responseData.getResponseStatus(), is(Response.SC_UNAUTHORIZED));
         assertThat(responseData.getResponseMessage(), startsWith("Player not authorized."));
@@ -76,11 +77,10 @@ public class LoginPlayerRouteTest {
 
     @Test
     public void not_found_is_returned_without_an_existing_player() throws Exception {
-        String requestBody = "{\"username\":\"bobby\"," + "\"password\":\"wrongpassword\"" + "}";
 
-        when(dao.getPlayerByName("bobby")).thenReturn(Optional.empty());
+        when(dao.getPlayerByName(USER_NAME)).thenReturn(Optional.empty());
         LoginPlayerRoute route = new LoginPlayerRoute(new JsonTransformer(), dao, tokenGenerator);
-        ResponseData responseData = route.process(requestBody, Collections.emptyMap());
+        ResponseData responseData = route.process(REQUEST_BODY, Collections.emptyMap());
 
         assertThat(responseData.getResponseStatus(), is(Response.SC_NOT_FOUND));
         assertThat(responseData.getResponseMessage(), startsWith("Player not found."));
@@ -89,10 +89,8 @@ public class LoginPlayerRouteTest {
 
     @Test
     public void invalid_is_returned_from_gobbledygook_request() throws Exception {
-        String requestBody = "";
-
         LoginPlayerRoute route = new LoginPlayerRoute(new JsonTransformer(), dao, tokenGenerator);
-        ResponseData responseData = route.process(requestBody, Collections.emptyMap());
+        ResponseData responseData = route.process("", Collections.emptyMap());
 
         assertThat(responseData.getResponseStatus(), is(Response.SC_BAD_REQUEST));
         assertThat(responseData.getResponseMessage(), startsWith("Invalid Request."));
