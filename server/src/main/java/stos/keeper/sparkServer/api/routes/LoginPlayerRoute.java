@@ -22,15 +22,17 @@ public class LoginPlayerRoute extends AbstractScoreKeeperRoute {
     }
 
     @Override
-    public ResponseData process(String requestbody, Map<String, String> requestParams) throws Exception {
-        LoginPlayerRequest loginRequest = transformer.loginPlayerFromJson(requestbody);
+    public ResponseData process(String requestBody, Map<String, String> requestParams) throws Exception {
+        LoginPlayerRequest loginRequest = transformer.loginPlayerFromJson(requestBody);
         if (loginRequest != null) {
             Optional<Player> playerOptional = playerDAO.getPlayerByName(loginRequest.getUsername());
             if (playerOptional.isPresent()) {
                 Player playerByName = playerOptional.get();
-                boolean authentic = PasswordService.authenticate(loginRequest.getPassword(), playerByName.getPassword(), playerByName.getSalt());
+                boolean authentic = PasswordService.authenticate(loginRequest.getPassword(),
+                        playerByName.getPassword(), playerByName.getSalt());
                 if (authentic) {
-                    String token = tokenGenerator.generateToken(playerByName.getUsername(), loginRequest.getPassword(), playerByName.getEmail());
+                    String token = tokenGenerator.generateToken(playerByName.getUsername(),
+                            loginRequest.getPassword(), playerByName.getEmail());
                     PlayerIdAndTokenReply reply = new PlayerIdAndTokenReply(playerByName.getId(),
                             playerByName.getUsername(), token);
                     return new ResponseData(Response.SC_OK, transformer.render(reply));

@@ -53,7 +53,7 @@ public class ScoreKeeper {
 
         post(RegisterPlayerRoute.PATH, new RegisterPlayerRoute(transformer, playerDAO, tokenGenerator));
 
-        get(LoginPlayerRoute.PATH, new LoginPlayerRoute(transformer, playerDAO, tokenGenerator));
+        put(LoginPlayerRoute.PATH, new LoginPlayerRoute(transformer, playerDAO, tokenGenerator));
     }
 
 }
