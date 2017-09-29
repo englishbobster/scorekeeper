@@ -17,6 +17,7 @@ import stos.keeper.sparkServer.api.messages.RegisterPlayerRequest;
 
 import java.lang.reflect.Type;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class JsonTransformer implements ResponseTransformer {
 
@@ -64,7 +65,7 @@ public class JsonTransformer implements ResponseTransformer {
     private class ZoneDateTimeDeserializerAdapter implements JsonDeserializer<ZonedDateTime> {
         @Override
         public ZonedDateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-            return ZonedDateTime.parse(json.getAsString());
+            return ZonedDateTime.parse(json.getAsString(), DateTimeFormatter.ISO_OFFSET_DATE_TIME);
         }
     }
 }

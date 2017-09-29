@@ -1,6 +1,6 @@
 CREATE TABLE planned_matches (
   id INTEGER NOT NULL UNIQUE PRIMARY KEY,
-  match_time TIMESTAMP,
+  match_time TIMESTAMP WITH TIME ZONE,
   arena VARCHAR(200),
   home_team VARCHAR(200),
   away_team VARCHAR(200),
@@ -17,7 +17,7 @@ CREATE TABLE players (
   salt varchar(255) NOT NULL,
   email VARCHAR(255) NOT NULL,
   paid BOOLEAN DEFAULT FALSE,
-  created TIMESTAMP NOT NULL
+  created TIMESTAMP WITH TIME ZONE NOT NULL
 );
 
 CREATE TABLE player_guesses (

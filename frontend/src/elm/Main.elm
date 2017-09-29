@@ -1,8 +1,15 @@
 module ScoreKeeper exposing (..)
 
-import Html exposing (Html, text, div, form, h2, p, label, input, button)
+import Html exposing (Html, program, text, div, form, h2, p, label, input, button)
 import Html.Attributes exposing (class, classList, id, for, type_, value)
-import Html.Events exposing (onInput)
+import Html.Events exposing (onInput, onClick)
+import Http exposing (Request, send, Body, post, jsonBody)
+import Json.Encode as Enc exposing (object, string, encode)
+import Json.Decode as Dec exposing (Decoder, map2, string, int, field)
+import Task exposing (perform)
+import Time exposing (Time, now)
+import Time.TimeZones as TimeZones exposing (europe_stockholm)
+import Time.ZonedDateTime as ZonedDateTime exposing (ZonedDateTime, fromTimestamp, toISO8601)
 
 
 -- Model
@@ -12,6 +19,7 @@ type alias Model =
     { username : String
     , password : String
     , email : String
+    , created : String
     , id : Int
     , token : String
     , errorMsg : String
@@ -23,6 +31,7 @@ initialModel =
     { username = ""
     , password = ""
     , email = ""
+    , created = ""
     , id = 0
     , token = ""
     , errorMsg = ""
@@ -33,14 +42,17 @@ type Msg
     = SetUserName String
     | SetPassword String
     | SetEmail String
+    | SetCreated Time
+    | RegisterClick
+    | RegisterPlayer (Result Http.Error { id : Int, token : String })
 
 
 
 -- Update
 
 
-update : Model -> Msg -> ( Model, Cmd msg )
-update model msg =
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
     case msg of
         SetUserName name ->
             ( { model | username = name }, Cmd.none )
@@ -50,6 +62,57 @@ update model msg =
 
         SetEmail address ->
             ( { model | email = address }, Cmd.none )
+
+        RegisterClick ->
+            ( model, timeNow )
+
+        SetCreated time ->
+            ( { model | created = timeAsISOString time }, registerPlayer model (timeAsISOString time) )
+
+        RegisterPlayer (Ok credentials) ->
+            ( { model | id = credentials.id, token = credentials.token }, Cmd.none )
+
+        RegisterPlayer (Err httpErr) ->
+            ( { model | errorMsg = toString (httpErr) }, Cmd.none )
+
+
+timeNow : Cmd Msg
+timeNow =
+    Task.perform SetCreated Time.now
+
+
+timeAsISOString : Time -> String
+timeAsISOString time =
+    (fromTimestamp (europe_stockholm ()) time) |> toISO8601
+
+
+
+-- API calls
+
+
+registerPlayer : Model -> String -> Cmd Msg
+registerPlayer model time =
+    send RegisterPlayer (registerRequest model time)
+
+
+registerRequest : Model -> String -> Request { id : Int, token : String }
+registerRequest model time =
+    let
+        body =
+            object
+                [ ( "username", Enc.string model.username )
+                , ( "password", Enc.string model.password )
+                , ( "email", Enc.string model.email )
+                , ( "created", Enc.string time )
+                ]
+                |> jsonBody
+
+        replyDecoder =
+            map2 (\a b -> { id = a, token = b })
+                (field "id" int)
+                (field "token" Dec.string)
+    in
+        post "http://127.0.0.1:5000/register" body replyDecoder
 
 
 
@@ -69,10 +132,11 @@ view model =
                 , fieldInput "Password" "password" model.password SetPassword
                 , fieldInput "Email" "email" model.email SetEmail
                 , div [ class "text-center" ]
-                    [ button [ class "btn btn-primary" ] [ text "Register" ]
+                    [ button [ class "btn btn-primary", onClick RegisterClick ] [ text "Register" ]
                     ]
                 ]
             ]
+        , div [] [ text (toString model) ]
         ]
 
 
@@ -87,9 +151,14 @@ fieldInput lab identity val msg =
 
 
 
---Main
+-- Main
 
 
-main : Html Msg
+main : Program Never Model Msg
 main =
-    view initialModel
+    program
+        { init = ( initialModel, Cmd.none )
+        , view = view
+        , update = update
+        , subscriptions = (\model -> Sub.none)
+        }
