@@ -12,7 +12,13 @@
 <div id="elm-embedded"></div>
 <script src="Main.js"></script>
 <script>
-    Elm.ScoreKeeper.embed(document.getElementById("elm-embedded"));
+    var elementById = document.getElementById("elm-embedded");
+    var app = Elm.ScoreKeeper.embed(elementById);
+
+    app.ports.storeSession.subscribe(function(session) {
+        localStorage.session = JSON.stringify(session);
+      });
+
 </script>
 
 </body>

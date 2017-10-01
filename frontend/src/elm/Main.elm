@@ -1,4 +1,4 @@
-module ScoreKeeper exposing (..)
+port module ScoreKeeper exposing (..)
 
 import Html exposing (Html, program, text, div, form, h2, p, label, input, button)
 import Html.Attributes exposing (class, classList, id, for, type_, value)
@@ -10,6 +10,7 @@ import Task exposing (perform)
 import Time exposing (Time, now)
 import Time.TimeZones as TimeZones exposing (europe_stockholm)
 import Time.ZonedDateTime as ZonedDateTime exposing (ZonedDateTime, fromTimestamp, toISO8601)
+import Navigation exposing (modifyUrl, load)
 
 
 -- Model
@@ -70,7 +71,7 @@ update msg model =
             ( { model | created = timeAsISOString time }, registerPlayer model (timeAsISOString time) )
 
         RegisterPlayer (Ok credentials) ->
-            ( { model | id = credentials.id, token = credentials.token }, Cmd.none )
+            ( { model | id = credentials.id, token = credentials.token }, Cmd.batch [ storeSession model, load "http://127.0.0.1:5000/test.html" ] )
 
         RegisterPlayer (Err httpErr) ->
             ( { model | errorMsg = toString (httpErr) }, Cmd.none )
@@ -87,6 +88,13 @@ timeAsISOString time =
 
 
 
+-- Ports
+
+
+port storeSession : Model -> Cmd msg
+
+
+
 -- API calls
 
 
@@ -95,14 +103,14 @@ registerPlayer model time =
     send RegisterPlayer (registerRequest model time)
 
 
-registerRequest : Model -> String -> Request { id : Int, token : String }
-registerRequest model time =
+registerRequest : { r | username : String, password : String, email : String } -> String -> Request { id : Int, token : String }
+registerRequest { username, password, email } time =
     let
         body =
             object
-                [ ( "username", Enc.string model.username )
-                , ( "password", Enc.string model.password )
-                , ( "email", Enc.string model.email )
+                [ ( "username", Enc.string username )
+                , ( "password", Enc.string password )
+                , ( "email", Enc.string email )
                 , ( "created", Enc.string time )
                 ]
                 |> jsonBody
